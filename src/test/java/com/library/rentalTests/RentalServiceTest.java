@@ -1,4 +1,4 @@
-package com.library.rentalTest;
+package com.library.rentalTests;
 
 public class RentalServiceTest {
 }
