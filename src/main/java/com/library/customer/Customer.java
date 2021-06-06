@@ -12,8 +12,14 @@ public class Customer {
     private long id;
     private String firstName;
     private String lastName;
-    @OneToMany(mappedBy = "rental", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private List<Rental> rentals;
+
+    public Customer(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public Customer() {
+    }
 
     public String getFirstName() {
         return firstName;

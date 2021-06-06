@@ -17,7 +17,8 @@ public class BookService {
 
     public void addNewBook(Book book) {
         Optional<Book> bookByTitleAndAuthor = bookRepository.findBookByTitleAndAuthor(book.getTitle(), book.getAuthor());
-        if ( bookByTitleAndAuthor.isPresent() ) {
+
+        if (bookByTitleAndAuthor.isPresent()) {
             throw new IllegalStateException("Book already exists");
         }
         bookRepository.save(book);
@@ -25,11 +26,13 @@ public class BookService {
 
     public void deleteBook(Book book) {
         Optional<Book> bookByTitleAndAuthor = bookRepository.findBookByTitleAndAuthor(book.getTitle(), book.getAuthor());
-        if ( bookByTitleAndAuthor.isEmpty() ) {
+
+        if (bookByTitleAndAuthor.isEmpty()) {
             throw new IllegalStateException("Book does not exist");
         }
         bookRepository.delete(book);
     }
+
     public List<Book> getBooks() {
         return bookRepository.findAll();
     }

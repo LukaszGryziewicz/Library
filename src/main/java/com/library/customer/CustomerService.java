@@ -16,21 +16,23 @@ public class CustomerService {
 
     public void addCustomer(Customer customer) {
         Optional<Customer> customerByFirstNameAndLastName = customerRepository.findCustomerByFirstNameAndLastName(customer.getFirstName(), customer.getLastName());
-        if ( customerByFirstNameAndLastName.isPresent() ) {
+
+        if (customerByFirstNameAndLastName.isPresent()) {
             throw new IllegalStateException("Customer already exists");
         }
         customerRepository.save(customer);
     }
 
-    void deleteCustomer(Customer customer) {
+    public void deleteCustomer(Customer customer) {
         Optional<Customer> customerByFirstNameAndLastName = customerRepository.findCustomerByFirstNameAndLastName(customer.getFirstName(), customer.getLastName());
-        if ( customerByFirstNameAndLastName.isEmpty() ) {
+
+        if (customerByFirstNameAndLastName.isEmpty()) {
             throw new IllegalStateException("Customer does not exist");
         }
         customerRepository.delete(customer);
     }
 
-    List<Customer>findCustomers(){
-       return customerRepository.findAll();
+    public List<Customer> getBooks() {
+        return customerRepository.findAll();
     }
 }

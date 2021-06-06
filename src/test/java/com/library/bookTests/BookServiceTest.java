@@ -1,4 +1,4 @@
-package com.library.BookTests;
+package com.library.bookTests;
 
 import com.library.book.Book;
 import com.library.book.BookRepository;
@@ -24,7 +24,7 @@ public class BookServiceTest {
     @Test
     public void shouldAddNewBookToDatabase() {
         //given
-        Book book1=new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         //when
         bookService.addNewBook(book1);
         //then
@@ -34,21 +34,21 @@ public class BookServiceTest {
     @Test
     public void shouldFindAllBooks() {
         //given
-        Book book1=new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        Book book2=new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
 
         bookService.addNewBook(book1);
         bookService.addNewBook(book2);
         //when
         List<Book> bookList = bookService.getBooks();
         //then
-        assertThat(bookList).containsExactlyInAnyOrder(book1,book2);
+        assertThat(bookList).containsExactlyInAnyOrder(book1, book2);
     }
 
     @Test
     public void shouldDeleteBookFromDatabase() {
         //given
-        Book book1=new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
 
         bookService.addNewBook(book1);
         //when

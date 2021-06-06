@@ -1,4 +1,4 @@
-package com.library.BookTests;
+package com.library.bookTests;
 
 import com.library.book.Book;
 import com.library.book.BookRepository;
