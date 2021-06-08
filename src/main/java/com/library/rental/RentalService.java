@@ -23,7 +23,7 @@ public class RentalService {
 
     public void createRental(Rental rental) {
 
-        final boolean containsCustomer = customerService.getBooks().contains(rental.getCustomer());
+        final boolean containsCustomer = customerService.getCustomers().contains(rental.getCustomer());
         final boolean containsBook = bookService.getBooks().contains(rental.getBook());
 
         if ( !containsCustomer ) {
@@ -34,6 +34,7 @@ public class RentalService {
             throw new IllegalStateException("Rental already finished");
         }
 
+        rental.setReturned(false);
         rental.setTimeOfRental(LocalDateTime.now());
         rental.setTimeOfReturn(null);
 

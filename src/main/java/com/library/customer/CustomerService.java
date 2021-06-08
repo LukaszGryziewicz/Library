@@ -32,7 +32,7 @@ public class CustomerService {
         customerRepository.delete(customer);
     }
 
-    public List<Customer> getBooks() {
+    public List<Customer> getCustomers() {
         return customerRepository.findAll();
     }
 }
