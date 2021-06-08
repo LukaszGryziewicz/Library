@@ -2,12 +2,10 @@ package com.library.rental;
 
 import com.library.book.Book;
 import com.library.customer.Customer;
-import com.sun.istack.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 
 @Entity
 public class Rental {
@@ -30,6 +28,11 @@ public class Rental {
     private LocalDateTime timeOfReturn;
 
     public Rental() {
+    }
+
+    public Rental(Customer customer, Book book) {
+        this.customer = customer;
+        this.book = book;
     }
 
     public Rental(Customer customer, Book book, boolean returned, LocalDateTime timeOfRental, LocalDateTime timeOfReturn) {

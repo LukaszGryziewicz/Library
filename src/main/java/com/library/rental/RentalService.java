@@ -26,11 +26,11 @@ public class RentalService {
         final boolean containsCustomer = customerService.getBooks().contains(rental.getCustomer());
         final boolean containsBook = bookService.getBooks().contains(rental.getBook());
 
-        if (!containsCustomer) {
+        if ( !containsCustomer ) {
             throw new IllegalStateException("Could not find customer");
-        } else if (!containsBook) {
+        } else if ( !containsBook ) {
             throw new IllegalStateException("Could not find book");
-        } else if (rental.isReturned()) {
+        } else if ( rental.isReturned() ) {
             throw new IllegalStateException("Rental already finished");
         }
 
@@ -41,7 +41,7 @@ public class RentalService {
     }
 
     public void endRental(Rental rental) {
-        if (rental.isReturned()) {
+        if ( rental.isReturned() ) {
             throw new IllegalStateException("Rental already finished");
         }
         rental.setReturned(true);
@@ -52,5 +52,14 @@ public class RentalService {
     List<Rental> getAllRentals() {
         return rentalRepository.findAll();
     }
+
+    List<Rental> getUnfinishedRentals() {
+        return rentalRepository.findUnfinishedRentals();
+    }
+
+    List<Rental> getFinishedRentals() {
+        return rentalRepository.findFinishedRentals();
+    }
+
 
 }

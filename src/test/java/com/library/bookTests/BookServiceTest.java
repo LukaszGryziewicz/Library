@@ -50,7 +50,7 @@ public class BookServiceTest {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
 
-        bookService.addNewBook(book1);
+        bookRepository.save(book1);
         //when
         bookService.deleteBook(book1);
         //then
