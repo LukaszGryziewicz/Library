@@ -2,7 +2,6 @@ package com.library.rental;
 
 import com.library.book.Book;
 import com.library.customer.Customer;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,10 +20,8 @@ public class Rental {
 
     private boolean returned;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime timeOfRental;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime timeOfReturn;
 
     public Rental() {

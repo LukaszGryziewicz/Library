@@ -1,6 +1,8 @@
 package com.library.rental;
 
+import com.library.book.Book;
 import com.library.book.BookService;
+import com.library.customer.Customer;
 import com.library.customer.CustomerService;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +28,11 @@ public class RentalService {
         final boolean containsCustomer = customerService.getCustomers().contains(rental.getCustomer());
         final boolean containsBook = bookService.getBooks().contains(rental.getBook());
 
-        if ( !containsCustomer ) {
+        if (!containsCustomer) {
             throw new IllegalStateException("Could not find customer");
-        } else if ( !containsBook ) {
+        } else if (!containsBook) {
             throw new IllegalStateException("Could not find book");
-        } else if ( rental.isReturned() ) {
+        } else if (rental.isReturned()) {
             throw new IllegalStateException("Rental already finished");
         }
 
@@ -42,7 +44,7 @@ public class RentalService {
     }
 
     public void endRental(Rental rental) {
-        if ( rental.isReturned() ) {
+        if (rental.isReturned()) {
             throw new IllegalStateException("Rental already finished");
         }
         rental.setReturned(true);
@@ -50,17 +52,24 @@ public class RentalService {
         rentalRepository.save(rental);
     }
 
-    List<Rental> getAllRentals() {
+    public List<Rental> getAllRentals() {
         return rentalRepository.findAll();
     }
 
-    List<Rental> getUnfinishedRentals() {
+    public List<Rental> getUnfinishedRentals() {
         return rentalRepository.findUnfinishedRentals();
     }
 
-    List<Rental> getFinishedRentals() {
+    public List<Rental> getFinishedRentals() {
         return rentalRepository.findFinishedRentals();
     }
 
+    public List<Rental> getRentalsOfCustomer(Customer customer) {
+        return rentalRepository.findRentalByCustomer(customer);
+    }
+
+    public List<Rental> getRentalsOfBook(Book book) {
+        return rentalRepository.findRentalByBook(book);
+    }
 
 }
