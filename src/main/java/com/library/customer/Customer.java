@@ -9,6 +9,7 @@ import java.util.List;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false,updatable = false)
     private long id;
     private String firstName;
     private String lastName;
