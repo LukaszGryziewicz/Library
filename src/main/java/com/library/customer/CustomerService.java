@@ -14,13 +14,14 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public void addCustomer(Customer customer) {
+    public Customer addCustomer(Customer customer) {
         Optional<Customer> customerByFirstNameAndLastName = customerRepository.findCustomerByFirstNameAndLastName(customer.getFirstName(), customer.getLastName());
 
         if (customerByFirstNameAndLastName.isPresent()) {
             throw new IllegalStateException("Customer already exists");
         }
         customerRepository.save(customer);
+        return customer;
     }
 
     public void deleteCustomer(Customer customer) {

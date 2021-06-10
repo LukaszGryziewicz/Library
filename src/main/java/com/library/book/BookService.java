@@ -15,13 +15,15 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public void addNewBook(Book book) {
+    public Book addNewBook(Book book) {
         Optional<Book> bookByTitleAndAuthor = bookRepository.findBookByTitleAndAuthor(book.getTitle(), book.getAuthor());
 
         if (bookByTitleAndAuthor.isPresent()) {
             throw new IllegalStateException("Book already exists");
         }
         bookRepository.save(book);
+
+        return book;
     }
 
     public void deleteBook(Book book) {
