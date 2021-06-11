@@ -331,5 +331,34 @@ public class RentalServiceTest {
         assertThat(thrown).isInstanceOf(RentalNotFoundException.class)
                 .hasMessageContaining("Rental not found");
     }
+    @Test
+    public void shouldShouldSetNumberOfRentalsToPlusOne() throws ExceededMaximumNumberOfRentalsException, BookAlreadyRentedException, RentalAlreadyFinishedException {
+        //given
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
+        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
+        Rental rental1 = new Rental(customer1, book1);
+
+        bookRepository.save(book1);
+        customerRepository.save(customer1);
+        //when
+        rentalService.createRental(rental1);
+        //then
+        assertThat(rental1.getCustomer().getNumberOfRentals()).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenExceedingNumberOfRentals() throws ExceededMaximumNumberOfRentalsException, BookAlreadyRentedException, RentalAlreadyFinishedException {
+        //given
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
+        Customer customer1 = new Customer("Łukasz", "Gryziewicz",3);
+        Rental rental1 = new Rental(customer1, book1);
+        bookRepository.save(book1);
+        customerRepository.save(customer1);
+        //when
+        Throwable thrown= catchThrowable(()->rentalService.createRental(rental1));
+        //then
+        assertThat(thrown).isInstanceOf(ExceededMaximumNumberOfRentalsException.class)
+                .hasMessageContaining("Customer reached the maximum number of rentals(3)");
+    }
 }
 

@@ -36,7 +36,7 @@ public class RentalService {
             throw new RentalAlreadyFinishedException();
         } else if ( rental.getBook().isRented() ) {
             throw new BookAlreadyRentedException();
-        } else if ( rental.getCustomer().getNumberOfRentals() >= 3 ) {
+        } else if ( rental.getCustomer().getNumberOfRentals() == 3 ) {
             throw new ExceededMaximumNumberOfRentalsException();
         }
 
