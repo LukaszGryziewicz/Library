@@ -11,6 +11,7 @@ public class Book {
     private String title;
     private String author;
     private String isbn;
+    private boolean rented;
 
     public Book() {
     }
@@ -21,13 +22,17 @@ public class Book {
         this.isbn = isbn;
     }
 
+    public Book(String title, String author, String isbn, boolean rented) {
+        this.title = title;
+        this.author = author;
+        this.isbn = isbn;
+        this.rented = rented;
+    }
+
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;
@@ -51,5 +56,13 @@ public class Book {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public boolean isRented() {
+        return rented;
+    }
+
+    public void setRented(boolean rented) {
+        this.rented = rented;
     }
 }

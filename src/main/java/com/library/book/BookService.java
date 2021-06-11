@@ -24,7 +24,7 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-    public Book findBookById(Long id) {
+    public Book findBook(Long id) {
         return bookRepository.findBookById(id)
                 .orElseThrow(() -> new IllegalStateException("Book not found"));
     }
@@ -47,7 +47,7 @@ public class BookService {
 
     public void deleteBook(Long id) {
         bookRepository.findBookById(id)
-                .orElseThrow(() -> new IllegalStateException("Book does not exist"));
+                .orElseThrow(() -> new IllegalStateException("Book not found"));
 
         bookRepository.deleteById(id);
     }
