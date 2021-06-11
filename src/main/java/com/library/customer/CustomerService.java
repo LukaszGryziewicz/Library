@@ -14,26 +14,40 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
+    public List<Customer> getCustomers() {
+        return customerRepository.findAll();
+    }
+
     public Customer addCustomer(Customer customer) {
         Optional<Customer> customerByFirstNameAndLastName = customerRepository.findCustomerByFirstNameAndLastName(customer.getFirstName(), customer.getLastName());
 
-        if (customerByFirstNameAndLastName.isPresent()) {
+        if ( customerByFirstNameAndLastName.isPresent() ) {
             throw new IllegalStateException("Customer already exists");
         }
         customerRepository.save(customer);
         return customer;
     }
 
-    public void deleteCustomer(Customer customer) {
-        Optional<Customer> customerByFirstNameAndLastName = customerRepository.findCustomerByFirstNameAndLastName(customer.getFirstName(), customer.getLastName());
-
-        if (customerByFirstNameAndLastName.isEmpty()) {
-            throw new IllegalStateException("Customer does not exist");
-        }
-        customerRepository.delete(customer);
+    public Customer findCustomer(Long id) {
+        return customerRepository.findCustomerById(id)
+                .orElseThrow(() -> new IllegalStateException("Customer not found"));
     }
 
-    public List<Customer> getCustomers() {
-        return customerRepository.findAll();
+    public Customer updateCustomer(Long id, Customer customer) {
+        Optional<Customer> customerById = customerRepository.findCustomerById(id);
+        customerById.orElseThrow(() -> new IllegalStateException("Customer not found"));
+
+        Customer existingCustomer = customerById.get();
+        existingCustomer.setFirstName(customer.getFirstName());
+        existingCustomer.setLastName(customer.getLastName());
+
+        return customerRepository.save(existingCustomer);
+    }
+
+    public void deleteCustomer(Long id) {
+        customerRepository.findCustomerById(id)
+                .orElseThrow(() -> new IllegalStateException("Customer not found"));
+
+        customerRepository.deleteById(id);
     }
 }

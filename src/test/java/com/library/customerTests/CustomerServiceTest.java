@@ -30,7 +30,7 @@ public class CustomerServiceTest {
         Customer customer1 = new Customer("Adam", "Dominik");
         //when
         customerService.addCustomer(customer1);
-        //than
+        //then
         assertThat(customerRepository.findAll()).contains(customer1);
     }
 
@@ -39,7 +39,7 @@ public class CustomerServiceTest {
         Customer customer1 = new Customer("Adam", "Dominik");
         customerRepository.save(customer1);
         //when
-        Throwable thrown = catchThrowable(() ->customerService.addCustomer(customer1));
+        Throwable thrown = catchThrowable(() -> customerService.addCustomer(customer1));
 
         //then
         assertThat(thrown).isInstanceOf(IllegalStateException.class)
@@ -54,7 +54,7 @@ public class CustomerServiceTest {
         customerRepository.saveAll(Arrays.asList(customer1, customer2));
         //when
         final List<Customer> customers = customerService.getCustomers();
-        //than
+        //then
         assertThat(customers).containsExactlyInAnyOrder(customer1, customer2);
     }
 
@@ -63,8 +63,8 @@ public class CustomerServiceTest {
         Customer customer1 = new Customer("Adam", "Dominik");
         customerRepository.save(customer1);
         //when
-        customerService.deleteCustomer(customer1);
-        //than
+        customerService.deleteCustomer(customer1.getId());
+        //then
         assertThat(customerRepository.findAll()).isEmpty();
     }
 
@@ -72,10 +72,46 @@ public class CustomerServiceTest {
     void shouldThrowExceptionWhenDeletingCustomerThatDoesNotExist() {
         Customer customer1 = new Customer("Adam", "Dominik");
         //when
-        Throwable thrown = catchThrowable(() -> customerService.deleteCustomer(customer1));
+        Throwable thrown = catchThrowable(() -> customerService.deleteCustomer(customer1.getId()));
         //than
         assertThat(thrown).isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Customer does not exist");
+                .hasMessageContaining("Customer not found");
+    }
+
+    @Test
+    void shouldFindCustomer() {
+        //given
+        Customer customer1 = new Customer("Adam", "Dominik");
+        customerRepository.save(customer1);
+        //when
+        Customer customer = customerService.findCustomer(customer1.getId());
+        //then
+        assertThat(customer).isEqualTo(customer1);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCustomerIsNotFound() {
+        //given
+        Customer customer1 = new Customer("Adam", "Dominik");
+        //when
+        Throwable thrown = catchThrowable(() -> customerService.findCustomer(customer1.getId()));
+        //then
+        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Customer not found");
+    }
+
+    @Test
+    void shouldUpdateCustomer() {
+        //given
+        Customer customer1 = new Customer("Adam", "Dominik");
+        Customer customer2 = new Customer("Łukasz", "Gryziewicz");
+        customerRepository.save(customer1);
+        //when
+        customerService.updateCustomer(customer1.getId(), customer2);
+        //then
+        assertThat(customer1.getFirstName()).isEqualTo(customer2.getFirstName());
+        assertThat(customer1.getLastName()).isEqualTo(customer2.getLastName());
+
     }
 
 }
