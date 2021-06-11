@@ -1,5 +1,7 @@
 package com.library.customer;
 
+import com.library.exceptions.CustomerAlreadyExistsException;
+import com.library.exceptions.CustomerNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +20,11 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    public Customer addCustomer(Customer customer) {
-        Optional<Customer> customerByFirstNameAndLastName = customerRepository.findCustomerByFirstNameAndLastName(customer.getFirstName(), customer.getLastName());
+    public Customer addCustomer(Customer customer) throws CustomerAlreadyExistsException {
+        Optional<Customer> customerById = customerRepository.findCustomerById(customer.getId());
 
-        if ( customerByFirstNameAndLastName.isPresent() ) {
-            throw new IllegalStateException("Customer already exists");
+        if ( customerById.isPresent() ) {
+            throw new CustomerAlreadyExistsException();
         }
         customerRepository.save(customer);
         return customer;
@@ -30,12 +32,12 @@ public class CustomerService {
 
     public Customer findCustomer(Long id) {
         return customerRepository.findCustomerById(id)
-                .orElseThrow(() -> new IllegalStateException("Customer not found"));
+                .orElseThrow(CustomerNotFoundException::new);
     }
 
     public Customer updateCustomer(Long id, Customer customer) {
         Optional<Customer> customerById = customerRepository.findCustomerById(id);
-        customerById.orElseThrow(() -> new IllegalStateException("Customer not found"));
+        customerById.orElseThrow(CustomerNotFoundException::new);
 
         Customer existingCustomer = customerById.get();
         existingCustomer.setFirstName(customer.getFirstName());
@@ -46,7 +48,7 @@ public class CustomerService {
 
     public void deleteCustomer(Long id) {
         customerRepository.findCustomerById(id)
-                .orElseThrow(() -> new IllegalStateException("Customer not found"));
+                .orElseThrow(CustomerNotFoundException::new);
 
         customerRepository.deleteById(id);
     }

@@ -1,5 +1,7 @@
 package com.library.book;
 
+import com.library.exceptions.BookAlreadyExistsException;
+import com.library.exceptions.BookNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,14 +21,14 @@ public class BookService {
         Optional<Book> bookByTitleAndAuthor = bookRepository.findBookById(book.getId());
 
         if ( bookByTitleAndAuthor.isPresent() ) {
-            throw new IllegalStateException("Book already exists");
+            throw new BookAlreadyExistsException();
         }
         return bookRepository.save(book);
     }
 
     public Book findBook(Long id) {
         return bookRepository.findBookById(id)
-                .orElseThrow(() -> new IllegalStateException("Book not found"));
+                .orElseThrow(BookNotFoundException::new);
     }
 
     public Book updateBook(Long id,Book book) {
@@ -35,7 +37,7 @@ public class BookService {
 
         Optional<Book> bookByTitleAndAuthor = bookRepository.findBookByTitleAndAuthor(book.getTitle(), book.getAuthor());
         if ( bookByTitleAndAuthor.isPresent() ){
-            throw new IllegalStateException("Book already exists");
+            throw new BookAlreadyExistsException();
         }
 
         Book existingBook = bookById.get();
@@ -47,7 +49,7 @@ public class BookService {
 
     public void deleteBook(Long id) {
         bookRepository.findBookById(id)
-                .orElseThrow(() -> new IllegalStateException("Book not found"));
+                .orElseThrow(BookNotFoundException::new);
 
         bookRepository.deleteById(id);
     }

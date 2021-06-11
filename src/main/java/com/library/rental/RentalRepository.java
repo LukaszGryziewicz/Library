@@ -19,8 +19,8 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
     @Query("SELECT r FROM Rental r WHERE r.returned=true")
     List<Rental> findFinishedRentals();
 
-    List<Rental> findRentalByCustomer(Customer customer);
+    List<Rental> findRentalByCustomerId(Long id);
 
-    List<Rental> findRentalByBook(Book book);
+    List<Rental> findRentalByBookId(Long id);
 
 }

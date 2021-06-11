@@ -4,9 +4,8 @@ import com.library.book.Book;
 import com.library.book.BookRepository;
 import com.library.customer.Customer;
 import com.library.customer.CustomerRepository;
-import com.library.rental.Rental;
-import com.library.rental.RentalRepository;
-import com.library.rental.RentalService;
+import com.library.exceptions.*;
+import com.library.rental.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +34,7 @@ public class RentalServiceTest {
     private BookRepository bookRepository;
 
     @Test
-    void shouldAddRentalToDatabase() {
+    void shouldAddRentalToDatabase() throws BookAlreadyRentedException, RentalAlreadyFinishedException, ExceededMaximumNumberOfRentalsException {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -49,7 +48,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldSetRentalReturnedToFalseAndBookToRented() {
+    void shouldSetRentalReturnedToFalseAndBookToRented() throws BookAlreadyRentedException, RentalAlreadyFinishedException, ExceededMaximumNumberOfRentalsException {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -64,7 +63,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldSetDateOfRentalToNowAndDateOfReturnToNull() {
+    void shouldSetDateOfRentalToNowAndDateOfReturnToNull() throws BookAlreadyRentedException, RentalAlreadyFinishedException, ExceededMaximumNumberOfRentalsException {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -89,14 +88,14 @@ public class RentalServiceTest {
         //when
         Throwable thrown = catchThrowable(() -> rentalService.createRental(rental1));
         //then
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+        assertThat(thrown).isInstanceOf(RentalAlreadyFinishedException.class)
                 .hasMessageContaining("Rental already finished");
     }
 
     @Test
-    void shouldThrowExceptionWhenTryingToAddRentedBookToRental(){
+    void shouldThrowExceptionWhenTryingToAddRentedBookToRental() {
         //given
-        Book book1 = new Book("Adam", "Z Nikiszowca", "123456789",true);
+        Book book1 = new Book("Adam", "Z Nikiszowca", "123456789", true);
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
         bookRepository.save(book1);
         customerRepository.save(customer1);
@@ -104,7 +103,7 @@ public class RentalServiceTest {
         //when
         Throwable thrown = catchThrowable(() -> rentalService.createRental(rental1));
         //then
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+        assertThat(thrown).isInstanceOf(BookAlreadyRentedException.class)
                 .hasMessageContaining("Book is already rented");
 
     }
@@ -119,8 +118,8 @@ public class RentalServiceTest {
         //when
         Throwable thrown = catchThrowable(() -> rentalService.createRental(rental1));
         //then
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Could not find customer");
+        assertThat(thrown).isInstanceOf(CustomerNotFoundException.class)
+                .hasMessageContaining("Customer not found");
     }
 
     @Test
@@ -133,12 +132,12 @@ public class RentalServiceTest {
         //when
         Throwable thrown = catchThrowable(() -> rentalService.createRental(rental1));
         //then
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Could not find book");
+        assertThat(thrown).isInstanceOf(BookNotFoundException.class)
+                .hasMessageContaining("Book not found");
     }
 
     @Test
-    void shouldEndRental() {
+    void shouldEndRental() throws RentalAlreadyFinishedException {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -148,14 +147,14 @@ public class RentalServiceTest {
         Rental rental1 = new Rental(customer1, book1);
         rentalRepository.save(rental1);
         //when
-        rentalService.endRental(rental1);
+        rentalService.endRental(rental1.getId());
         //then
         assertThat(rental1.isReturned()).isTrue();
         assertThat(rental1.getTimeOfReturn()).isBetween(LocalDateTime.now().minusSeconds(1), LocalDateTime.now());
     }
 
     @Test
-    void shouldThrowExceptionWhenRentalIsAlreadyFinished() {
+    void shouldThrowExceptionWhenRentalIsAlreadyFinished() throws RentalAlreadyFinishedException {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -164,10 +163,10 @@ public class RentalServiceTest {
         Rental rental1 = new Rental(customer1, book1);
         rentalRepository.save(rental1);
         //when
-        rentalService.endRental(rental1);
-        Throwable thrown = catchThrowable(() -> rentalService.endRental(rental1));
+        rentalService.endRental(rental1.getId());
+        Throwable thrown = catchThrowable(() -> rentalService.endRental(rental1.getId()));
         //then
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+        assertThat(thrown).isInstanceOf(RentalAlreadyFinishedException.class)
                 .hasMessageContaining("Rental already finished");
     }
 
@@ -245,7 +244,7 @@ public class RentalServiceTest {
         customerRepository.save(customer1);
         rentalRepository.saveAll(Arrays.asList(rental1, rental2));
         //when
-        final List<Rental> rentalByCustomer = rentalService.getRentalsOfCustomer(customer1);
+        final List<Rental> rentalByCustomer = rentalService.getRentalsOfCustomer(customer1.getId());
         //than
         assertThat(rentalByCustomer).containsExactlyInAnyOrder(rental1, rental2);
     }
@@ -264,7 +263,7 @@ public class RentalServiceTest {
         customerRepository.saveAll(Arrays.asList(customer1, customer2));
         rentalRepository.saveAll(Arrays.asList(rental1, rental2));
         //when
-        final List<Rental> rentalByBook = rentalService.getRentalsOfBook(book1);
+        final List<Rental> rentalByBook = rentalService.getRentalsOfBook(book1.getId());
         //than
         assertThat(rentalByBook).containsExactlyInAnyOrder(rental1, rental2);
     }
@@ -297,7 +296,7 @@ public class RentalServiceTest {
         //when
         Throwable thrown = catchThrowable(() -> rentalService.findRental(rental1.getId()));
         //then
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+        assertThat(thrown).isInstanceOf(RentalNotFoundException.class)
                 .hasMessageContaining("Rental not found");
     }
 
@@ -329,7 +328,7 @@ public class RentalServiceTest {
         //when
         Throwable thrown = catchThrowable(() -> rentalService.deleteRental(rental1.getId()));
         //then
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+        assertThat(thrown).isInstanceOf(RentalNotFoundException.class)
                 .hasMessageContaining("Rental not found");
     }
 }

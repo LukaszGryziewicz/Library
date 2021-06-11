@@ -1,9 +1,12 @@
 package com.library.bookTests;
 
 import com.library.book.Book;
+import com.library.exceptions.BookNotFoundException;
 import com.library.book.BookRepository;
 import com.library.book.BookService;
 import java.util.Arrays;
+
+import com.library.exceptions.BookAlreadyExistsException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,7 +44,7 @@ public class BookServiceTest {
         bookRepository.save(book1);
         Throwable thrown = catchThrowable(() -> bookService.addNewBook(book1));
         //than
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+        assertThat(thrown).isInstanceOf(BookAlreadyExistsException.class)
                 .hasMessageContaining("Book already exists");
     }
 
@@ -75,7 +78,7 @@ public class BookServiceTest {
         //when
         Throwable thrown = catchThrowable(() -> bookService.deleteBook(book1.getId()));
         //then
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+        assertThat(thrown).isInstanceOf(BookNotFoundException.class)
                 .hasMessageContaining("Book not found");
     }
 
@@ -97,7 +100,7 @@ public class BookServiceTest {
         //when
         Throwable thrown= catchThrowable(() -> bookService.findBook(book1.getId()));
         //then
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+        assertThat(thrown).isInstanceOf(BookNotFoundException.class)
                 .hasMessageContaining("Book not found");
     }
 

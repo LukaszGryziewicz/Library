@@ -3,6 +3,8 @@ package com.library.customerTests;
 import com.library.customer.Customer;
 import com.library.customer.CustomerRepository;
 import com.library.customer.CustomerService;
+import com.library.exceptions.CustomerAlreadyExistsException;
+import com.library.exceptions.CustomerNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,7 +44,7 @@ public class CustomerServiceTest {
         Throwable thrown = catchThrowable(() -> customerService.addCustomer(customer1));
 
         //then
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+        assertThat(thrown).isInstanceOf(CustomerAlreadyExistsException.class)
                 .hasMessageContaining("Customer already exists");
     }
 
@@ -74,7 +76,7 @@ public class CustomerServiceTest {
         //when
         Throwable thrown = catchThrowable(() -> customerService.deleteCustomer(customer1.getId()));
         //than
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+        assertThat(thrown).isInstanceOf(CustomerNotFoundException.class)
                 .hasMessageContaining("Customer not found");
     }
 
@@ -96,7 +98,7 @@ public class CustomerServiceTest {
         //when
         Throwable thrown = catchThrowable(() -> customerService.findCustomer(customer1.getId()));
         //then
-        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+        assertThat(thrown).isInstanceOf(CustomerNotFoundException.class)
                 .hasMessageContaining("Customer not found");
     }
 
