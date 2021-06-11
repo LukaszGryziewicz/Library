@@ -16,23 +16,40 @@ public class BookService {
     }
 
     public Book addNewBook(Book book) {
-        Optional<Book> bookByTitleAndAuthor = bookRepository.findBookByTitleAndAuthor(book.getTitle(), book.getAuthor());
+        Optional<Book> bookByTitleAndAuthor = bookRepository.findBookById(book.getId());
 
-        if (bookByTitleAndAuthor.isPresent()) {
+        if ( bookByTitleAndAuthor.isPresent() ) {
             throw new IllegalStateException("Book already exists");
         }
-        bookRepository.save(book);
-
-        return book;
+        return bookRepository.save(book);
     }
 
-    public void deleteBook(Book book) {
-        Optional<Book> bookByTitleAndAuthor = bookRepository.findBookByTitleAndAuthor(book.getTitle(), book.getAuthor());
+    public Book findBookById(Long id) {
+        return bookRepository.findBookById(id)
+                .orElseThrow(() -> new IllegalStateException("Book not found"));
+    }
 
-        if (bookByTitleAndAuthor.isEmpty()) {
-            throw new IllegalStateException("Book does not exist");
+    public Book updateBook(Long id,Book book) {
+        Optional<Book> bookById = bookRepository.findBookById(id);
+        bookById.orElseThrow(() -> new IllegalStateException("Can't find the book that you want to update"));
+
+        Optional<Book> bookByTitleAndAuthor = bookRepository.findBookByTitleAndAuthor(book.getTitle(), book.getAuthor());
+        if ( bookByTitleAndAuthor.isPresent() ){
+            throw new IllegalStateException("Book already exists");
         }
-        bookRepository.delete(book);
+
+        Book existingBook = bookById.get();
+        existingBook.setTitle(book.getTitle());
+        existingBook.setAuthor(book.getAuthor());
+
+        return bookRepository.save(existingBook);
+    }
+
+    public void deleteBook(Long id) {
+        bookRepository.findBookById(id)
+                .orElseThrow(() -> new IllegalStateException("Book does not exist"));
+
+        bookRepository.deleteById(id);
     }
 
     public List<Book> getBooks() {

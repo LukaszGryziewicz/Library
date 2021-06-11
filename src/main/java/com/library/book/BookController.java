@@ -2,7 +2,6 @@ package com.library.book;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,9 +27,21 @@ public class BookController {
         return new ResponseEntity<>(newBook,HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete//")
-    public ResponseEntity<?> deleteBook(@RequestBody Book book) {
-        bookService.deleteBook(book);
+    @GetMapping("/find/{id}")
+    public ResponseEntity<Book> findBookById(@PathVariable("id")Long id) {
+        Book bookById = bookService.findBookById(id);
+        return new ResponseEntity<>(bookById,HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Book>updateBook(@PathVariable("id") Long id, @RequestBody Book book){
+        Book updatedBook = bookService.updateBook(id, book);
+        return new ResponseEntity<>(updatedBook,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteBook(@PathVariable("id") Long id) {
+        bookService.deleteBook(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
