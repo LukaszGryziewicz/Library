@@ -41,6 +41,10 @@ public class Rental {
         this.timeOfReturn = timeOfReturn;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public Customer getCustomer() {
         return customer;
     }

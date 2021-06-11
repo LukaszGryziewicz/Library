@@ -61,7 +61,6 @@ public class BookServiceTest {
     void shouldDeleteBookFromDatabase() {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-
         bookRepository.save(book1);
         //when
         bookService.deleteBook(book1.getId());
@@ -77,16 +76,17 @@ public class BookServiceTest {
         Throwable thrown = catchThrowable(() -> bookService.deleteBook(book1.getId()));
         //then
         assertThat(thrown).isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Book does not exist");
+                .hasMessageContaining("Book not found");
     }
 
     @Test
     void shouldFindBookById(){
+        //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         bookRepository.save(book1);
-
-        Book bookById = bookService.findBookById(book1.getId());
-
+        //when
+        Book bookById = bookService.findBook(book1.getId());
+        //than
         assertThat(bookById).isEqualTo(book1);
     }
 
@@ -95,7 +95,7 @@ public class BookServiceTest {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         //when
-        Throwable thrown= catchThrowable(() -> bookService.findBookById(book1.getId()));
+        Throwable thrown= catchThrowable(() -> bookService.findBook(book1.getId()));
         //then
         assertThat(thrown).isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("Book not found");

@@ -28,28 +28,45 @@ public class RentalService {
         final boolean containsCustomer = customerService.getCustomers().contains(rental.getCustomer());
         final boolean containsBook = bookService.getBooks().contains(rental.getBook());
 
-        if (!containsCustomer) {
+        if ( !containsCustomer ) {
             throw new IllegalStateException("Could not find customer");
-        } else if (!containsBook) {
+        } else if ( !containsBook ) {
             throw new IllegalStateException("Could not find book");
-        } else if (rental.isReturned()) {
+        } else if ( rental.isReturned() ) {
             throw new IllegalStateException("Rental already finished");
+        }else if(rental.getBook().isRented()){
+            throw  new IllegalStateException("Book is already rented");
         }
 
         rental.setReturned(false);
         rental.setTimeOfRental(LocalDateTime.now());
         rental.setTimeOfReturn(null);
+        rental.getBook().setRented(true);
 
         rentalRepository.save(rental);
     }
 
+    public Rental findRental(Long id) {
+        return rentalRepository.findRentalById(id)
+                .orElseThrow(() -> new IllegalStateException("Rental not found"));
+    }
+
     public void endRental(Rental rental) {
-        if (rental.isReturned()) {
+
+        if ( rental.isReturned() ) {
             throw new IllegalStateException("Rental already finished");
         }
         rental.setReturned(true);
         rental.setTimeOfReturn(LocalDateTime.now());
+        rental.getBook().setRented(false);
         rentalRepository.save(rental);
+    }
+
+    public void deleteRental(Long id) {
+        rentalRepository.findRentalById(id)
+                .orElseThrow(() -> new IllegalStateException("Rental not found"));
+
+        rentalRepository.deleteById(id);
     }
 
     public List<Rental> getAllRentals() {

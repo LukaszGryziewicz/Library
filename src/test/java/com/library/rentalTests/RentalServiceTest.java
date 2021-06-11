@@ -49,17 +49,31 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldSetReturnedToFalseAndDateOfRentalToNowAndDateOfReturnToNull() {
+    void shouldSetRentalReturnedToFalseAndBookToRented() {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
         bookRepository.save(book1);
         customerRepository.save(customer1);
-        //when
         Rental rental1 = new Rental(customer1, book1);
+        //when
         rentalService.createRental(rental1);
         //then
         assertThat(rental1.isReturned()).isFalse();
+        assertThat(rental1.getBook().isRented()).isTrue();
+    }
+
+    @Test
+    void shouldSetDateOfRentalToNowAndDateOfReturnToNull() {
+        //given
+        Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
+        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
+        bookRepository.save(book1);
+        customerRepository.save(customer1);
+        Rental rental1 = new Rental(customer1, book1);
+        //when
+        rentalService.createRental(rental1);
+        //then
         assertThat(rental1.getTimeOfRental()).isBetween(LocalDateTime.now().minusSeconds(1), LocalDateTime.now());
         assertThat(rental1.getTimeOfReturn()).matches(Objects::isNull);
     }
@@ -71,12 +85,28 @@ public class RentalServiceTest {
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
         bookRepository.save(book1);
         customerRepository.save(customer1);
-        //when
         Rental rental1 = new Rental(customer1, book1, true, LocalDateTime.MIN, LocalDateTime.MAX);
+        //when
         Throwable thrown = catchThrowable(() -> rentalService.createRental(rental1));
-        //than
+        //then
         assertThat(thrown).isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("Rental already finished");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryingToAddRentedBookToRental(){
+        //given
+        Book book1 = new Book("Adam", "Z Nikiszowca", "123456789",true);
+        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
+        bookRepository.save(book1);
+        customerRepository.save(customer1);
+        Rental rental1 = new Rental(customer1, book1);
+        //when
+        Throwable thrown = catchThrowable(() -> rentalService.createRental(rental1));
+        //then
+        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Book is already rented");
+
     }
 
     @Test
@@ -88,7 +118,7 @@ public class RentalServiceTest {
         Rental rental1 = new Rental(customer1, book1, true, LocalDateTime.MIN, LocalDateTime.MAX);
         //when
         Throwable thrown = catchThrowable(() -> rentalService.createRental(rental1));
-        //than
+        //then
         assertThat(thrown).isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("Could not find customer");
     }
@@ -102,7 +132,7 @@ public class RentalServiceTest {
         Rental rental1 = new Rental(customer1, book1, true, LocalDateTime.MIN, LocalDateTime.MAX);
         //when
         Throwable thrown = catchThrowable(() -> rentalService.createRental(rental1));
-        //than
+        //then
         assertThat(thrown).isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("Could not find book");
     }
@@ -119,7 +149,7 @@ public class RentalServiceTest {
         rentalRepository.save(rental1);
         //when
         rentalService.endRental(rental1);
-        //than
+        //then
         assertThat(rental1.isReturned()).isTrue();
         assertThat(rental1.getTimeOfReturn()).isBetween(LocalDateTime.now().minusSeconds(1), LocalDateTime.now());
     }
@@ -136,7 +166,7 @@ public class RentalServiceTest {
         //when
         rentalService.endRental(rental1);
         Throwable thrown = catchThrowable(() -> rentalService.endRental(rental1));
-        //than
+        //then
         assertThat(thrown).isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("Rental already finished");
     }
@@ -157,7 +187,7 @@ public class RentalServiceTest {
         rentalRepository.saveAll(Arrays.asList(rental1, rental2));
         //when
         final List<Rental> allRentals = rentalService.getAllRentals();
-
+        //then
         assertThat(allRentals).containsExactlyInAnyOrder(rental1, rental2);
     }
 
@@ -177,7 +207,7 @@ public class RentalServiceTest {
         rentalRepository.saveAll(Arrays.asList(rental1, rental2));
         //when
         final List<Rental> finishedRentals = rentalService.getFinishedRentals();
-
+        //then
         assertThat(finishedRentals).containsExactlyInAnyOrder(rental2);
     }
 
@@ -197,7 +227,7 @@ public class RentalServiceTest {
         rentalRepository.saveAll(Arrays.asList(rental1, rental2));
         //when
         final List<Rental> unfinishedRentals = rentalService.getUnfinishedRentals();
-
+        //then
         assertThat(unfinishedRentals).containsExactlyInAnyOrder(rental1);
     }
 
@@ -239,5 +269,68 @@ public class RentalServiceTest {
         assertThat(rentalByBook).containsExactlyInAnyOrder(rental1, rental2);
     }
 
+    @Test
+    public void shouldFindRental() {
+        //given
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
+        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
+        Rental rental1 = new Rental(customer1, book1, false, LocalDateTime.now(), null);
+
+        bookRepository.save(book1);
+        customerRepository.save(customer1);
+        rentalRepository.save(rental1);
+        //when
+        Rental rental = rentalService.findRental(rental1.getId());
+        //then
+        assertThat(rental).isEqualTo(rental1);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenRentalIsNotFound() {
+        //given
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
+        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
+        Rental rental1 = new Rental(customer1, book1, false, LocalDateTime.now(), null);
+
+        bookRepository.save(book1);
+        customerRepository.save(customer1);
+        //when
+        Throwable thrown = catchThrowable(() -> rentalService.findRental(rental1.getId()));
+        //then
+        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Rental not found");
+    }
+
+    @Test
+    void shouldDeleteRental() {
+        //given
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
+        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
+        Rental rental1 = new Rental(customer1, book1, false, LocalDateTime.now(), null);
+
+        bookRepository.save(book1);
+        customerRepository.save(customer1);
+        rentalRepository.save(rental1);
+        //when
+        rentalService.deleteRental(rental1.getId());
+        //then
+        assertThat(rentalRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenTryingToDeleteRentalThatDoesNotExist() {
+        //given
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
+        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
+        Rental rental1 = new Rental(customer1, book1, false, LocalDateTime.now(), null);
+
+        bookRepository.save(book1);
+        customerRepository.save(customer1);
+        //when
+        Throwable thrown = catchThrowable(() -> rentalService.deleteRental(rental1.getId()));
+        //then
+        assertThat(thrown).isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Rental not found");
+    }
 }
 
