@@ -1,7 +1,5 @@
 package com.library.customer;
 
-import com.library.book.Book;
-import com.library.exceptions.CustomerAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +25,7 @@ public class CustomerController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) throws CustomerAlreadyExistsException {
+    public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) {
         final Customer newCustomer = customerService.addCustomer(customer);
         return new ResponseEntity<>(newCustomer, HttpStatus.CREATED);
     }

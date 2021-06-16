@@ -3,7 +3,6 @@ package com.library.customerTests;
 import com.library.customer.Customer;
 import com.library.customer.CustomerRepository;
 import com.library.customer.CustomerService;
-import com.library.exceptions.CustomerAlreadyExistsException;
 import com.library.exceptions.CustomerNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,18 +33,6 @@ public class CustomerServiceTest {
         customerService.addCustomer(customer1);
         //then
         assertThat(customerRepository.findAll()).contains(customer1);
-    }
-
-    @Test
-    void shouldThrowExceptionWhenAddingCustomerThatAlreadyExists() {
-        Customer customer1 = new Customer("Adam", "Dominik");
-        customerRepository.save(customer1);
-        //when
-        Throwable thrown = catchThrowable(() -> customerService.addCustomer(customer1));
-
-        //then
-        assertThat(thrown).isInstanceOf(CustomerAlreadyExistsException.class)
-                .hasMessageContaining("Customer already exists");
     }
 
     @Test

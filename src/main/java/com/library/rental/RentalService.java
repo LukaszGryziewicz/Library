@@ -2,10 +2,8 @@ package com.library.rental;
 
 import com.library.book.Book;
 import com.library.book.BookRepository;
-import com.library.book.BookService;
 import com.library.customer.Customer;
 import com.library.customer.CustomerRepository;
-import com.library.customer.CustomerService;
 import com.library.exceptions.*;
 import org.springframework.stereotype.Service;
 
@@ -20,33 +18,28 @@ public class RentalService {
     private final BookRepository bookRepository;
     private final CustomerRepository customerRepository;
 
-    private final BookService bookService;
-    private final CustomerService customerService;
 
-    public RentalService(RentalRepository rentalRepository, BookRepository bookRepository, CustomerRepository customerRepository, BookService bookService, CustomerService customerService) {
+    public RentalService(RentalRepository rentalRepository, BookRepository bookRepository, CustomerRepository customerRepository) {
         this.rentalRepository = rentalRepository;
         this.bookRepository = bookRepository;
         this.customerRepository = customerRepository;
-        this.bookService = bookService;
-        this.customerService = customerService;
     }
 
-    public Rental createRental(Long customerId, Long bookId) throws ExceededMaximumNumberOfRentalsException, BookAlreadyRentedException, RentalAlreadyFinishedException {
+    public Rental createRental(Long customerId, String title, String author) throws ExceededMaximumNumberOfRentalsException, RentalAlreadyFinishedException {
         Optional<Customer> customerById = customerRepository.findCustomerById(customerId);
-        Optional<Book> bookById = bookRepository.findBookById(bookId);
+        List<Book> bookByTitleAndAuthor = bookRepository.findBooksByTitleAndAuthor(title, author);
+        Optional<Book> availableBook = bookRepository.findTopBookByTitleAndAuthorAndRentedIsFalse(title, author);
 
         customerById.orElseThrow(CustomerNotFoundException::new);
-        bookById.orElseThrow(BookNotFoundException::new);
-
-        Rental rental = new Rental(customerById.get(), bookById.get());
-
-        if ( rental.isReturned() ) {
-            throw new RentalAlreadyFinishedException();
-        } else if ( rental.getBook().isRented() ) {
-            throw new BookAlreadyRentedException();
-        } else if ( rentalRepository.findRentalsByCustomerId(customerId).size() == 3 ) {
+        if (bookByTitleAndAuthor.isEmpty()) {
+            throw new BookNotFoundException();
+        }
+        availableBook.orElseThrow(NoBookAvailableException::new);
+        if (rentalRepository.findRentalsByCustomerId(customerId).size() == 3) {
             throw new ExceededMaximumNumberOfRentalsException();
         }
+
+        Rental rental = new Rental(customerById.get(), availableBook.get());
 
         rental.setReturned(false);
         rental.setTimeOfRental(LocalDateTime.now());
@@ -66,7 +59,7 @@ public class RentalService {
         rentalById.orElseThrow(RentalNotFoundException::new);
 
         Rental rental = rentalById.get();
-        if ( rental.isReturned() ) {
+        if (rental.isReturned()) {
             throw new RentalAlreadyFinishedException();
         }
         rental.setReturned(true);

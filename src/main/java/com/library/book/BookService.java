@@ -1,6 +1,5 @@
 package com.library.book;
 
-import com.library.exceptions.BookAlreadyExistsException;
 import com.library.exceptions.BookNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +17,6 @@ public class BookService {
     }
 
     public Book addNewBook(Book book) {
-        Optional<Book> bookByTitleAndAuthor = bookRepository.findBookById(book.getId());
-
-        if ( bookByTitleAndAuthor.isPresent() ) {
-            throw new BookAlreadyExistsException();
-        }
         return bookRepository.save(book);
     }
 

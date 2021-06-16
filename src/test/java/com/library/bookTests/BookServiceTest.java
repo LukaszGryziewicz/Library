@@ -106,4 +106,19 @@ public class BookServiceTest {
         assertThat(book1.getTitle()).isEqualTo(book2.getTitle());
         assertThat(book1.getAuthor()).isEqualTo(book2.getAuthor());
     }
+
+    @Test
+    public void shouldFindFirstBookWithGivenTitleAndAuthor() {
+        //given
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789", true);
+        Book book2 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789", false);
+        Book book3 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789", false);
+        bookRepository.save(book1);
+        bookRepository.save(book2);
+        bookRepository.save(book3);
+        //when
+        final Optional<Book> titleAndAuthorAndRentedIsFalse = bookRepository.findTopBookByTitleAndAuthorAndRentedIsFalse("Adam z Nikiszowca", "Adam Dominik");
+        //then
+        assertThat(titleAndAuthorAndRentedIsFalse).get().isEqualTo(book2);
+    }
 }

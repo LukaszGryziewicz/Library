@@ -1,6 +1,5 @@
 package com.library.rental;
 
-import com.library.exceptions.BookAlreadyRentedException;
 import com.library.exceptions.ExceededMaximumNumberOfRentalsException;
 import com.library.exceptions.RentalAlreadyFinishedException;
 import org.springframework.http.HttpStatus;
@@ -50,9 +49,9 @@ public class RentalController {
         return new ResponseEntity<>(rentalsOfBook, HttpStatus.OK);
     }
 
-    @PostMapping("/add/{customerId}/{bookId}")
-    public ResponseEntity<Rental> addNewRental(@PathVariable("customerId") Long customerId,@PathVariable("bookId") Long bookId) throws BookAlreadyRentedException, RentalAlreadyFinishedException, ExceededMaximumNumberOfRentalsException {
-        final Rental newRental = rentalService.createRental(customerId,bookId);
+    @PostMapping("/add/{customerId}/{title}/{author}")
+    public ResponseEntity<Rental> addNewRental(@PathVariable("customerId") Long customerId,@PathVariable("title") String title,@PathVariable("author") String author) throws RentalAlreadyFinishedException, ExceededMaximumNumberOfRentalsException {
+        final Rental newRental = rentalService.createRental(customerId,title,author);
         return new ResponseEntity<>(newRental, HttpStatus.CREATED);
     }
 
