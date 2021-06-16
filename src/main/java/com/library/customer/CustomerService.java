@@ -20,12 +20,7 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    public Customer addCustomer(Customer customer) throws CustomerAlreadyExistsException {
-        Optional<Customer> customerById = customerRepository.findCustomerById(customer.getId());
-
-        if ( customerById.isPresent() ) {
-            throw new CustomerAlreadyExistsException();
-        }
+    public Customer addCustomer(Customer customer) {
         customerRepository.save(customer);
         return customer;
     }

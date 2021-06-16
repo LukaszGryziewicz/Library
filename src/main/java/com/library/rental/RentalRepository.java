@@ -1,8 +1,5 @@
 package com.library.rental;
 
-
-import com.library.book.Book;
-import com.library.customer.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

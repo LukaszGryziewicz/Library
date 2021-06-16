@@ -4,6 +4,7 @@ import com.library.book.Book;
 import com.library.exceptions.BookNotFoundException;
 import com.library.book.BookRepository;
 import com.library.book.BookService;
+
 import java.util.Arrays;
 
 import com.library.exceptions.BookAlreadyExistsException;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.transaction.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -37,23 +39,11 @@ public class BookServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenAddingBookThatAlreadyExists() {
-        //given
-        Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        //when
-        bookRepository.save(book1);
-        Throwable thrown = catchThrowable(() -> bookService.addNewBook(book1));
-        //than
-        assertThat(thrown).isInstanceOf(BookAlreadyExistsException.class)
-                .hasMessageContaining("Book already exists");
-    }
-
-    @Test
     public void shouldFindAllBooksInDatabase() {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        bookRepository.saveAll(Arrays.asList(book1,book2));
+        bookRepository.saveAll(Arrays.asList(book1, book2));
         //when
         List<Book> bookList = bookService.getBooks();
         //then
@@ -83,7 +73,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void shouldFindBookById(){
+    void shouldFindBookById() {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         bookRepository.save(book1);
@@ -98,7 +88,7 @@ public class BookServiceTest {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         //when
-        Throwable thrown= catchThrowable(() -> bookService.findBook(book1.getId()));
+        Throwable thrown = catchThrowable(() -> bookService.findBook(book1.getId()));
         //then
         assertThat(thrown).isInstanceOf(BookNotFoundException.class)
                 .hasMessageContaining("Book not found");
@@ -111,7 +101,7 @@ public class BookServiceTest {
         Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
         bookRepository.save(book1);
         //when
-        bookService.updateBook(book1.getId(),book2);
+        bookService.updateBook(book1.getId(), book2);
         //then
         assertThat(book1.getTitle()).isEqualTo(book2.getTitle());
         assertThat(book1.getAuthor()).isEqualTo(book2.getAuthor());
