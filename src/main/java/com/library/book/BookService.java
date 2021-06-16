@@ -35,11 +35,6 @@ public class BookService {
         Optional<Book> bookById = bookRepository.findBookById(id);
         bookById.orElseThrow(() -> new IllegalStateException("Can't find the book that you want to update"));
 
-        Optional<Book> bookByTitleAndAuthor = bookRepository.findBookByTitleAndAuthor(book.getTitle(), book.getAuthor());
-        if ( bookByTitleAndAuthor.isPresent() ){
-            throw new BookAlreadyExistsException();
-        }
-
         Book existingBook = bookById.get();
         existingBook.setTitle(book.getTitle());
         existingBook.setAuthor(book.getAuthor());

@@ -1,6 +1,10 @@
 package com.library.rental;
 
+import com.library.book.Book;
+import com.library.book.BookRepository;
 import com.library.book.BookService;
+import com.library.customer.Customer;
+import com.library.customer.CustomerRepository;
 import com.library.customer.CustomerService;
 import com.library.exceptions.*;
 import org.springframework.stereotype.Service;
@@ -13,30 +17,34 @@ import java.util.Optional;
 public class RentalService {
 
     private final RentalRepository rentalRepository;
+    private final BookRepository bookRepository;
+    private final CustomerRepository customerRepository;
 
     private final BookService bookService;
     private final CustomerService customerService;
 
-    public RentalService(RentalRepository rentalRepository, BookService bookService, CustomerService customerService) {
+    public RentalService(RentalRepository rentalRepository, BookRepository bookRepository, CustomerRepository customerRepository, BookService bookService, CustomerService customerService) {
         this.rentalRepository = rentalRepository;
+        this.bookRepository = bookRepository;
+        this.customerRepository = customerRepository;
         this.bookService = bookService;
         this.customerService = customerService;
     }
 
-    public Rental createRental(Rental rental) throws ExceededMaximumNumberOfRentalsException, BookAlreadyRentedException, RentalAlreadyFinishedException {
+    public Rental createRental(Long customerId, Long bookId) throws ExceededMaximumNumberOfRentalsException, BookAlreadyRentedException, RentalAlreadyFinishedException {
+        Optional<Customer> customerById = customerRepository.findCustomerById(customerId);
+        Optional<Book> bookById = bookRepository.findBookById(bookId);
 
-        final boolean containsCustomer = customerService.getCustomers().contains(rental.getCustomer());
-        final boolean containsBook = bookService.getBooks().contains(rental.getBook());
+        customerById.orElseThrow(CustomerNotFoundException::new);
+        bookById.orElseThrow(BookNotFoundException::new);
 
-        if ( !containsCustomer ) {
-            throw new CustomerNotFoundException();
-        } else if ( !containsBook ) {
-            throw new BookNotFoundException();
-        } else if ( rental.isReturned() ) {
+        Rental rental = new Rental(customerById.get(), bookById.get());
+
+        if ( rental.isReturned() ) {
             throw new RentalAlreadyFinishedException();
         } else if ( rental.getBook().isRented() ) {
             throw new BookAlreadyRentedException();
-        } else if ( rental.getCustomer().getNumberOfRentals() == 3 ) {
+        } else if ( rentalRepository.findRentalsByCustomerId(customerId).size() == 3 ) {
             throw new ExceededMaximumNumberOfRentalsException();
         }
 
@@ -44,7 +52,6 @@ public class RentalService {
         rental.setTimeOfRental(LocalDateTime.now());
         rental.setTimeOfReturn(null);
         rental.getBook().setRented(true);
-        rental.getCustomer().setNumberOfRentals(rental.getCustomer().getNumberOfRentals() + 1);
 
         return rentalRepository.save(rental);
     }
@@ -65,7 +72,6 @@ public class RentalService {
         rental.setReturned(true);
         rental.setTimeOfReturn(LocalDateTime.now());
         rental.getBook().setRented(false);
-        rental.getCustomer().setNumberOfRentals(rental.getCustomer().getNumberOfRentals() - 1);
         return rentalRepository.save(rental);
 
     }
@@ -90,7 +96,7 @@ public class RentalService {
     }
 
     public List<Rental> getRentalsOfCustomer(Long id) {
-        return rentalRepository.findRentalByCustomerId(id);
+        return rentalRepository.findRentalsByCustomerId(id);
     }
 
     public List<Rental> getRentalsOfBook(Long id) {

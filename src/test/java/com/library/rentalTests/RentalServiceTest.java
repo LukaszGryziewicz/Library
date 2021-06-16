@@ -41,10 +41,9 @@ public class RentalServiceTest {
         bookRepository.save(book1);
         customerRepository.save(customer1);
         //when
-        Rental rental1 = new Rental(customer1, book1);
-        rentalService.createRental(rental1);
+        Rental rental = rentalService.createRental(customer1.getId(), book1.getId());
         //then
-        assertThat(rentalRepository.findAll()).containsExactlyInAnyOrder(rental1);
+        assertThat(rentalRepository.findAll()).containsExactlyInAnyOrder(rental);
     }
 
     @Test
@@ -56,7 +55,7 @@ public class RentalServiceTest {
         customerRepository.save(customer1);
         Rental rental1 = new Rental(customer1, book1);
         //when
-        rentalService.createRental(rental1);
+        rentalService.createRental(customer1.getId(), book1.getId());
         //then
         assertThat(rental1.isReturned()).isFalse();
         assertThat(rental1.getBook().isRented()).isTrue();
@@ -69,24 +68,24 @@ public class RentalServiceTest {
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
         bookRepository.save(book1);
         customerRepository.save(customer1);
-        Rental rental1 = new Rental(customer1, book1);
         //when
-        rentalService.createRental(rental1);
+        Rental rental = rentalService.createRental(customer1.getId(), book1.getId());
         //then
-        assertThat(rental1.getTimeOfRental()).isBetween(LocalDateTime.now().minusSeconds(1), LocalDateTime.now());
-        assertThat(rental1.getTimeOfReturn()).matches(Objects::isNull);
+        assertThat(rental.getTimeOfRental()).isBetween(LocalDateTime.now().minusSeconds(1), LocalDateTime.now());
+        assertThat(rental.getTimeOfReturn()).matches(Objects::isNull);
     }
 
     @Test
-    void shouldThrowExceptionWhenTryingToAddAlreadyFinishedRental() {
+    void shouldThrowExceptionWhenTryingToAddAlreadyFinishedRental() throws ExceededMaximumNumberOfRentalsException, BookAlreadyRentedException, RentalAlreadyFinishedException {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
         bookRepository.save(book1);
         customerRepository.save(customer1);
-        Rental rental1 = new Rental(customer1, book1, true, LocalDateTime.MIN, LocalDateTime.MAX);
         //when
-        Throwable thrown = catchThrowable(() -> rentalService.createRental(rental1));
+        Rental rental = rentalService.createRental(customer1.getId(), book1.getId());
+        rentalService.endRental(rental.getId());
+        Throwable thrown = catchThrowable(() -> rentalService.endRental(rental.getId()));
         //then
         assertThat(thrown).isInstanceOf(RentalAlreadyFinishedException.class)
                 .hasMessageContaining("Rental already finished");
@@ -99,9 +98,8 @@ public class RentalServiceTest {
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
         bookRepository.save(book1);
         customerRepository.save(customer1);
-        Rental rental1 = new Rental(customer1, book1);
         //when
-        Throwable thrown = catchThrowable(() -> rentalService.createRental(rental1));
+        Throwable thrown = catchThrowable(() -> rentalService.createRental(customer1.getId(), book1.getId()));
         //then
         assertThat(thrown).isInstanceOf(BookAlreadyRentedException.class)
                 .hasMessageContaining("Book is already rented");
@@ -114,9 +112,8 @@ public class RentalServiceTest {
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
         bookRepository.save(book1);
-        Rental rental1 = new Rental(customer1, book1, true, LocalDateTime.MIN, LocalDateTime.MAX);
         //when
-        Throwable thrown = catchThrowable(() -> rentalService.createRental(rental1));
+        Throwable thrown = catchThrowable(() -> rentalService.createRental(customer1.getId(), book1.getId()));
         //then
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class)
                 .hasMessageContaining("Customer not found");
@@ -128,9 +125,8 @@ public class RentalServiceTest {
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
         customerRepository.save(customer1);
-        Rental rental1 = new Rental(customer1, book1, true, LocalDateTime.MIN, LocalDateTime.MAX);
         //when
-        Throwable thrown = catchThrowable(() -> rentalService.createRental(rental1));
+        Throwable thrown = catchThrowable(() -> rentalService.createRental(customer1.getId(), book1.getId()));
         //then
         assertThat(thrown).isInstanceOf(BookNotFoundException.class)
                 .hasMessageContaining("Book not found");
@@ -331,31 +327,22 @@ public class RentalServiceTest {
         assertThat(thrown).isInstanceOf(RentalNotFoundException.class)
                 .hasMessageContaining("Rental not found");
     }
-    @Test
-    public void shouldShouldSetNumberOfRentalsToPlusOne() throws ExceededMaximumNumberOfRentalsException, BookAlreadyRentedException, RentalAlreadyFinishedException {
-        //given
-        Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
-        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
-        Rental rental1 = new Rental(customer1, book1);
-
-        bookRepository.save(book1);
-        customerRepository.save(customer1);
-        //when
-        rentalService.createRental(rental1);
-        //then
-        assertThat(rental1.getCustomer().getNumberOfRentals()).isEqualTo(1);
-    }
 
     @Test
     public void shouldThrowExceptionWhenExceedingNumberOfRentals() throws ExceededMaximumNumberOfRentalsException, BookAlreadyRentedException, RentalAlreadyFinishedException {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
-        Customer customer1 = new Customer("Łukasz", "Gryziewicz",3);
-        Rental rental1 = new Rental(customer1, book1);
-        bookRepository.save(book1);
+        Book book2 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
+        Book book3 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
+        Book book4 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
+        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
+        bookRepository.saveAll(Arrays.asList(book1, book2, book3, book4));
         customerRepository.save(customer1);
         //when
-        Throwable thrown= catchThrowable(()->rentalService.createRental(rental1));
+        rentalService.createRental(customer1.getId(), book1.getId());
+        rentalService.createRental(customer1.getId(), book2.getId());
+        rentalService.createRental(customer1.getId(), book3.getId());
+        Throwable thrown = catchThrowable(() -> rentalService.createRental(customer1.getId(), book4.getId()));
         //then
         assertThat(thrown).isInstanceOf(ExceededMaximumNumberOfRentalsException.class)
                 .hasMessageContaining("Customer reached the maximum number of rentals(3)");

@@ -13,7 +13,6 @@ public class Customer {
     private long id;
     private String firstName;
     private String lastName;
-    private int numberOfRentals;
 
     public Customer() {
     }
@@ -23,22 +22,8 @@ public class Customer {
         this.lastName = lastName;
     }
 
-    public Customer(String firstName, String lastName, int numberOfRentals) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.numberOfRentals = numberOfRentals;
-    }
-
     public long getId() {
         return id;
-    }
-
-    public int getNumberOfRentals() {
-        return numberOfRentals;
-    }
-
-    public void setNumberOfRentals(int numberOfRentals) {
-        this.numberOfRentals = numberOfRentals;
     }
 
     public String getFirstName() {

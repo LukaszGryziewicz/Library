@@ -6,10 +6,12 @@ import com.library.exceptions.RentalAlreadyFinishedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
 
 @RestController
+@EnableWebMvc
 @RequestMapping("/rental")
 public class RentalController {
     private final RentalService rentalService;
@@ -48,9 +50,9 @@ public class RentalController {
         return new ResponseEntity<>(rentalsOfBook, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<Rental> addNewRental(@RequestBody Rental rental) throws BookAlreadyRentedException, RentalAlreadyFinishedException, ExceededMaximumNumberOfRentalsException {
-        final Rental newRental = rentalService.createRental(rental);
+    @PostMapping("/add/{customerId}/{bookId}")
+    public ResponseEntity<Rental> addNewRental(@PathVariable("customerId") Long customerId,@PathVariable("bookId") Long bookId) throws BookAlreadyRentedException, RentalAlreadyFinishedException, ExceededMaximumNumberOfRentalsException {
+        final Rental newRental = rentalService.createRental(customerId,bookId);
         return new ResponseEntity<>(newRental, HttpStatus.CREATED);
     }
 
