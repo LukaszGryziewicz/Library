@@ -50,7 +50,7 @@ public class RentalController {
     }
 
     @PostMapping("/add/{customerId}/{title}/{author}")
-    public ResponseEntity<Rental> addNewRental(@PathVariable("customerId") Long customerId,@PathVariable("title") String title,@PathVariable("author") String author) throws RentalAlreadyFinishedException, ExceededMaximumNumberOfRentalsException {
+    public ResponseEntity<Rental> addNewRental(@PathVariable("customerId") Long customerId,@PathVariable("title") String title,@PathVariable("author") String author) throws ExceededMaximumNumberOfRentalsException {
         final Rental newRental = rentalService.createRental(customerId,title,author);
         return new ResponseEntity<>(newRental, HttpStatus.CREATED);
     }

@@ -25,7 +25,7 @@ public class RentalService {
         this.customerRepository = customerRepository;
     }
 
-    public Rental createRental(Long customerId, String title, String author) throws ExceededMaximumNumberOfRentalsException, RentalAlreadyFinishedException {
+    public Rental createRental(Long customerId, String title, String author) throws ExceededMaximumNumberOfRentalsException {
         Optional<Customer> customerById = customerRepository.findCustomerById(customerId);
         List<Book> bookByTitleAndAuthor = bookRepository.findBooksByTitleAndAuthor(title, author);
         Optional<Book> availableBook = bookRepository.findTopBookByTitleAndAuthorAndRentedIsFalse(title, author);
