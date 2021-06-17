@@ -27,7 +27,7 @@ public class BookService {
 
     public Book updateBook(Long id,Book book) {
         Optional<Book> bookById = bookRepository.findBookById(id);
-        bookById.orElseThrow(() -> new IllegalStateException("Can't find the book that you want to update"));
+        bookById.orElseThrow(BookNotFoundException::new);
 
         Book existingBook = bookById.get();
         existingBook.setTitle(book.getTitle());

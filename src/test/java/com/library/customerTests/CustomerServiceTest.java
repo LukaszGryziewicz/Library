@@ -81,7 +81,7 @@ public class CustomerServiceTest {
     @Test
     void shouldThrowExceptionWhenCustomerIsNotFound() {
         //given
-        Customer customer1 = new Customer("Adam", "Dominik");
+            Customer customer1 = new Customer("Adam", "Dominik");
         //when
         Throwable thrown = catchThrowable(() -> customerService.findCustomer(customer1.getId()));
         //then
