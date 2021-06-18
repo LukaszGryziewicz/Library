@@ -17,19 +17,19 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<List<Book>> getAllBooks() {
         final List<Book> books = bookService.getBooks();
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     public ResponseEntity<Book> addNewBook(@RequestBody Book book) {
         final Book newBook = bookService.addNewBook(book);
         return new ResponseEntity<>(newBook, HttpStatus.CREATED);
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Book> findBookById(@PathVariable("id") Long id) {
         Book bookById = bookService.findBook(id);
         return new ResponseEntity<>(bookById, HttpStatus.OK);

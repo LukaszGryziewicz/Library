@@ -19,7 +19,7 @@ public class RentalController {
         this.rentalService = rentalService;
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<List<Rental>> getAllRentalsOfCustomer() {
         final List<Rental> rentals = rentalService.getAllRentals();
         return new ResponseEntity<>(rentals, HttpStatus.OK);
@@ -49,13 +49,13 @@ public class RentalController {
         return new ResponseEntity<>(rentalsOfBook, HttpStatus.OK);
     }
 
-    @PostMapping("/add/{customerId}/{title}/{author}")
+    @PostMapping("/{customerId}/{title}/{author}")
     public ResponseEntity<Rental> addNewRental(@PathVariable("customerId") Long customerId, @PathVariable("title") String title, @PathVariable("author") String author) throws ExceededMaximumNumberOfRentalsException {
         final Rental newRental = rentalService.createRental(customerId, title, author);
         return new ResponseEntity<>(newRental, HttpStatus.CREATED);
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Rental> findRentalById(@PathVariable("id") Long id) {
         Rental rentalById = rentalService.findRental(id);
         return new ResponseEntity<>(rentalById, HttpStatus.OK);

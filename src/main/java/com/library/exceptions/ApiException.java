@@ -1,13 +1,15 @@
 package com.library.exceptions;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class ApiException {
     private String message;
     private HttpStatus httpStatus;
+
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime timestamp;
 
     public ApiException(String message, HttpStatus httpStatus, LocalDateTime timestamp) {

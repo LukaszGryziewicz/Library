@@ -18,19 +18,19 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<List<Customer>> getAllCustomers() {
         final List<Customer> customers = customerService.getCustomers();
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) {
         final Customer newCustomer = customerService.addCustomer(customer);
         return new ResponseEntity<>(newCustomer, HttpStatus.CREATED);
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Customer> findCustomer(@PathVariable("id") Long id) {
         Customer customer = customerService.findCustomer(id);
         return new ResponseEntity<>(customer, HttpStatus.OK);
