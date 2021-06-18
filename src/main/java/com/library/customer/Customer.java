@@ -1,15 +1,12 @@
 package com.library.customer;
 
-import com.library.rental.Rental;
-
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false, updatable = false)
     private long id;
     private String firstName;
     private String lastName;

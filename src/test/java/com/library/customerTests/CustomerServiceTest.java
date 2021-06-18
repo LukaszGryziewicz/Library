@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -81,7 +80,7 @@ public class CustomerServiceTest {
     @Test
     void shouldThrowExceptionWhenCustomerIsNotFound() {
         //given
-            Customer customer1 = new Customer("Adam", "Dominik");
+        Customer customer1 = new Customer("Adam", "Dominik");
         //when
         Throwable thrown = catchThrowable(() -> customerService.findCustomer(customer1.getId()));
         //then
@@ -102,5 +101,4 @@ public class CustomerServiceTest {
         assertThat(customer1.getLastName()).isEqualTo(customer2.getLastName());
 
     }
-
 }

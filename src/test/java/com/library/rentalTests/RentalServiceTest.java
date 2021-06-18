@@ -5,18 +5,18 @@ import com.library.book.BookRepository;
 import com.library.customer.Customer;
 import com.library.customer.CustomerRepository;
 import com.library.exceptions.*;
-import com.library.rental.*;
+import com.library.rental.Rental;
+import com.library.rental.RentalRepository;
+import com.library.rental.RentalService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
-
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -35,7 +35,7 @@ public class RentalServiceTest {
     private BookRepository bookRepository;
 
     @Test
-    void shouldAddRentalToDatabase()  {
+    void shouldAddRentalToDatabase() {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -48,7 +48,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldSetRentalReturnedToFalseAndBookToRented()  {
+    void shouldSetRentalReturnedToFalseAndBookToRented() {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -63,7 +63,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldSetDateOfRentalToNowAndDateOfReturnToNull()  {
+    void shouldSetDateOfRentalToNowAndDateOfReturnToNull() {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -77,7 +77,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenTryingToAddAlreadyFinishedRental()  {
+    void shouldThrowExceptionWhenTryingToAddAlreadyFinishedRental() {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -130,9 +130,9 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenNoBookIsAvailable(){
+    void shouldThrowExceptionWhenNoBookIsAvailable() {
         //given
-        Book book1 = new Book("Adam", "Z Nikiszowca", "123456789",true);
+        Book book1 = new Book("Adam", "Z Nikiszowca", "123456789", true);
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
         bookRepository.save(book1);
         customerRepository.save(customer1);
@@ -144,7 +144,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldEndRental()  {
+    void shouldEndRental() {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -161,7 +161,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenRentalIsAlreadyFinished()  {
+    void shouldThrowExceptionWhenRentalIsAlreadyFinished() {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -337,7 +337,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenExceedingNumberOfRentals()  {
+    public void shouldThrowExceptionWhenExceedingNumberOfRentals() {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
         Book book2 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");

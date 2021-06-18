@@ -31,11 +31,11 @@ public class RentalService {
         Optional<Book> availableBook = bookRepository.findTopBookByTitleAndAuthorAndRentedIsFalse(title, author);
 
         customerById.orElseThrow(CustomerNotFoundException::new);
-        if (bookByTitleAndAuthor.isEmpty()) {
+        if ( bookByTitleAndAuthor.isEmpty() ) {
             throw new BookNotFoundException();
         }
         availableBook.orElseThrow(NoBookAvailableException::new);
-        if (rentalRepository.findRentalsByCustomerId(customerId).size() == 3) {
+        if ( rentalRepository.findRentalsByCustomerId(customerId).size() == 3 ) {
             throw new ExceededMaximumNumberOfRentalsException();
         }
 
@@ -59,7 +59,7 @@ public class RentalService {
         rentalById.orElseThrow(RentalNotFoundException::new);
 
         Rental rental = rentalById.get();
-        if (rental.isReturned()) {
+        if ( rental.isReturned() ) {
             throw new RentalAlreadyFinishedException();
         }
         rental.setReturned(true);

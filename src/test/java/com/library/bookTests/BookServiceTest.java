@@ -1,18 +1,15 @@
 package com.library.bookTests;
 
 import com.library.book.Book;
-import com.library.exceptions.BookNotFoundException;
 import com.library.book.BookRepository;
 import com.library.book.BookService;
-
-import java.util.Arrays;
-
+import com.library.exceptions.BookNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
-
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,6 +18,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 @SpringBootTest
 @Transactional
 public class BookServiceTest {
+
     @Autowired
     private BookService bookService;
     @Autowired
@@ -104,5 +102,4 @@ public class BookServiceTest {
         assertThat(book1.getTitle()).isEqualTo(book2.getTitle());
         assertThat(book1.getAuthor()).isEqualTo(book2.getAuthor());
     }
-
 }
