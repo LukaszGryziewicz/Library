@@ -1,5 +1,6 @@
 package com.library.rental;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.library.book.Book;
 import com.library.customer.Customer;
 
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 public class Rental {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false, updatable = false)
     private long id;
 
     @ManyToOne
@@ -21,8 +22,10 @@ public class Rental {
 
     private boolean returned;
 
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime timeOfRental;
 
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime timeOfReturn;
 
     public Rental() {

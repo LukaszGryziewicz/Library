@@ -7,6 +7,7 @@ import com.library.customer.CustomerRepository;
 import com.library.exceptions.*;
 import com.library.rental.*;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -34,7 +35,7 @@ public class RentalServiceTest {
     private BookRepository bookRepository;
 
     @Test
-    void shouldAddRentalToDatabase() throws RentalAlreadyFinishedException, ExceededMaximumNumberOfRentalsException {
+    void shouldAddRentalToDatabase()  {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -47,7 +48,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldSetRentalReturnedToFalseAndBookToRented() throws RentalAlreadyFinishedException, ExceededMaximumNumberOfRentalsException {
+    void shouldSetRentalReturnedToFalseAndBookToRented()  {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -62,7 +63,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldSetDateOfRentalToNowAndDateOfReturnToNull() throws RentalAlreadyFinishedException, ExceededMaximumNumberOfRentalsException {
+    void shouldSetDateOfRentalToNowAndDateOfReturnToNull()  {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -76,7 +77,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenTryingToAddAlreadyFinishedRental() throws ExceededMaximumNumberOfRentalsException, RentalAlreadyFinishedException {
+    void shouldThrowExceptionWhenTryingToAddAlreadyFinishedRental()  {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -142,9 +143,8 @@ public class RentalServiceTest {
 
     }
 
-
     @Test
-    void shouldEndRental() throws RentalAlreadyFinishedException {
+    void shouldEndRental()  {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -161,7 +161,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenRentalIsAlreadyFinished() throws RentalAlreadyFinishedException {
+    void shouldThrowExceptionWhenRentalIsAlreadyFinished()  {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -337,7 +337,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenExceedingNumberOfRentals() throws ExceededMaximumNumberOfRentalsException, RentalAlreadyFinishedException {
+    public void shouldThrowExceptionWhenExceedingNumberOfRentals()  {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
         Book book2 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
