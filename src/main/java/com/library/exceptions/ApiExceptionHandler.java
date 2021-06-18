@@ -10,32 +10,32 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
-    @ExceptionHandler(value = {CustomerNotFoundException.class,BookNotFoundException.class,RentalNotFoundException.class})
-    ResponseEntity<Object> handleNotFoundExceptions(Exception exception) {
-        ApiException apiException = new ApiException(exception.getMessage(), HttpStatus.NOT_FOUND, LocalDateTime.now());
+    @ExceptionHandler(value = {CustomerNotFoundException.class, BookNotFoundException.class, RentalNotFoundException.class})
+    ResponseEntity<Object> handleNotFoundExceptions(Exception e) {
+        ApiException apiException = new ApiException(e.getMessage(), HttpStatus.NOT_FOUND, LocalDateTime.now());
 
         return new ResponseEntity<>(apiException, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NoBookAvailableException.class)
-    ResponseEntity<Object>handleNoBookAvailableException(NoBookAvailableException exception){
-        ApiException apiException= new ApiException(exception.getMessage(),HttpStatus.NOT_FOUND,LocalDateTime.now());
+    ResponseEntity<Object> handleNoBookAvailableException(NoBookAvailableException e) {
+        ApiException apiException = new ApiException(e.getMessage(), HttpStatus.NOT_FOUND, LocalDateTime.now());
 
         return new ResponseEntity<>(apiException, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(RentalAlreadyFinishedException.class)
-    ResponseEntity<Object>handleRentalAlreadyFinishedException(RentalNotFoundException exception){
-        ApiException apiException = new ApiException(exception.getMessage(), HttpStatus.CONFLICT, LocalDateTime.now());
+    ResponseEntity<Object> handleRentalAlreadyFinishedException(RentalNotFoundException e) {
+        ApiException apiException = new ApiException(e.getMessage(), HttpStatus.CONFLICT, LocalDateTime.now());
 
         return new ResponseEntity<>(apiException, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(ExceededMaximumNumberOfRentalsException.class)
-    ResponseEntity<Object>handleExceededMaximumNumberOfRentalsException(ExceededMaximumNumberOfRentalsException exception){
-        ApiException apiException = new ApiException(exception.getMessage(), HttpStatus.CONFLICT, LocalDateTime.now());
+    ResponseEntity<Object> handleExceededMaximumNumberOfRentalsException(ExceededMaximumNumberOfRentalsException e) {
+        ApiException apiException = new ApiException(e.getMessage(), HttpStatus.CONFLICT, LocalDateTime.now());
 
-        return new ResponseEntity<>(apiException,HttpStatus.CONFLICT);
+        return new ResponseEntity<>(apiException, HttpStatus.CONFLICT);
     }
 
 
