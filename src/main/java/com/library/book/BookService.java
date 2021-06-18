@@ -24,6 +24,14 @@ public class BookService {
                 .orElseThrow(BookNotFoundException::new);
     }
 
+    public List<Book> findBooksByTitleAndAuthor(String title, String author) {
+        List<Book> booksByTitleAndAuthor = bookRepository.findBooksByTitleAndAuthor(title, author);
+        if ( booksByTitleAndAuthor.isEmpty() ) {
+            throw new BookNotFoundException();
+        }
+        return booksByTitleAndAuthor;
+    }
+
     public Book updateBook(Long id, Book book) {
         Optional<Book> bookById = bookRepository.findBookById(id);
         bookById.orElseThrow(BookNotFoundException::new);
