@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -51,7 +52,7 @@ public class RentalController {
 
     @PostMapping("/{customerId}/{title}/{author}")
     public ResponseEntity<Rental> addNewRental(@PathVariable("customerId") Long customerId, @PathVariable("title") String title, @PathVariable("author") String author) throws ExceededMaximumNumberOfRentalsException {
-        final Rental newRental = rentalService.createRental(customerId, title, author);
+        final Rental newRental = rentalService.createRental(customerId, title, author, LocalDateTime.now());
         return new ResponseEntity<>(newRental, HttpStatus.CREATED);
     }
 
@@ -63,7 +64,7 @@ public class RentalController {
 
     @PutMapping("/endRental/{id}")
     public ResponseEntity<Rental> endRental(@PathVariable("id") Long id) throws RentalAlreadyFinishedException {
-        Rental finishedRental = rentalService.endRental(id);
+        Rental finishedRental = rentalService.endRental(id,LocalDateTime.now());
         return new ResponseEntity<>(finishedRental, HttpStatus.OK);
     }
 

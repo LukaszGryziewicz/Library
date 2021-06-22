@@ -25,25 +25,23 @@ public class RentalService {
         this.customerRepository = customerRepository;
     }
 
-    public Rental createRental(Long customerId, String title, String author) throws ExceededMaximumNumberOfRentalsException {
+    public Rental createRental(Long customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
         Optional<Customer> customerById = customerRepository.findCustomerById(customerId);
         List<Book> bookByTitleAndAuthor = bookRepository.findBooksByTitleAndAuthor(title, author);
         Optional<Book> availableBook = bookRepository.findTopBookByTitleAndAuthorAndRentedIsFalse(title, author);
 
         customerById.orElseThrow(CustomerNotFoundException::new);
-        if ( bookByTitleAndAuthor.isEmpty() ) {
+        if (bookByTitleAndAuthor.isEmpty()) {
             throw new BookNotFoundException();
         }
         availableBook.orElseThrow(NoBookAvailableException::new);
-        if ( rentalRepository.findRentalsByCustomerId(customerId).size() == 3 ) {
+        if (rentalRepository.findRentalsByCustomerId(customerId).size() == 3) {
             throw new ExceededMaximumNumberOfRentalsException();
         }
 
         Rental rental = new Rental(customerById.get(), availableBook.get());
 
         rental.setReturned(false);
-        rental.setTimeOfRental(LocalDateTime.now());
-        rental.setTimeOfReturn(null);
         rental.getBook().setRented(true);
 
         return rentalRepository.save(rental);
@@ -54,16 +52,15 @@ public class RentalService {
                 .orElseThrow(RentalNotFoundException::new);
     }
 
-    public Rental endRental(Long id) throws RentalAlreadyFinishedException {
+    public Rental endRental(Long id, LocalDateTime dateOfReturn) throws RentalAlreadyFinishedException {
         Optional<Rental> rentalById = rentalRepository.findRentalById(id);
         rentalById.orElseThrow(RentalNotFoundException::new);
 
         Rental rental = rentalById.get();
-        if ( rental.isReturned() ) {
+        if (rental.isReturned()) {
             throw new RentalAlreadyFinishedException();
         }
         rental.setReturned(true);
-        rental.setTimeOfReturn(LocalDateTime.now());
         rental.getBook().setRented(false);
         return rentalRepository.save(rental);
 
