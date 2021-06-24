@@ -8,6 +8,7 @@ import com.library.exceptions.*;
 import com.library.rental.Rental;
 import com.library.rental.RentalRepository;
 import com.library.rental.RentalService;
+import com.library.rentalHistory.HistoricalRentalRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +34,8 @@ public class RentalServiceTest {
     private CustomerRepository customerRepository;
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    private HistoricalRentalRepository historicalRentalRepository;
 
     @Test
     void shouldAddRentalToDatabase() {
@@ -48,7 +51,7 @@ public class RentalServiceTest {
     }
 
     @Test
-    void shouldSetRentalReturnedToFalseAndBookToRented() {
+    void shouldSetBookToRented() {
         //given
         Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
@@ -58,24 +61,9 @@ public class RentalServiceTest {
         //when
         rentalService.createRental(customer1.getId(), book1.getTitle(), book1.getAuthor(),LocalDateTime.now());
         //then
-        assertThat(rental1.isReturned()).isFalse();
         assertThat(rental1.getBook().isRented()).isTrue();
     }
 
-    @Test
-    void shouldThrowExceptionWhenTryingToAddAlreadyFinishedRental() {
-        //given
-        Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
-        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
-        bookRepository.save(book1);
-        customerRepository.save(customer1);
-        //when
-        Rental rental = rentalService.createRental(customer1.getId(), book1.getTitle(), book1.getAuthor(),LocalDateTime.now());
-        rentalService.endRental(rental.getId(),LocalDateTime.now());
-        Throwable thrown = catchThrowable(() -> rentalService.endRental(rental.getId(),LocalDateTime.now()));
-        //then
-        assertThat(thrown).isInstanceOf(RentalAlreadyFinishedException.class);
-    }
 
     @Test
     void shouldThrowExceptionWhenTryingToAddRentedBookToRental() {
@@ -142,23 +130,8 @@ public class RentalServiceTest {
         //when
         rentalService.endRental(rental1.getId(),LocalDateTime.now());
         //then
-        assertThat(rental1.isReturned()).isTrue();
-    }
-
-    @Test
-    void shouldThrowExceptionWhenRentalIsAlreadyFinished() {
-        //given
-        Book book1 = new Book("Adam", "Z Nikiszowca", "123456789");
-        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
-        bookRepository.save(book1);
-        customerRepository.save(customer1);
-        Rental rental1 = new Rental(customer1, book1);
-        rentalRepository.save(rental1);
-        //when
-        rentalService.endRental(rental1.getId(),LocalDateTime.now());
-        Throwable thrown = catchThrowable(() -> rentalService.endRental(rental1.getId(),LocalDateTime.now()));
-        //then
-        assertThat(thrown).isInstanceOf(RentalAlreadyFinishedException.class);
+        assertThat(rentalRepository.findAll()).isEmpty();
+        assertThat(historicalRentalRepository.findAll().size()).isEqualTo(1);
     }
 
     @Test
@@ -166,11 +139,11 @@ public class RentalServiceTest {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
-        Rental rental1 = new Rental(customer1, book1, false);
+        Rental rental1 = new Rental(customer1, book1);
 
         Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
         Customer customer2 = new Customer("Adam", "Dominik");
-        Rental rental2 = new Rental(customer2, book2, true);
+        Rental rental2 = new Rental(customer2, book2);
 
         bookRepository.saveAll(Arrays.asList(book1, book2));
         customerRepository.saveAll(Arrays.asList(customer1, customer2));
@@ -181,45 +154,6 @@ public class RentalServiceTest {
         assertThat(allRentals).containsExactlyInAnyOrder(rental1, rental2);
     }
 
-    @Test
-    void shouldReturnFinishedRentals() {
-        //given
-        Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
-        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
-        Rental rental1 = new Rental(customer1, book1, false);
-
-        Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        Customer customer2 = new Customer("Adam", "Dominik");
-        Rental rental2 = new Rental(customer2, book2, true);
-
-        bookRepository.saveAll(Arrays.asList(book1, book2));
-        customerRepository.saveAll(Arrays.asList(customer1, customer2));
-        rentalRepository.saveAll(Arrays.asList(rental1, rental2));
-        //when
-        final List<Rental> finishedRentals = rentalService.getFinishedRentals();
-        //then
-        assertThat(finishedRentals).containsExactlyInAnyOrder(rental2);
-    }
-
-    @Test
-    void shouldReturnUnfinishedRentals() {
-        //given
-        Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
-        Customer customer1 = new Customer("Łukasz", "Gryziewicz");
-        Rental rental1 = new Rental(customer1, book1, false);
-
-        Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        Customer customer2 = new Customer("Adam", "Dominik");
-        Rental rental2 = new Rental(customer2, book2, true);
-
-        bookRepository.saveAll(Arrays.asList(book1, book2));
-        customerRepository.saveAll(Arrays.asList(customer1, customer2));
-        rentalRepository.saveAll(Arrays.asList(rental1, rental2));
-        //when
-        final List<Rental> unfinishedRentals = rentalService.getUnfinishedRentals();
-        //then
-        assertThat(unfinishedRentals).containsExactlyInAnyOrder(rental1);
-    }
 
     @Test
     void shouldFindRentalsOfCustomer() {
@@ -264,7 +198,7 @@ public class RentalServiceTest {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
-        Rental rental1 = new Rental(customer1, book1, false);
+        Rental rental1 = new Rental(customer1, book1);
 
         bookRepository.save(book1);
         customerRepository.save(customer1);
@@ -280,7 +214,7 @@ public class RentalServiceTest {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
-        Rental rental1 = new Rental(customer1, book1, false);
+        Rental rental1 = new Rental(customer1, book1);
 
         bookRepository.save(book1);
         customerRepository.save(customer1);
@@ -295,7 +229,7 @@ public class RentalServiceTest {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
-        Rental rental1 = new Rental(customer1, book1, false);
+        Rental rental1 = new Rental(customer1, book1);
 
         bookRepository.save(book1);
         customerRepository.save(customer1);
@@ -311,7 +245,7 @@ public class RentalServiceTest {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Domnik", "123456789");
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
-        Rental rental1 = new Rental(customer1, book1, false);
+        Rental rental1 = new Rental(customer1, book1);
 
         bookRepository.save(book1);
         customerRepository.save(customer1);

@@ -20,20 +20,12 @@ public class Rental {
     @ManyToOne
     private Book book;
 
-    private boolean returned;
-
     public Rental() {
     }
 
     public Rental(Customer customer, Book book) {
         this.customer = customer;
         this.book = book;
-    }
-
-    public Rental(Customer customer, Book book, boolean returned) {
-        this.customer = customer;
-        this.book = book;
-        this.returned = returned;
     }
 
     public long getId() {
@@ -55,13 +47,4 @@ public class Rental {
     public void setBook(Book book) {
         this.book = book;
     }
-
-    public boolean isReturned() {
-        return returned;
-    }
-
-    public void setReturned(boolean returned) {
-        this.returned = returned;
-    }
-
 }

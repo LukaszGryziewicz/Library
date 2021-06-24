@@ -1,7 +1,6 @@
 package com.library.rental;
 
 import com.library.exceptions.ExceededMaximumNumberOfRentalsException;
-import com.library.exceptions.RentalAlreadyFinishedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,18 +22,6 @@ public class RentalController {
     @GetMapping()
     public ResponseEntity<List<Rental>> getAllRentalsOfCustomer() {
         final List<Rental> rentals = rentalService.getAllRentals();
-        return new ResponseEntity<>(rentals, HttpStatus.OK);
-    }
-
-    @GetMapping("/finished")
-    public ResponseEntity<List<Rental>> getFinishedRentals() {
-        final List<Rental> rentals = rentalService.getFinishedRentals();
-        return new ResponseEntity<>(rentals, HttpStatus.OK);
-    }
-
-    @GetMapping("/unfinished")
-    public ResponseEntity<List<Rental>> getUnfinishedRentals() {
-        final List<Rental> rentals = rentalService.getUnfinishedRentals();
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 
@@ -63,9 +50,9 @@ public class RentalController {
     }
 
     @PutMapping("/endRental/{id}")
-    public ResponseEntity<Rental> endRental(@PathVariable("id") Long id) throws RentalAlreadyFinishedException {
-        Rental finishedRental = rentalService.endRental(id,LocalDateTime.now());
-        return new ResponseEntity<>(finishedRental, HttpStatus.OK);
+    public ResponseEntity<Rental> endRental(@PathVariable("id") Long id) {
+        rentalService.endRental(id, LocalDateTime.now());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
