@@ -28,7 +28,7 @@ public class ApiExceptionHandler {
     ResponseEntity<Object> handleRentalAlreadyFinishedException(RentalNotFoundException e) {
         ApiException apiException = new ApiException(e.getMessage(), HttpStatus.CONFLICT, LocalDateTime.now());
 
-        return new ResponseEntity<>(apiException, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(apiException, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ExceededMaximumNumberOfRentalsException.class)

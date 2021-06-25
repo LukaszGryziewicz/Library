@@ -60,7 +60,8 @@ public class CustomerServiceTest {
     void shouldThrowExceptionWhenDeletingCustomerThatDoesNotExist() {
         Customer customer1 = new Customer("Adam", "Dominik");
         //when
-        Throwable thrown = catchThrowable(() -> customerService.deleteCustomer(customer1.getId()));
+        Throwable thrown = catchThrowable(() ->
+                customerService.deleteCustomer(customer1.getId()));
         //than
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class)
                 .hasMessageContaining("Customer not found");
@@ -82,7 +83,8 @@ public class CustomerServiceTest {
         //given
         Customer customer1 = new Customer("Adam", "Dominik");
         //when
-        Throwable thrown = catchThrowable(() -> customerService.findCustomer(customer1.getId()));
+        Throwable thrown = catchThrowable(() ->
+                customerService.findCustomer(customer1.getId()));
         //then
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class)
                 .hasMessageContaining("Customer not found");
@@ -99,6 +101,17 @@ public class CustomerServiceTest {
         //then
         assertThat(customer1.getFirstName()).isEqualTo(customer2.getFirstName());
         assertThat(customer1.getLastName()).isEqualTo(customer2.getLastName());
+    }
 
+    @Test
+    void shouldThrowExceptionWhenUpdatingCustomerThatDoesNotExist() {
+        //given
+        Customer customer1 = new Customer("Adam", "Dominik");
+        Customer customer2 = new Customer("Łukasz", "Gryziewicz");
+        //when
+        Throwable thrown = catchThrowable(() ->
+                customerService.updateCustomer(customer1.getId(), customer2));
+        //then
+        assertThat(thrown).isInstanceOf(CustomerNotFoundException.class);
     }
 }

@@ -25,7 +25,7 @@ public class BookServiceTest {
     private BookRepository bookRepository;
 
     @Test
-    public void shouldAddNewBookToDatabase() {
+    void shouldAddNewBookToDatabase() {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         //when
@@ -35,7 +35,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void shouldFindAllBooksInDatabase() {
+    void shouldFindAllBooksInDatabase() {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
@@ -62,7 +62,8 @@ public class BookServiceTest {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         //when
-        Throwable thrown = catchThrowable(() -> bookService.deleteBook(book1.getId()));
+        Throwable thrown = catchThrowable(() ->
+                bookService.deleteBook(book1.getId()));
         //then
         assertThat(thrown).isInstanceOf(BookNotFoundException.class)
                 .hasMessageContaining("Book not found");
@@ -80,18 +81,19 @@ public class BookServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenFindingBookThatDoesNotExist() {
+    void shouldThrowExceptionWhenFindingBookThatDoesNotExist() {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         //when
-        Throwable thrown = catchThrowable(() -> bookService.findBook(book1.getId()));
+        Throwable thrown = catchThrowable(() ->
+                bookService.findBook(book1.getId()));
         //then
         assertThat(thrown).isInstanceOf(BookNotFoundException.class)
                 .hasMessageContaining("Book not found");
     }
 
     @Test
-    public void shouldUpdateBook() {
+    void shouldUpdateBook() {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
@@ -101,5 +103,28 @@ public class BookServiceTest {
         //then
         assertThat(book1.getTitle()).isEqualTo(book2.getTitle());
         assertThat(book1.getAuthor()).isEqualTo(book2.getAuthor());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingBookThatDoesNotExist() {
+        //given
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
+        //when
+        Throwable thrown = catchThrowable(() ->
+                bookService.updateBook(book1.getId(), book2));
+        //then
+        assertThat(thrown).isInstanceOf(BookNotFoundException.class);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenListOfBooksWithGivenTitleAndAuthorIsEmpty() {
+        //given
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        //when
+        Throwable thrown = catchThrowable(() ->
+                bookService.findBooksByTitleAndAuthor(book1.getTitle(), book1.getAuthor()));
+        //then
+        assertThat(thrown).isInstanceOf(BookNotFoundException.class);
     }
 }

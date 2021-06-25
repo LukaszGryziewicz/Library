@@ -15,6 +15,10 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
+    public List<Book> getBooks() {
+        return bookRepository.findAll();
+    }
+
     public Book addNewBook(Book book) {
         return bookRepository.save(book);
     }
@@ -50,7 +54,4 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public List<Book> getBooks() {
-        return bookRepository.findAll();
-    }
 }
