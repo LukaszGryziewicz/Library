@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 @WebMvcTest(BookController.class)
 public class BookControllerTest {
 
@@ -61,7 +60,25 @@ public class BookControllerTest {
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.title").value("Adam z Nikiszowca"))
                 .andExpect(jsonPath("$.author").value("Adam Dominik"))
-                .andExpect(jsonPath("$.isbn").value("123456  789"));
+                .andExpect(jsonPath("$.isbn").value("123456789"));
+
+    }
+
+    @Test
+    void shouldReturnBookWithGivenTitleAndAuthor() throws Exception {
+        //given
+        Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        //when
+        when(bookService.findBooksByTitleAndAuthor(book.getTitle(), book.getAuthor()))
+                .thenReturn(List.of(book));
+        //than
+        mockMvc.perform(MockMvcRequestBuilders.get("/book/Adam z Nikiszowca/Adam Dominik"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$[0].title").value("Adam z Nikiszowca"))
+                .andExpect(jsonPath("$[0].author").value("Adam Dominik"))
+                .andExpect(jsonPath("$[0].isbn").value("123456789"));
 
     }
 
