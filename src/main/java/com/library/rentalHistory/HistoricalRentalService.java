@@ -18,7 +18,6 @@ public class HistoricalRentalService {
     }
 
     List<HistoricalRental>getHistoricalRentalsOfBook(String title, String author){
-
         return historicalRentalRepository.findHistoricalRentalsByTitleAndAuthor(title, author);
     }
 
