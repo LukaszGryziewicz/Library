@@ -1,12 +1,12 @@
 package com.library.rental;
 
 import com.library.exceptions.ExceededMaximumNumberOfRentalsException;
-import com.library.exceptions.RentalAlreadyFinishedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -25,18 +25,6 @@ public class RentalController {
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 
-    @GetMapping("/finished")
-    public ResponseEntity<List<Rental>> getFinishedRentals() {
-        final List<Rental> rentals = rentalService.getFinishedRentals();
-        return new ResponseEntity<>(rentals, HttpStatus.OK);
-    }
-
-    @GetMapping("/unfinished")
-    public ResponseEntity<List<Rental>> getUnfinishedRentals() {
-        final List<Rental> rentals = rentalService.getUnfinishedRentals();
-        return new ResponseEntity<>(rentals, HttpStatus.OK);
-    }
-
     @GetMapping("/customerRentals/{id}")
     public ResponseEntity<List<Rental>> getRentalsOfCustomer(Long id) {
         final List<Rental> rentals = rentalService.getRentalsOfCustomer(id);
@@ -51,7 +39,7 @@ public class RentalController {
 
     @PostMapping("/{customerId}/{title}/{author}")
     public ResponseEntity<Rental> addNewRental(@PathVariable("customerId") Long customerId, @PathVariable("title") String title, @PathVariable("author") String author) throws ExceededMaximumNumberOfRentalsException {
-        final Rental newRental = rentalService.createRental(customerId, title, author);
+        final Rental newRental = rentalService.createRental(customerId, title, author, LocalDateTime.now());
         return new ResponseEntity<>(newRental, HttpStatus.CREATED);
     }
 
@@ -62,9 +50,9 @@ public class RentalController {
     }
 
     @PutMapping("/endRental/{id}")
-    public ResponseEntity<Rental> endRental(@PathVariable("id") Long id) throws RentalAlreadyFinishedException {
-        Rental finishedRental = rentalService.endRental(id);
-        return new ResponseEntity<>(finishedRental, HttpStatus.OK);
+    public ResponseEntity<Rental> endRental(@PathVariable("id") Long id) {
+        rentalService.endRental(id, LocalDateTime.now());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

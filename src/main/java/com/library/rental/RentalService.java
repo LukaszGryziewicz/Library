@@ -5,6 +5,8 @@ import com.library.book.BookRepository;
 import com.library.customer.Customer;
 import com.library.customer.CustomerRepository;
 import com.library.exceptions.*;
+import com.library.rentalHistory.HistoricalRental;
+import com.library.rentalHistory.HistoricalRentalRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,33 +19,32 @@ public class RentalService {
     private final RentalRepository rentalRepository;
     private final BookRepository bookRepository;
     private final CustomerRepository customerRepository;
+    private final HistoricalRentalRepository historicalRentalRepository;
 
 
-    public RentalService(RentalRepository rentalRepository, BookRepository bookRepository, CustomerRepository customerRepository) {
+    public RentalService(RentalRepository rentalRepository, BookRepository bookRepository, CustomerRepository customerRepository, HistoricalRentalRepository historicalRentalRepository) {
         this.rentalRepository = rentalRepository;
         this.bookRepository = bookRepository;
         this.customerRepository = customerRepository;
+        this.historicalRentalRepository = historicalRentalRepository;
     }
 
-    public Rental createRental(Long customerId, String title, String author) throws ExceededMaximumNumberOfRentalsException {
+    public Rental createRental(Long customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
         Optional<Customer> customerById = customerRepository.findCustomerById(customerId);
         List<Book> bookByTitleAndAuthor = bookRepository.findBooksByTitleAndAuthor(title, author);
         Optional<Book> availableBook = bookRepository.findTopBookByTitleAndAuthorAndRentedIsFalse(title, author);
 
         customerById.orElseThrow(CustomerNotFoundException::new);
-        if ( bookByTitleAndAuthor.isEmpty() ) {
+        if (bookByTitleAndAuthor.isEmpty()) {
             throw new BookNotFoundException();
         }
         availableBook.orElseThrow(NoBookAvailableException::new);
-        if ( rentalRepository.findRentalsByCustomerId(customerId).size() == 3 ) {
+        if (rentalRepository.findRentalsByCustomerId(customerId).size() == 3) {
             throw new ExceededMaximumNumberOfRentalsException();
         }
 
         Rental rental = new Rental(customerById.get(), availableBook.get());
 
-        rental.setReturned(false);
-        rental.setTimeOfRental(LocalDateTime.now());
-        rental.setTimeOfReturn(null);
         rental.getBook().setRented(true);
 
         return rentalRepository.save(rental);
@@ -54,19 +55,21 @@ public class RentalService {
                 .orElseThrow(RentalNotFoundException::new);
     }
 
-    public Rental endRental(Long id) throws RentalAlreadyFinishedException {
+    public void endRental(Long id, LocalDateTime dateOfReturn){
         Optional<Rental> rentalById = rentalRepository.findRentalById(id);
-        rentalById.orElseThrow(RentalNotFoundException::new);
+        final Rental rental = rentalById.orElseThrow(RentalNotFoundException::new);
 
-        Rental rental = rentalById.get();
-        if ( rental.isReturned() ) {
-            throw new RentalAlreadyFinishedException();
-        }
-        rental.setReturned(true);
-        rental.setTimeOfReturn(LocalDateTime.now());
         rental.getBook().setRented(false);
-        return rentalRepository.save(rental);
 
+        HistoricalRental historicalRental = new HistoricalRental(
+                rental.getBook().getTitle(),
+                rental.getBook().getAuthor(),
+                rental.getBook().getIsbn(),
+                rental.getCustomer().getFirstName(),
+                rental.getCustomer().getLastName());
+        historicalRentalRepository.save(historicalRental);
+
+        rentalRepository.delete(rental);
     }
 
     public void deleteRental(Long id) {
@@ -78,14 +81,6 @@ public class RentalService {
 
     public List<Rental> getAllRentals() {
         return rentalRepository.findAll();
-    }
-
-    public List<Rental> getUnfinishedRentals() {
-        return rentalRepository.findUnfinishedRentals();
-    }
-
-    public List<Rental> getFinishedRentals() {
-        return rentalRepository.findFinishedRentals();
     }
 
     public List<Rental> getRentalsOfCustomer(Long id) {
