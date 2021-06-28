@@ -5,7 +5,6 @@ import com.library.book.Book;
 import com.library.customer.Customer;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 public class Rental {

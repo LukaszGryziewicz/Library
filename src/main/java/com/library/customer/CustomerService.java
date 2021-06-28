@@ -30,20 +30,14 @@ public class CustomerService {
     }
 
     public Customer updateCustomer(Long id, Customer customer) {
-        Optional<Customer> customerById = customerRepository.findCustomerById(id);
-        customerById.orElseThrow(CustomerNotFoundException::new);
-
-        Customer existingCustomer = customerById.get();
+        final Customer existingCustomer = findCustomer(id);
         existingCustomer.setFirstName(customer.getFirstName());
         existingCustomer.setLastName(customer.getLastName());
-
         return customerRepository.save(existingCustomer);
     }
 
     public void deleteCustomer(Long id) {
-        customerRepository.findCustomerById(id)
-                .orElseThrow(CustomerNotFoundException::new);
-
+        findCustomer(id);
         customerRepository.deleteById(id);
     }
 }

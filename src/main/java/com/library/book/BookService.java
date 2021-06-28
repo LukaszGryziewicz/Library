@@ -1,10 +1,10 @@
 package com.library.book;
 
 import com.library.exceptions.BookNotFoundException;
+import com.library.exceptions.NoBookAvailableException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookService {
@@ -30,28 +30,27 @@ public class BookService {
 
     public List<Book> findBooksByTitleAndAuthor(String title, String author) {
         List<Book> booksByTitleAndAuthor = bookRepository.findBooksByTitleAndAuthor(title, author);
-        if ( booksByTitleAndAuthor.isEmpty() ) {
+        if (booksByTitleAndAuthor.isEmpty()) {
             throw new BookNotFoundException();
         }
         return booksByTitleAndAuthor;
     }
 
-    public Book updateBook(Long id, Book book) {
-        Optional<Book> bookById = bookRepository.findBookById(id);
-        bookById.orElseThrow(BookNotFoundException::new);
+    public Book findFirstAvailableBookByTitleAndAuthor(String title, String author) {
+        return bookRepository.findTopBookByTitleAndAuthorAndRentedIsFalse(title, author)
+                .orElseThrow(NoBookAvailableException::new);
+    }
 
-        Book existingBook = bookById.get();
+    public Book updateBook(Long id, Book book) {
+        final Book existingBook = findBook(id);
         existingBook.setTitle(book.getTitle());
         existingBook.setAuthor(book.getAuthor());
-
+        existingBook.setIsbn(book.getIsbn());
         return bookRepository.save(existingBook);
     }
 
     public void deleteBook(Long id) {
-        bookRepository.findBookById(id)
-                .orElseThrow(BookNotFoundException::new);
-
+        findBook(id);
         bookRepository.deleteById(id);
     }
-
 }
