@@ -1,9 +1,6 @@
-package com.library.bookTests;
+package com.library.book;
 
 
-import com.library.book.Book;
-import com.library.book.BookController;
-import com.library.book.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -90,6 +87,9 @@ public class BookControllerTest {
                 "  \"author\":\"Adam Domnik\",\n" +
                 "  \"isbn\": \"123456789\"\n" +
                 "}";
+        //when
+        Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        when(bookService.addNewBook(new Book())).thenReturn(book);
         //than
         mockMvc.perform(MockMvcRequestBuilders.post("/book")
                 .contentType(MediaType.APPLICATION_JSON)

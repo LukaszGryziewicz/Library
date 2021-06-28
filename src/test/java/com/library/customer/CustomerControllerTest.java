@@ -1,8 +1,5 @@
-package com.library.customerTests;
+package com.library.customer;
 
-import com.library.customer.Customer;
-import com.library.customer.CustomerController;
-import com.library.customer.CustomerService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
