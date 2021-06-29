@@ -1,19 +1,17 @@
 package com.library.rental;
 
 import com.library.book.Book;
-import com.library.book.BookRepository;
 import com.library.book.BookService;
 import com.library.customer.Customer;
-import com.library.customer.CustomerRepository;
 import com.library.customer.CustomerService;
-import com.library.exceptions.*;
+import com.library.exceptions.ExceededMaximumNumberOfRentalsException;
+import com.library.exceptions.RentalNotFoundException;
 import com.library.rentalHistory.HistoricalRental;
 import com.library.rentalHistory.HistoricalRentalRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RentalService {

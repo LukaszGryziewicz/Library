@@ -4,6 +4,7 @@ import com.library.book.Book;
 import com.library.customer.Customer;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Rental {
@@ -44,5 +45,18 @@ public class Rental {
 
     public void setBook(Book book) {
         this.book = book;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rental rental = (Rental) o;
+        return id == rental.id && Objects.equals(customer, rental.customer) && Objects.equals(book, rental.book);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, customer, book);
     }
 }
