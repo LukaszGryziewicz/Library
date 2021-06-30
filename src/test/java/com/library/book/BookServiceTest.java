@@ -1,8 +1,5 @@
-package com.library.bookTests;
+package com.library.book;
 
-import com.library.book.Book;
-import com.library.book.BookRepository;
-import com.library.book.BookService;
 import com.library.exceptions.BookNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

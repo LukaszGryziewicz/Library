@@ -1,13 +1,10 @@
-package com.library.rentalTests;
+package com.library.rental;
 
 import com.library.book.Book;
 import com.library.book.BookRepository;
 import com.library.customer.Customer;
 import com.library.customer.CustomerRepository;
 import com.library.exceptions.*;
-import com.library.rental.Rental;
-import com.library.rental.RentalRepository;
-import com.library.rental.RentalService;
 import com.library.rentalHistory.HistoricalRentalRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;

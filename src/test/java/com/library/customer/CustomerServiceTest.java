@@ -1,8 +1,5 @@
-package com.library.customerTests;
+package com.library.customer;
 
-import com.library.customer.Customer;
-import com.library.customer.CustomerRepository;
-import com.library.customer.CustomerService;
 import com.library.exceptions.CustomerNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
