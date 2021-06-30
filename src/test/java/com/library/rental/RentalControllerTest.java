@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,7 +43,10 @@ public class RentalControllerTest {
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerRepository.save(customer);
         bookRepository.save(book);
-        final Rental rental = rentalService.createRental(customer.getId(), book.getTitle(), book.getAuthor(), LocalDateTime.now());
+        final Rental rental = rentalService.createRental(
+                customer.getId(), book.getTitle(),
+                book.getAuthor(), LocalDateTime.now()
+        );
         //expect
         mockMvc.perform(MockMvcRequestBuilders.get("/rental"))
                 .andDo(print())
@@ -65,4 +69,58 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$.customer").value(customer))
                 .andExpect(jsonPath("$.book").value(book));
     }
+
+    @Test
+    void shouldFindRentalById() throws Exception {
+        //when
+        Customer customer = new Customer("Adam", "Dominik");
+        Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        customerRepository.save(customer);
+        bookRepository.save(book);
+        final Rental rental = rentalService.createRental(
+                customer.getId(), book.getTitle(),
+                book.getAuthor(), LocalDateTime.now()
+        );
+        //expect
+        mockMvc.perform(MockMvcRequestBuilders.get("/rental/" + rental.getId()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.customer").value(customer))
+                .andExpect(jsonPath("$.book").value(book));
+    }
+
+    @Test
+    void shouldEndRental() throws Exception {
+        //when
+        Customer customer = new Customer("Adam", "Dominik");
+        Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        customerRepository.save(customer);
+        bookRepository.save(book);
+        Rental rental = rentalService.createRental(
+                customer.getId(), book.getTitle(),
+                book.getAuthor(), LocalDateTime.now()
+        );
+        //expect
+        mockMvc.perform(MockMvcRequestBuilders.put("/rental/endRental/" + rental.getId()))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldDeleteRental() throws Exception {
+        //when
+        Customer customer = new Customer("Adam", "Dominik");
+        Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        customerRepository.save(customer);
+        bookRepository.save(book);
+        Rental rental = rentalService.createRental(
+                customer.getId(), book.getTitle(),
+                book.getAuthor(), LocalDateTime.now()
+        );
+        //expect
+        mockMvc.perform(MockMvcRequestBuilders.delete("/rental/delete/" + rental.getId()))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
 }
