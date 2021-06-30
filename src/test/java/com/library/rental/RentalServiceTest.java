@@ -165,16 +165,17 @@ public class RentalServiceTest {
         Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
 
         Customer customer1 = new Customer("Łukasz", "Gryziewicz");
+        Customer customer2 = new Customer("Adam", "Dominik");
         Rental rental1 = new Rental(customer1, book1);
-        Rental rental2 = new Rental(customer1, book2);
+        Rental rental2 = new Rental(customer2, book2);
 
         bookRepository.saveAll(Arrays.asList(book1, book2));
-        customerRepository.save(customer1);
+        customerRepository.saveAll(Arrays.asList(customer1, customer2));
         rentalRepository.saveAll(Arrays.asList(rental1, rental2));
         //when
         final List<Rental> rentalByCustomer = rentalService.getRentalsOfCustomer(customer1.getId());
         //than
-        assertThat(rentalByCustomer).containsExactlyInAnyOrder(rental1, rental2);
+        assertThat(rentalByCustomer).containsExactlyInAnyOrder(rental1);
     }
 
     @Test
