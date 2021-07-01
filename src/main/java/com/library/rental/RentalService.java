@@ -10,12 +10,14 @@ import com.library.rentalHistory.HistoricalRental;
 import com.library.rentalHistory.HistoricalRentalRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class RentalService {
 
+    private static final int MAX_ALLOWED_RENTALS = 3;
     private final RentalRepository rentalRepository;
     private final HistoricalRentalRepository historicalRentalRepository;
     private final BookService bookService;
@@ -29,21 +31,24 @@ public class RentalService {
         this.historicalRentalRepository = historicalRentalRepository;
     }
 
-    private void checkIfCustomerIsEligibleForRental(Long customerId) {
-        customerService.findCustomer(customerId);
-        if (rentalRepository.findRentalsByCustomerId(customerId).size() == 3) {
-            throw new ExceededMaximumNumberOfRentalsException();
-        }
-    }
-
-    public Rental createRental(Long customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
+    public Rental rent(Long customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
         final Customer customer = customerService.findCustomer(customerId);
         bookService.findBooksByTitleAndAuthor(title, author);
         final Book availableBook = bookService.findFirstAvailableBookByTitleAndAuthor(title, author);
         checkIfCustomerIsEligibleForRental(customerId);
         Rental rental = new Rental(customer, availableBook);
-        rental.getBook().setRented(true);
+        availableBook.rent();
         return rentalRepository.save(rental);
+    }
+
+    private void checkIfCustomerIsEligibleForRental(Long customerId) {
+        if ( booksRentedByCustomer(customerId) >= MAX_ALLOWED_RENTALS ) {
+            throw new ExceededMaximumNumberOfRentalsException();
+        }
+    }
+
+    private int booksRentedByCustomer(Long customerId) {
+        return rentalRepository.findRentalsByCustomerId(customerId).size();
     }
 
     public Rental findRental(Long id) {
@@ -51,7 +56,8 @@ public class RentalService {
                 .orElseThrow(RentalNotFoundException::new);
     }
 
-    public void endRental(Long id, LocalDateTime dateOfReturn) {
+    @Transactional
+    public void returnBook(Long id, LocalDateTime dateOfReturn) {
         final Rental rental = findRental(id);
         rental.getBook().setRented(false);
         HistoricalRental historicalRental = new HistoricalRental(
