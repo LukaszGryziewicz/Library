@@ -39,8 +39,8 @@ public class CustomerDTO {
 
     @Override
     public boolean equals(Object o) {
-        if ( this == o ) return true;
-        if ( o == null || getClass() != o.getClass() ) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         CustomerDTO that = (CustomerDTO) o;
         return id == that.id && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName);
     }

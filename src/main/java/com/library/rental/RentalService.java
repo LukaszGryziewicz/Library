@@ -42,7 +42,7 @@ public class RentalService {
     }
 
     private void checkIfCustomerIsEligibleForRental(Long customerId) {
-        if ( booksRentedByCustomer(customerId) >= MAX_ALLOWED_RENTALS ) {
+        if (booksRentedByCustomer(customerId) >= MAX_ALLOWED_RENTALS) {
             throw new ExceededMaximumNumberOfRentalsException();
         }
     }

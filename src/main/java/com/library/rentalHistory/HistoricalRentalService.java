@@ -13,15 +13,15 @@ public class HistoricalRentalService {
         this.historicalRentalRepository = historicalRentalRepository;
     }
 
-    List<HistoricalRental>getAllHistoricalRentals() {
+    List<HistoricalRental> getAllHistoricalRentals() {
         return historicalRentalRepository.findAll();
     }
 
-    List<HistoricalRental>getHistoricalRentalsOfBook(String title, String author){
+    List<HistoricalRental> getHistoricalRentalsOfBook(String title, String author) {
         return historicalRentalRepository.findHistoricalRentalsByTitleAndAuthor(title, author);
     }
 
-    List<HistoricalRental>getHistoricalRentalsOfCustomer(String firstName, String lastName){
+    List<HistoricalRental> getHistoricalRentalsOfCustomer(String firstName, String lastName) {
         return historicalRentalRepository.findHistoricalRentalsByFirstNameAndLastName(firstName, lastName);
     }
 

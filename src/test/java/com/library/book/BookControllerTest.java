@@ -20,10 +20,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class BookControllerTest {
 
+    ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private MockMvc mockMvc;
-
-    ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private BookService bookService;
 
