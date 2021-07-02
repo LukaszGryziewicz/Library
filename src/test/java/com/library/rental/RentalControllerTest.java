@@ -1,7 +1,7 @@
 package com.library.rental;
 
 import com.library.book.Book;
-import com.library.book.BookService;
+import com.library.book.BookFacade;
 import com.library.customer.Customer;
 import com.library.customer.CustomerService;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class RentalControllerTest {
     CustomerService customerService;
 
     @Autowired
-    BookService bookService;
+    BookFacade bookFacade;
 
     @Autowired
     RentalService rentalService;
@@ -41,7 +41,7 @@ public class RentalControllerTest {
         Customer customer = new Customer("Adam", "Dominik");
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerService.addCustomer(customer);
-        bookService.addNewBook(book);
+        bookFacade.addNewBook(book);
         final Rental rental = rentalService.rent(
                 customer.getId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
@@ -63,8 +63,8 @@ public class RentalControllerTest {
         Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
         customerService.addCustomer(customer);
         customerService.addCustomer(customer2);
-        bookService.addNewBook(book);
-        bookService.addNewBook(book2);
+        bookFacade.addNewBook(book);
+        bookFacade.addNewBook(book2);
         rentalService.rent(
                 customer.getId(), book2.getTitle(),
                 book2.getAuthor(), LocalDateTime.now()
@@ -89,12 +89,12 @@ public class RentalControllerTest {
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerService.addCustomer(customer);
         customerService.addCustomer(customer2);
-        bookService.addNewBook(book);
+        bookFacade.addNewBook(book);
         rentalService.rent(
                 customer.getId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
-        book.setRented(false);
+        book.returnBook();
         rentalService.rent(
                 customer2.getId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
@@ -115,7 +115,7 @@ public class RentalControllerTest {
         Customer customer = new Customer("Adam", "Dominik");
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerService.addCustomer(customer);
-        bookService.addNewBook(book);
+        bookFacade.addNewBook(book);
         //expect
         mockMvc.perform(post(("/rental/" + customer.getId() + "/" + book.getTitle()) + "/" + book.getAuthor()))
                 .andDo(print())
@@ -130,7 +130,7 @@ public class RentalControllerTest {
         Customer customer = new Customer("Adam", "Dominik");
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerService.addCustomer(customer);
-        bookService.addNewBook(book);
+        bookFacade.addNewBook(book);
         final Rental rental = rentalService.rent(
                 customer.getId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
@@ -149,13 +149,13 @@ public class RentalControllerTest {
         Customer customer = new Customer("Adam", "Dominik");
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerService.addCustomer(customer);
-        bookService.addNewBook(book);
+        bookFacade.addNewBook(book);
         Rental rental = rentalService.rent(
                 customer.getId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
         //expect
-        mockMvc.perform(put("/rental/endRental/" + rental.getId()))
+        mockMvc.perform(post("/rental/endRental/" + rental.getId()))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -166,7 +166,7 @@ public class RentalControllerTest {
         Customer customer = new Customer("Adam", "Dominik");
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerService.addCustomer(customer);
-        bookService.addNewBook(book);
+        bookFacade.addNewBook(book);
         Rental rental = rentalService.rent(
                 customer.getId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()

@@ -30,44 +30,44 @@ public class Book {
         this.rented = rented;
     }
 
-    public long getId() {
-        return id;
-    }
-
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public String getIsbn() {
-        return isbn;
     }
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
-    public boolean isRented() {
-        return rented;
-    }
-
     public void setRented(boolean rented) {
         this.rented = rented;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public boolean isRented() {
+        return rented;
     }
 
     @Override
@@ -89,5 +89,11 @@ public class Book {
 
     public void returnBook() {
         rented = false;
+    }
+
+    public void update(Book book) {
+        this.title = book.getTitle();
+        this.author = book.getAuthor();
+        this.isbn = book.getIsbn();
     }
 }

@@ -1,7 +1,7 @@
 package com.library.rental;
 
 import com.library.book.Book;
-import com.library.book.BookService;
+import com.library.book.BookFacade;
 import com.library.customer.Customer;
 import com.library.customer.CustomerService;
 import com.library.exceptions.ExceededMaximumNumberOfRentalsException;
@@ -20,20 +20,23 @@ public class RentalService {
     private static final int MAX_ALLOWED_RENTALS = 3;
     private final RentalRepository rentalRepository;
     private final HistoricalRentalRepository historicalRentalRepository;
-    private final BookService bookService;
+    private final BookFacade bookFacade;
     private final CustomerService customerService;
 
-    public RentalService(RentalRepository rentalRepository, HistoricalRentalRepository historicalRentalRepository, BookService bookService, CustomerService customerService) {
+    public RentalService(RentalRepository rentalRepository,
+                         HistoricalRentalRepository historicalRentalRepository,
+                         BookFacade bookFacade,
+                         CustomerService customerService) {
         this.rentalRepository = rentalRepository;
-        this.bookService = bookService;
+        this.bookFacade = bookFacade;
         this.customerService = customerService;
         this.historicalRentalRepository = historicalRentalRepository;
     }
 
     public Rental rent(Long customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
         final Customer customer = customerService.findCustomer(customerId);
-        bookService.findBooksByTitleAndAuthor(title, author);
-        final Book availableBook = bookService.findFirstAvailableBookByTitleAndAuthor(title, author);
+        bookFacade.findBooksByTitleAndAuthor(title, author);
+        final Book availableBook = bookFacade.findFirstAvailableBookByTitleAndAuthor(title, author);
         checkIfCustomerIsEligibleForRental(customerId);
         Rental rental = new Rental(customer, availableBook);
         availableBook.rent();
@@ -71,14 +74,13 @@ public class RentalService {
         rentalRepository.delete(rental);
     }
 
-    public void deleteRental(Long id) {
+    void deleteRental(Long id) {
         checkIfRentalExists(id);
         rentalRepository.deleteById(id);
     }
 
     public void checkIfRentalExists(Long id) {
-        final boolean exists = rentalRepository.existsById(id);
-        if (!exists) {
+        if (!rentalRepository.existsById(id)) {
             throw new RentalNotFoundException();
         }
     }
