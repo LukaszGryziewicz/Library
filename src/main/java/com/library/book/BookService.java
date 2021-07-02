@@ -4,6 +4,7 @@ import com.library.exceptions.BookNotFoundException;
 import com.library.exceptions.NoBookAvailableException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -51,10 +52,10 @@ public class BookService {
 
     public Book updateBook(Long id, Book book) {
         final Book existingBook = findBook(id);
-        existingBook.setTitle(book.getTitle());
-        existingBook.setAuthor(book.getAuthor());
-        existingBook.setIsbn(book.getIsbn());
-        return bookRepository.save(existingBook);
+        newBook.setId(existingBook.getId());
+        bookRepository.delete(existingBook);
+        bookRepository.save(newBook);
+        return newBook;
     }
 
     public void deleteBook(Long id) {
