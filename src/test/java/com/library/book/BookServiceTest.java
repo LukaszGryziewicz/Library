@@ -103,6 +103,20 @@ public class BookServiceTest {
     }
 
     @Test
+    void shouldUpdateBook2() {
+        //given
+        Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
+        bookRepository.save(book1);
+        //when
+        bookService.updateBook2(book1.getId(), book2);
+        //then
+        assertThat(bookRepository.findAll()).doesNotContain(book1);
+        assertThat(bookRepository.findBooksByTitleAndAuthor(book2.getTitle(), book2.getAuthor()))
+                .isNotEmpty();
+    }
+
+    @Test
     void shouldThrowExceptionWhenUpdatingBookThatDoesNotExist() {
         //given
         Book book1 = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");

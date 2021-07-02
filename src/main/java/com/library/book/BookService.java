@@ -50,7 +50,16 @@ public class BookService {
                 .orElseThrow(NoBookAvailableException::new);
     }
 
-    public Book updateBook(Long id, Book book) {
+    public Book updateBook(Long id, Book newBook) {
+        final Book existingBook = findBook(id);
+        existingBook.setTitle(newBook.getTitle());
+        existingBook.setTitle(newBook.getAuthor());
+        existingBook.setTitle(newBook.getIsbn());
+        return bookRepository.save(existingBook);
+    }
+
+    @Transactional
+    public Book updateBook2(Long id, Book newBook) {
         final Book existingBook = findBook(id);
         newBook.setId(existingBook.getId());
         bookRepository.delete(existingBook);
