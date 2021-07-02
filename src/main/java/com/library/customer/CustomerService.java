@@ -36,7 +36,14 @@ public class CustomerService {
     }
 
     public void deleteCustomer(Long id) {
-        findCustomer(id);
+        checkIfCustomerExistById(id);
         customerRepository.deleteById(id);
+    }
+
+    public void checkIfCustomerExistById(Long id) {
+        final boolean exists = customerRepository.existsById(id);
+        if (!exists) {
+            throw new CustomerNotFoundException();
+        }
     }
 }

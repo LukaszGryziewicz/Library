@@ -23,6 +23,14 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    BookDTO convertBookToDTO(Book book) {
+        return new BookDTO(book.getTitle(), book.getAuthor(), book.getIsbn());
+    }
+
+    Book covertDToToBook(BookDTO bookDTO) {
+        return new Book(bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getIsbn());
+    }
+
     public Book findBook(Long id) {
         return bookRepository.findBookById(id)
                 .orElseThrow(BookNotFoundException::new);
@@ -50,7 +58,14 @@ public class BookService {
     }
 
     public void deleteBook(Long id) {
-        findBook(id);
+        checkIfBookExistById(id);
         bookRepository.deleteById(id);
+    }
+
+    public void checkIfBookExistById(Long id) {
+        final boolean exists = bookRepository.existsById(id);
+        if (!exists) {
+            throw new BookNotFoundException();
+        }
     }
 }

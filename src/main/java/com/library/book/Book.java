@@ -86,4 +86,8 @@ public class Book {
     public void rent() {
         rented = true;
     }
+
+    public void returnBook() {
+        rented = false;
+    }
 }

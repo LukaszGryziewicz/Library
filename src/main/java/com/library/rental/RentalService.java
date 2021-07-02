@@ -23,7 +23,6 @@ public class RentalService {
     private final BookService bookService;
     private final CustomerService customerService;
 
-
     public RentalService(RentalRepository rentalRepository, HistoricalRentalRepository historicalRentalRepository, BookService bookService, CustomerService customerService) {
         this.rentalRepository = rentalRepository;
         this.bookService = bookService;
@@ -59,20 +58,29 @@ public class RentalService {
     @Transactional
     public void returnBook(Long id, LocalDateTime dateOfReturn) {
         final Rental rental = findRental(id);
-        rental.getBook().setRented(false);
+        final Book book = rental.getBook();
+        book.returnBook();
+        final Customer customer = rental.getCustomer();
         HistoricalRental historicalRental = new HistoricalRental(
-                rental.getBook().getTitle(),
-                rental.getBook().getAuthor(),
-                rental.getBook().getIsbn(),
-                rental.getCustomer().getFirstName(),
-                rental.getCustomer().getLastName());
+                book.getTitle(),
+                book.getAuthor(),
+                book.getIsbn(),
+                customer.getFirstName(),
+                customer.getLastName());
         historicalRentalRepository.save(historicalRental);
         rentalRepository.delete(rental);
     }
 
     public void deleteRental(Long id) {
-        findRental(id);
+        checkIfRentalExists(id);
         rentalRepository.deleteById(id);
+    }
+
+    public void checkIfRentalExists(Long id) {
+        final boolean exists = rentalRepository.existsById(id);
+        if (!exists) {
+            throw new RentalNotFoundException();
+        }
     }
 
     public List<Rental> getAllRentals() {
