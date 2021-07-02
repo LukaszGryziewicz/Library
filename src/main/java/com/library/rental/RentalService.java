@@ -47,7 +47,7 @@ public class RentalService {
     }
 
     private int booksRentedByCustomer(Long customerId) {
-        return rentalRepository.findRentalsByCustomerId(customerId).size();
+        return rentalRepository.countRentalsByCustomerId(customerId);
     }
 
     public Rental findRental(Long id) {

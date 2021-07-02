@@ -11,6 +11,8 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
 
     List<Rental> findRentalsByCustomerId(Long id);
 
+    int countRentalsByCustomerId(Long id);
+
     List<Rental> findRentalByBookId(Long id);
 
 }
