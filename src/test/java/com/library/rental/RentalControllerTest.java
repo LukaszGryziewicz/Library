@@ -1,9 +1,9 @@
 package com.library.rental;
 
 import com.library.book.Book;
-import com.library.book.BookRepository;
+import com.library.book.BookService;
 import com.library.customer.Customer;
-import com.library.customer.CustomerRepository;
+import com.library.customer.CustomerService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
-import static java.util.Arrays.asList;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,10 +27,10 @@ public class RentalControllerTest {
     MockMvc mockMvc;
 
     @Autowired
-    CustomerRepository customerRepository;
+    CustomerService customerService;
 
     @Autowired
-    BookRepository bookRepository;
+    BookService bookService;
 
     @Autowired
     RentalService rentalService;
@@ -41,8 +40,8 @@ public class RentalControllerTest {
         //given
         Customer customer = new Customer("Adam", "Dominik");
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        customerRepository.save(customer);
-        bookRepository.save(book);
+        customerService.addCustomer(customer);
+        bookService.addNewBook(book);
         final Rental rental = rentalService.rent(
                 customer.getId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
@@ -62,8 +61,10 @@ public class RentalControllerTest {
         Customer customer2 = new Customer("Łukasz", "Gryziewicz");
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
         Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        customerRepository.saveAll(asList(customer, customer2));
-        bookRepository.saveAll(asList(book, book2));
+        customerService.addCustomer(customer);
+        customerService.addCustomer(customer2);
+        bookService.addNewBook(book);
+        bookService.addNewBook(book2);
         rentalService.rent(
                 customer.getId(), book2.getTitle(),
                 book2.getAuthor(), LocalDateTime.now()
@@ -86,8 +87,9 @@ public class RentalControllerTest {
         Customer customer = new Customer("Adam", "Dominik");
         Customer customer2 = new Customer("Łukasz", "Gryziewicz");
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        customerRepository.saveAll(asList(customer, customer2));
-        bookRepository.save(book);
+        customerService.addCustomer(customer);
+        customerService.addCustomer(customer2);
+        bookService.addNewBook(book);
         rentalService.rent(
                 customer.getId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
@@ -112,8 +114,8 @@ public class RentalControllerTest {
         //when
         Customer customer = new Customer("Adam", "Dominik");
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        customerRepository.save(customer);
-        bookRepository.save(book);
+        customerService.addCustomer(customer);
+        bookService.addNewBook(book);
         //expect
         mockMvc.perform(post(("/rental/" + customer.getId() + "/" + book.getTitle()) + "/" + book.getAuthor()))
                 .andDo(print())
@@ -127,8 +129,8 @@ public class RentalControllerTest {
         //when
         Customer customer = new Customer("Adam", "Dominik");
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        customerRepository.save(customer);
-        bookRepository.save(book);
+        customerService.addCustomer(customer);
+        bookService.addNewBook(book);
         final Rental rental = rentalService.rent(
                 customer.getId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
@@ -146,8 +148,8 @@ public class RentalControllerTest {
         //when
         Customer customer = new Customer("Adam", "Dominik");
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        customerRepository.save(customer);
-        bookRepository.save(book);
+        customerService.addCustomer(customer);
+        bookService.addNewBook(book);
         Rental rental = rentalService.rent(
                 customer.getId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
@@ -163,8 +165,8 @@ public class RentalControllerTest {
         //when
         Customer customer = new Customer("Adam", "Dominik");
         Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        customerRepository.save(customer);
-        bookRepository.save(book);
+        customerService.addCustomer(customer);
+        bookService.addNewBook(book);
         Rental rental = rentalService.rent(
                 customer.getId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
