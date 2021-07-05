@@ -4,8 +4,6 @@ import com.library.book.Book;
 import com.library.book.BookFacade;
 import com.library.customer.Customer;
 import com.library.customer.CustomerService;
-import com.library.exceptions.ExceededMaximumNumberOfRentalsException;
-import com.library.exceptions.RentalNotFoundException;
 import com.library.rentalHistory.HistoricalRental;
 import com.library.rentalHistory.HistoricalRentalRepository;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,12 @@
 package com.library.rental;
 
 import com.library.book.Book;
+import com.library.book.BookNotFoundException;
 import com.library.book.BookRepository;
+import com.library.book.NoBookAvailableException;
 import com.library.customer.Customer;
+import com.library.customer.CustomerNotFoundException;
 import com.library.customer.CustomerRepository;
-import com.library.exceptions.*;
 import com.library.rentalHistory.HistoricalRentalRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

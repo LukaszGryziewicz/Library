@@ -1,6 +1,5 @@
 package com.library.customer;
 
-import com.library.exceptions.CustomerNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

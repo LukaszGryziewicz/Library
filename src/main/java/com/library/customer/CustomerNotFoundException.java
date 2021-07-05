@@ -1,4 +1,4 @@
-package com.library.exceptions;
+package com.library.customer;
 
 public class CustomerNotFoundException extends RuntimeException {
     public CustomerNotFoundException() {

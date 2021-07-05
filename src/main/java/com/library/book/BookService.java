@@ -1,7 +1,5 @@
 package com.library.book;
 
-import com.library.exceptions.BookNotFoundException;
-import com.library.exceptions.NoBookAvailableException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +25,7 @@ class BookService {
         return new BookDTO(book.getTitle(), book.getAuthor(), book.getIsbn());
     }
 
-    Book covertDToToBook(BookDTO bookDTO) {
+    Book covertDTOToBook(BookDTO bookDTO) {
         return new Book(bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getIsbn());
     }
 

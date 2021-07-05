@@ -1,4 +1,4 @@
-package com.library.exceptions;
+package com.library.rental;
 
 public class ExceededMaximumNumberOfRentalsException extends RuntimeException {
     public ExceededMaximumNumberOfRentalsException() {

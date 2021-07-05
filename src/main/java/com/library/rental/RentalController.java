@@ -1,6 +1,5 @@
 package com.library.rental;
 
-import com.library.exceptions.ExceededMaximumNumberOfRentalsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
