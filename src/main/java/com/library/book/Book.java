@@ -2,6 +2,7 @@ package com.library.book;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 public class Book {
@@ -9,6 +10,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private long id;
+    private UUID bookId;
     private String title;
     private String author;
     private String isbn;
@@ -23,11 +25,12 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public Book(String title, String author, String isbn, boolean rented) {
-        this.title = title;
-        this.author = author;
-        this.isbn = isbn;
-        this.rented = rented;
+    public UUID getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(UUID bookId) {
+        this.bookId = bookId;
     }
 
     public void setId(long id) {
@@ -75,12 +78,12 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return id == book.id && rented == book.rented && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(isbn, book.isbn);
+        return id == book.id && rented == book.rented && Objects.equals(bookId, book.bookId) && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(isbn, book.isbn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, author, isbn, rented);
+        return Objects.hash(id, bookId, title, author, isbn, rented);
     }
 
     public void rent() {
