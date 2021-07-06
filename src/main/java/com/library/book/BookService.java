@@ -3,6 +3,8 @@ package com.library.book;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 class BookService {
@@ -13,55 +15,74 @@ class BookService {
         this.bookRepository = bookRepository;
     }
 
-    List<Book> getBooks() {
-        return bookRepository.findAll();
-    }
-
-    Book addNewBook(Book book) {
-        return bookRepository.save(book);
-    }
-
     BookDTO convertBookToDTO(Book book) {
-        return new BookDTO(book.getTitle(), book.getAuthor(), book.getIsbn());
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle(book.getTitle());
+        bookDTO.setAuthor(book.getAuthor());
+        bookDTO.setIsbn(book.getIsbn());
+        return bookDTO;
     }
 
     Book covertDTOToBook(BookDTO bookDTO) {
-        return new Book(bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getIsbn());
+        Book book = new Book();
+        book.setBookId(bookDTO.getBookId());
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setIsbn(bookDTO.getIsbn());
+        return book;
     }
 
-    Book findBook(Long id) {
-        return bookRepository.findBookById(id)
+    List<BookDTO> convertListOfBookToDTO(List<Book> listOfBooks) {
+        return listOfBooks.stream()
+                .map(this::convertBookToDTO)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    List<BookDTO> getBooks() {
+        final List<Book> books = bookRepository.findAll();
+        return convertListOfBookToDTO(books);
+    }
+
+    BookDTO addNewBook(BookDTO bookDTO) {
+        bookRepository.save(covertDTOToBook(bookDTO));
+        return bookDTO;
+    }
+
+    BookDTO findBook(UUID bookId) {
+        final Book book = bookRepository.findBookByBookId(bookId)
                 .orElseThrow(BookNotFoundException::new);
+        return convertBookToDTO(book);
     }
 
-    List<Book> findBooksByTitleAndAuthor(String title, String author) {
+    List<BookDTO> findBooksByTitleAndAuthor(String title, String author) {
         List<Book> booksByTitleAndAuthor = bookRepository.findBooksByTitleAndAuthor(title, author);
         if (booksByTitleAndAuthor.isEmpty()) {
             throw new BookNotFoundException();
         }
-        return booksByTitleAndAuthor;
+        return convertListOfBookToDTO(booksByTitleAndAuthor);
     }
 
-    Book findFirstAvailableBookByTitleAndAuthor(String title, String author) {
-        return bookRepository.findTopBookByTitleAndAuthorAndRentedIsFalse(title, author)
+    BookDTO findFirstAvailableBookByTitleAndAuthor(String title, String author) {
+        final Book book = bookRepository.findTopBookByTitleAndAuthorAndRentedIsFalse(title, author)
                 .orElseThrow(NoBookAvailableException::new);
+        return convertBookToDTO(book);
     }
 
-    Book updateBook(Long id, Book newBook) {
-        final Book existingBook = findBook(id);
-        existingBook.update(newBook);
-        bookRepository.save(existingBook);
-        return existingBook;
+    BookDTO updateBook(UUID bookId, BookDTO newBookDTO) {
+        final BookDTO existingBookDTO = findBook(bookId);
+        final Book book = covertDTOToBook(existingBookDTO);
+        book.update(covertDTOToBook(newBookDTO));
+        bookRepository.save(book);
+        return newBookDTO;
     }
 
-
-    void deleteBook(Long id) {
-        checkIfBookExistById(id);
-        bookRepository.deleteById(id);
+    void deleteBook(UUID bookId) {
+        checkIfBookExistById(bookId);
+        bookRepository.deleteBookByBookId(bookId);
     }
 
-    void checkIfBookExistById(Long id) {
-        final boolean exists = bookRepository.existsById(id);
+    void checkIfBookExistById(UUID bookId) {
+        final boolean exists = bookRepository.existsByBookId(bookId);
         if (!exists) {
             throw new BookNotFoundException();
         }
