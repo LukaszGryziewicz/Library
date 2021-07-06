@@ -17,6 +17,7 @@ public class CustomerService {
 
     CustomerDTO convertCustomerToDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setCustomerId(customer.getCustomerId());
         customerDTO.setFirstName(customer.getFirstName());
         customerDTO.setLastName(customer.getLastName());
         return customerDTO;

@@ -30,8 +30,8 @@ public class CustomerControllerTest {
     @Test
     void shouldReturnAllCustomers() throws Exception {
         //given
-        Customer customer = new Customer("Adam", "Dominik");
-        Customer customer2 = new Customer("Łukasz", "Gryziewicz");
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
+        CustomerDTO customer2 = new CustomerDTO("Łukasz", "Gryziewicz");
         customerService.addCustomer(customer);
         customerService.addCustomer(customer2);
         //expect
@@ -47,7 +47,7 @@ public class CustomerControllerTest {
     @Test
     void shouldAddCustomer() throws Exception {
         //when
-        Customer customer = new Customer("Adam", "Dominik");
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         String content = objectMapper.writeValueAsString(customer);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.post("/customer")
@@ -64,10 +64,10 @@ public class CustomerControllerTest {
     @Test
     void shouldReturnCustomerWithGivenId() throws Exception {
         //given
-        Customer customer = new Customer("Adam", "Dominik");
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         customerService.addCustomer(customer);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/customer/" + customer.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/customer/" + customer.getCustomerId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value(customer.getFirstName()))
@@ -77,10 +77,10 @@ public class CustomerControllerTest {
     @Test
     void shouldFindCustomerById() throws Exception {
         //given
-        Customer customer = new Customer("Adam", "Dominik");
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         customerService.addCustomer(customer);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/customer/" + customer.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/customer/" + customer.getCustomerId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value(customer.getFirstName()))
@@ -90,12 +90,12 @@ public class CustomerControllerTest {
     @Test
     void shouldUpdateCustomer() throws Exception {
         //given
-        Customer customer = new Customer("Adam", "Dominik");
-        Customer customer2 = new Customer("Łukasz", "Gryziewicz");
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
+        CustomerDTO customer2 = new CustomerDTO("Łukasz", "Gryziewicz");
         customerService.addCustomer(customer);
         String content = objectMapper.writeValueAsString(customer2);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.put("/customer/update/" + customer.getId())
+        mockMvc.perform(MockMvcRequestBuilders.put("/customer/update/" + customer.getCustomerId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
                 .accept(MediaType.APPLICATION_JSON))
@@ -107,10 +107,10 @@ public class CustomerControllerTest {
     @Test
     void shouldDeleteCustomer() throws Exception {
         //given
-        Customer customer = new Customer("Adam", "Dominik");
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         customerService.addCustomer(customer);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.delete("/customer/delete/" + customer.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/customer/delete/" + customer.getCustomerId()))
                 .andExpect(status().isOk());
 
     }
