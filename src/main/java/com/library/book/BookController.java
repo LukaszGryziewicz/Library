@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @EnableWebMvc
@@ -18,38 +19,38 @@ public class BookController {
     }
 
     @GetMapping()
-    ResponseEntity<List<Book>> getAllBooks() {
-        final List<Book> books = bookFacade.getBooks();
+    ResponseEntity<List<BookDTO>> getAllBooks() {
+        final List<BookDTO> books = bookFacade.getBooks();
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
     @PostMapping()
-    ResponseEntity<Book> addNewBook(@RequestBody Book book) {
-        final Book newBook = bookFacade.addNewBook(book);
+    ResponseEntity<BookDTO> addNewBook(@RequestBody BookDTO book) {
+        final BookDTO newBook = bookFacade.addNewBook(book);
         return new ResponseEntity<>(newBook, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Book> findBookById(@PathVariable("id") Long id) {
-        Book bookById = bookFacade.findBook(id);
+    ResponseEntity<BookDTO> findBookById(@PathVariable("id") UUID bookId) {
+        BookDTO bookById = bookFacade.findBook(bookId);
         return new ResponseEntity<>(bookById, HttpStatus.OK);
     }
 
     @GetMapping("/{title}/{author}")
-    ResponseEntity<List<Book>> findBooksByTitleAndAuthor(@PathVariable("title") String title, @PathVariable("author") String author) {
-        List<Book> booksByTitleAndAuthor = bookFacade.findBooksByTitleAndAuthor(title, author);
+    ResponseEntity<List<BookDTO>> findBooksByTitleAndAuthor(@PathVariable("title") String title, @PathVariable("author") String author) {
+        List<BookDTO> booksByTitleAndAuthor = bookFacade.findBooksByTitleAndAuthor(title, author);
         return new ResponseEntity<>(booksByTitleAndAuthor, HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
-    ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @RequestBody Book book) {
-        Book updatedBook = bookFacade.updateBook(id, book);
+    ResponseEntity<BookDTO> updateBook(@PathVariable("id") UUID bookId, @RequestBody BookDTO book) {
+        BookDTO updatedBook = bookFacade.updateBook(bookId, book);
         return new ResponseEntity<>(updatedBook, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    ResponseEntity<?> deleteBook(@PathVariable("id") Long id) {
-        bookFacade.deleteBook(id);
+    ResponseEntity<?> deleteBook(@PathVariable("id") UUID bookId) {
+        bookFacade.deleteBook(bookId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

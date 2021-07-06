@@ -3,6 +3,7 @@ package com.library.book;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class BookFacade {
@@ -12,37 +13,36 @@ public class BookFacade {
         this.bookService = bookService;
     }
 
-    List<Book> getBooks() {
+    List<BookDTO> getBooks() {
         return bookService.getBooks();
     }
 
-    public Book addNewBook(Book book) {
+    public BookDTO addNewBook(BookDTO book) {
         return bookService.addNewBook(book);
     }
 
-    public Book findBook(Long id) {
-        return bookService.findBook(id);
+    public BookDTO findBook(UUID bookId) {
+        return bookService.findBook(bookId);
     }
 
-    public List<Book> findBooksByTitleAndAuthor(String title, String author) {
+    public List<BookDTO> findBooksByTitleAndAuthor(String title, String author) {
         return bookService.findBooksByTitleAndAuthor(title, author);
     }
 
-    public Book findFirstAvailableBookByTitleAndAuthor(String title, String author) {
+    public BookDTO findFirstAvailableBookByTitleAndAuthor(String title, String author) {
         return bookService.findFirstAvailableBookByTitleAndAuthor(title, author);
     }
 
-    Book updateBook(Long id, Book newBook) {
-        return bookService.updateBook(id, newBook);
+    BookDTO updateBook(UUID bookId, BookDTO newBook) {
+        return bookService.updateBook(bookId, newBook);
     }
 
-    void deleteBook(Long id) {
-        bookService.deleteBook(id);
+    void deleteBook(UUID bookId) {
+        bookService.deleteBook(bookId);
     }
 
-    public void checkIfBookExistById(Long id) {
-        bookService.checkIfBookExistById(id);
+    public void checkIfBookExistById(UUID bookId) {
+        bookService.checkIfBookExistById(bookId);
     }
-
 
 }
