@@ -9,6 +9,9 @@ public class CustomerDTO {
     private String firstName;
     private String lastName;
 
+    public CustomerDTO() {
+    }
+
     public CustomerDTO(String firstName, String lastName) {
         this.customerId = UUID.randomUUID();
         this.firstName = firstName;

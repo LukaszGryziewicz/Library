@@ -66,4 +66,9 @@ public class Customer {
     public int hashCode() {
         return Objects.hash(id, customerId, firstName, lastName);
     }
+
+    public void update(Customer customer) {
+        this.firstName = customer.getFirstName();
+        this.lastName = customer.getLastName();
+    }
 }

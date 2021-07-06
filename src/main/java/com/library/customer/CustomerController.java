@@ -20,26 +20,26 @@ public class CustomerController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Customer>> getAllCustomers() {
-        final List<Customer> customers = customerService.getCustomers();
+    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
+        final List<CustomerDTO> customers = customerService.getCustomers();
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) {
-        final Customer newCustomer = customerService.addCustomer(customer);
+    public ResponseEntity<CustomerDTO> addCustomer(@RequestBody CustomerDTO customerDTO) {
+        final CustomerDTO newCustomer = customerService.addCustomer(customerDTO);
         return new ResponseEntity<>(newCustomer, HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Customer> findCustomer(@PathVariable("id") UUID customerId) {
-        Customer customer = customerService.findCustomer(customerId);
+    public ResponseEntity<CustomerDTO> findCustomer(@PathVariable("id") UUID customerId) {
+        CustomerDTO customer = customerService.findCustomer(customerId);
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable("id") UUID customerId, @RequestBody Customer customer) {
-        Customer updatedCustomer = customerService.updateCustomer(customerId, customer);
+    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable("id") UUID customerId, @RequestBody CustomerDTO customerDTO) {
+        CustomerDTO updatedCustomer = customerService.updateCustomer(customerId, customerDTO);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 
