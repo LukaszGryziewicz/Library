@@ -3,6 +3,8 @@ package com.library.customer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -13,36 +15,59 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public List<Customer> getCustomers() {
-        return customerRepository.findAll();
+    CustomerDTO convertCustomerToDTO(Customer customer) {
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setCustomerId(customer.getCustomerId());
+        customerDTO.setFirstName(customer.getFirstName());
+        customerDTO.setLastName(customer.getLastName());
+        return customerDTO;
     }
 
-    public Customer addCustomer(Customer customer) {
-        customerRepository.save(customer);
+    Customer convertDTOToCustomer(CustomerDTO customerDTO) {
+        Customer customer = new Customer();
+        customer.setCustomerId(customerDTO.getCustomerId());
+        customer.setFirstName(customerDTO.getFirstName());
+        customer.setLastName(customerDTO.getLastName());
         return customer;
     }
 
-    public Customer findCustomer(Long id) {
-        return customerRepository.findCustomerById(id)
+    public List<CustomerDTO> getCustomers() {
+        return customerRepository.findAll()
+                .stream()
+                .map(this::convertCustomerToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public CustomerDTO addCustomer(CustomerDTO customerDTO) {
+        customerRepository.save(convertDTOToCustomer(customerDTO));
+        return customerDTO;
+    }
+
+    public CustomerDTO findCustomer(UUID customerId) {
+        final Customer customer = customerRepository.findCustomerByCustomerId(customerId)
                 .orElseThrow(CustomerNotFoundException::new);
+        return convertCustomerToDTO(customer);
+
     }
 
-    public Customer updateCustomer(Long id, Customer customer) {
-        final Customer existingCustomer = findCustomer(id);
-        existingCustomer.setFirstName(customer.getFirstName());
-        existingCustomer.setLastName(customer.getLastName());
-        return customerRepository.save(existingCustomer);
+    public CustomerDTO updateCustomer(UUID customerId, CustomerDTO newCustomer) {
+        final CustomerDTO existingCustomerDTO = findCustomer(customerId);
+        final Customer existingCustomer = convertDTOToCustomer(existingCustomerDTO);
+        existingCustomer.update(convertDTOToCustomer(newCustomer));
+        customerRepository.save(existingCustomer);
+        return convertCustomerToDTO(existingCustomer);
     }
 
-    public void deleteCustomer(Long id) {
-        checkIfCustomerExistById(id);
-        customerRepository.deleteById(id);
+    public void deleteCustomer(UUID customerId) {
+        checkIfCustomerExistById(customerId);
+        customerRepository.deleteCustomerByCustomerId(customerId);
     }
 
-    public void checkIfCustomerExistById(Long id) {
-        final boolean exists = customerRepository.existsById(id);
+    public void checkIfCustomerExistById(UUID customerId) {
+        final boolean exists = customerRepository.existsByCustomerId(customerId);
         if (!exists) {
             throw new CustomerNotFoundException();
         }
     }
+
 }

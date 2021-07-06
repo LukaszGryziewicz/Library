@@ -2,6 +2,7 @@ package com.library.customer;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 public class Customer {
@@ -9,6 +10,7 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private long id;
+    private UUID customerId;
     private String firstName;
     private String lastName;
 
@@ -26,6 +28,14 @@ public class Customer {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
     }
 
     public String getFirstName() {
@@ -49,11 +59,16 @@ public class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return id == customer.id && Objects.equals(firstName, customer.firstName) && Objects.equals(lastName, customer.lastName);
+        return id == customer.id && Objects.equals(customerId, customer.customerId) && Objects.equals(firstName, customer.firstName) && Objects.equals(lastName, customer.lastName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName);
+        return Objects.hash(id, customerId, firstName, lastName);
+    }
+
+    public void update(Customer customer) {
+        this.firstName = customer.getFirstName();
+        this.lastName = customer.getLastName();
     }
 }

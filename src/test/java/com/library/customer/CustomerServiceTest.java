@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,48 +15,56 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 public class CustomerServiceTest {
 
     @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
     private CustomerService customerService;
 
     @Test
     void shouldAddCustomerToDatabase() {
         //given
-        Customer customer1 = new Customer("Adam", "Dominik");
+        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
         //when
         customerService.addCustomer(customer1);
         //then
-        assertThat(customerRepository.findAll()).contains(customer1);
+        final CustomerDTO customer = customerService.findCustomer(customer1.getCustomerId());
+        assertThat(customer).isNotNull();
     }
 
     @Test
     void shouldFindAllCustomersInDatabase() {
         //given
-        Customer customer1 = new Customer("Adam", "Dominik");
-        Customer customer2 = new Customer("Łukasz", "Gryziewicz");
-        customerRepository.saveAll(Arrays.asList(customer1, customer2));
+        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
+        CustomerDTO customer2 = new CustomerDTO("Łukasz", "Gryziewicz");
+        customerService.addCustomer(customer1);
+        customerService.addCustomer(customer2);
         //when
-        final List<Customer> customers = customerService.getCustomers();
+        final List<CustomerDTO> customers = customerService.getCustomers();
         //then
-        assertThat(customers).containsExactlyInAnyOrder(customer1, customer2);
+        assertThat(customers.size()).isEqualTo(2);
+        assertThat(customers.get(0).getCustomerId()).isEqualTo(customer1.getCustomerId());
+        assertThat(customers.get(0).getFirstName()).isEqualTo(customer1.getFirstName());
+        assertThat(customers.get(0).getLastName()).isEqualTo(customer1.getLastName());
+        assertThat(customers.get(1).getCustomerId()).isEqualTo(customer2.getCustomerId());
+        assertThat(customers.get(1).getFirstName()).isEqualTo(customer2.getFirstName());
+        assertThat(customers.get(1).getLastName()).isEqualTo(customer2.getLastName());
+
     }
 
     @Test
     void shouldDeleteCustomerFromDatabase() {
-        Customer customer1 = new Customer("Adam", "Dominik");
-        customerRepository.save(customer1);
+        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
+        customerService.addCustomer(customer1);
         //when
-        customerService.deleteCustomer(customer1.getId());
+        customerService.deleteCustomer(customer1.getCustomerId());
         //then
-        assertThat(customerRepository.findAll()).isEmpty();
+        final List<CustomerDTO> customer = customerService.getCustomers();
+        assertThat(customer).isEmpty();
     }
 
     @Test
     void shouldThrowExceptionWhenDeletingCustomerThatDoesNotExist() {
-        Customer customer1 = new Customer("Adam", "Dominik");
+        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
         //when
         Throwable thrown = catchThrowable(() ->
-                customerService.deleteCustomer(customer1.getId()));
+                customerService.deleteCustomer(customer1.getCustomerId()));
         //than
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class)
                 .hasMessageContaining("Customer not found");
@@ -66,21 +73,21 @@ public class CustomerServiceTest {
     @Test
     void shouldFindCustomer() {
         //given
-        Customer customer1 = new Customer("Adam", "Dominik");
-        customerRepository.save(customer1);
+        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
+        customerService.addCustomer(customer1);
         //when
-        Customer customer = customerService.findCustomer(customer1.getId());
+        CustomerDTO customer = customerService.findCustomer(customer1.getCustomerId());
         //then
-        assertThat(customer).isEqualTo(customer1);
+        assertThat(customer).isNotNull();
     }
 
     @Test
     void shouldThrowExceptionWhenCustomerIsNotFound() {
         //given
-        Customer customer1 = new Customer("Adam", "Dominik");
+        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
         //when
         Throwable thrown = catchThrowable(() ->
-                customerService.findCustomer(customer1.getId()));
+                customerService.findCustomer(customer1.getCustomerId()));
         //then
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class)
                 .hasMessageContaining("Customer not found");
@@ -89,24 +96,26 @@ public class CustomerServiceTest {
     @Test
     void shouldUpdateCustomer() {
         //given
-        Customer customer1 = new Customer("Adam", "Dominik");
-        Customer customer2 = new Customer("Łukasz", "Gryziewicz");
-        customerRepository.save(customer1);
+        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
+        CustomerDTO customer2 = new CustomerDTO("Łukasz", "Gryziewicz");
+        customerService.addCustomer(customer1);
         //when
-        customerService.updateCustomer(customer1.getId(), customer2);
+        customerService.updateCustomer(customer1.getCustomerId(), customer2);
         //then
-        assertThat(customer1.getFirstName()).isEqualTo(customer2.getFirstName());
-        assertThat(customer1.getLastName()).isEqualTo(customer2.getLastName());
+        final List<CustomerDTO> customers = customerService.getCustomers();
+        assertThat(customers.get(1).getCustomerId()).isEqualTo(customer1.getCustomerId());
+        assertThat(customers.get(1).getFirstName()).isEqualTo(customer2.getFirstName());
+        assertThat(customers.get(1).getLastName()).isEqualTo(customer2.getLastName());
     }
 
     @Test
     void shouldThrowExceptionWhenUpdatingCustomerThatDoesNotExist() {
         //given
-        Customer customer1 = new Customer("Adam", "Dominik");
-        Customer customer2 = new Customer("Łukasz", "Gryziewicz");
+        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
+        CustomerDTO customer2 = new CustomerDTO("Łukasz", "Gryziewicz");
         //when
         Throwable thrown = catchThrowable(() ->
-                customerService.updateCustomer(customer1.getId(), customer2));
+                customerService.updateCustomer(customer1.getCustomerId(), customer2));
         //then
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class);
     }
