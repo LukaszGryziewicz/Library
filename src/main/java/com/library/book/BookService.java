@@ -17,6 +17,7 @@ class BookService {
 
     BookDTO convertBookToDTO(Book book) {
         BookDTO bookDTO = new BookDTO();
+        bookDTO.setBookId(book.getBookId());
         bookDTO.setTitle(book.getTitle());
         bookDTO.setAuthor(book.getAuthor());
         bookDTO.setIsbn(book.getIsbn());

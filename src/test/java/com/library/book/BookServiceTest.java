@@ -97,9 +97,11 @@ public class BookServiceTest {
         //when
         bookFacade.updateBook(book1.getBookId(), book2);
         //then
-        final List<BookDTO> booksByTitleAndAuthor = bookFacade.findBooksByTitleAndAuthor(book2.getTitle(), book2.getAuthor());
-        assertThat(booksByTitleAndAuthor.size()).isEqualTo(1);
-        assertThat(booksByTitleAndAuthor.get(0).getIsbn()).isEqualTo(book2.getIsbn());
+        final List<BookDTO> books = bookFacade.getBooks();
+        assertThat(books.get(1).getBookId()).isEqualTo(book1.getBookId());
+        assertThat(books.get(1).getTitle()).isEqualTo(book2.getTitle());
+        assertThat(books.get(1).getAuthor()).isEqualTo(book2.getAuthor());
+        assertThat(books.get(1).getIsbn()).isEqualTo(book2.getIsbn());
     }
 
     @Test
