@@ -47,7 +47,7 @@ public class CustomerServiceTest {
         Customer customer1 = new Customer("Adam", "Dominik");
         customerRepository.save(customer1);
         //when
-        customerService.deleteCustomer(customer1.getId());
+        customerService.deleteCustomer(customer1.getCustomerId());
         //then
         assertThat(customerRepository.findAll()).isEmpty();
     }
@@ -57,7 +57,7 @@ public class CustomerServiceTest {
         Customer customer1 = new Customer("Adam", "Dominik");
         //when
         Throwable thrown = catchThrowable(() ->
-                customerService.deleteCustomer(customer1.getId()));
+                customerService.deleteCustomer(customer1.getCustomerId()));
         //than
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class)
                 .hasMessageContaining("Customer not found");
@@ -69,7 +69,7 @@ public class CustomerServiceTest {
         Customer customer1 = new Customer("Adam", "Dominik");
         customerRepository.save(customer1);
         //when
-        Customer customer = customerService.findCustomer(customer1.getId());
+        Customer customer = customerService.findCustomer(customer1.getCustomerId());
         //then
         assertThat(customer).isEqualTo(customer1);
     }
@@ -80,7 +80,7 @@ public class CustomerServiceTest {
         Customer customer1 = new Customer("Adam", "Dominik");
         //when
         Throwable thrown = catchThrowable(() ->
-                customerService.findCustomer(customer1.getId()));
+                customerService.findCustomer(customer1.getCustomerId()));
         //then
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class)
                 .hasMessageContaining("Customer not found");
@@ -93,7 +93,7 @@ public class CustomerServiceTest {
         Customer customer2 = new Customer("Łukasz", "Gryziewicz");
         customerRepository.save(customer1);
         //when
-        customerService.updateCustomer(customer1.getId(), customer2);
+        customerService.updateCustomer(customer1.getCustomerId(), customer2);
         //then
         assertThat(customer1.getFirstName()).isEqualTo(customer2.getFirstName());
         assertThat(customer1.getLastName()).isEqualTo(customer2.getLastName());
@@ -106,7 +106,7 @@ public class CustomerServiceTest {
         Customer customer2 = new Customer("Łukasz", "Gryziewicz");
         //when
         Throwable thrown = catchThrowable(() ->
-                customerService.updateCustomer(customer1.getId(), customer2));
+                customerService.updateCustomer(customer1.getCustomerId(), customer2));
         //then
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class);
     }
