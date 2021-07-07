@@ -15,7 +15,7 @@ class BookService {
         this.bookRepository = bookRepository;
     }
 
-    BookDTO convertBookToDTO(Book book) {
+    private BookDTO convertBookToDTO(Book book) {
         BookDTO bookDTO = new BookDTO();
         bookDTO.setBookId(book.getBookId());
         bookDTO.setTitle(book.getTitle());
@@ -24,7 +24,7 @@ class BookService {
         return bookDTO;
     }
 
-    Book covertDTOToBook(BookDTO bookDTO) {
+    private Book covertDTOToBook(BookDTO bookDTO) {
         Book book = new Book();
         book.setBookId(bookDTO.getBookId());
         book.setTitle(bookDTO.getTitle());
