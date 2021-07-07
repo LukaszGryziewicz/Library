@@ -11,41 +11,41 @@ import java.util.UUID;
 @RestController
 @EnableWebMvc
 @RequestMapping("/customer")
-public class CustomerController {
+class CustomerController {
 
-    private final CustomerService customerService;
+    private final CustomerFacade customerFacade;
 
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
+    public CustomerController(CustomerFacade customerFacade) {
+        this.customerFacade = customerFacade;
     }
 
     @GetMapping()
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        final List<CustomerDTO> customers = customerService.getCustomers();
+    ResponseEntity<List<CustomerDTO>> getAllCustomers() {
+        final List<CustomerDTO> customers = customerFacade.getCustomers();
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<CustomerDTO> addCustomer(@RequestBody CustomerDTO customerDTO) {
-        final CustomerDTO newCustomer = customerService.addCustomer(customerDTO);
+    ResponseEntity<CustomerDTO> addCustomer(@RequestBody CustomerDTO customerDTO) {
+        final CustomerDTO newCustomer = customerFacade.addCustomer(customerDTO);
         return new ResponseEntity<>(newCustomer, HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<CustomerDTO> findCustomer(@PathVariable("id") UUID customerId) {
-        CustomerDTO customer = customerService.findCustomer(customerId);
+    ResponseEntity<CustomerDTO> findCustomer(@PathVariable("id") UUID customerId) {
+        CustomerDTO customer = customerFacade.findCustomer(customerId);
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable("id") UUID customerId, @RequestBody CustomerDTO customerDTO) {
-        CustomerDTO updatedCustomer = customerService.updateCustomer(customerId, customerDTO);
+    ResponseEntity<CustomerDTO> updateCustomer(@PathVariable("id") UUID customerId, @RequestBody CustomerDTO customerDTO) {
+        CustomerDTO updatedCustomer = customerFacade.updateCustomer(customerId, customerDTO);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteCustomer(@PathVariable("id") UUID customerId) {
-        customerService.deleteCustomer(customerId);
+    ResponseEntity<?> deleteCustomer(@PathVariable("id") UUID customerId) {
+        customerFacade.deleteCustomer(customerId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

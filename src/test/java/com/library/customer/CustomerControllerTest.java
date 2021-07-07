@@ -25,15 +25,15 @@ public class CustomerControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private CustomerService customerService;
+    private CustomerFacade customerFacade;
 
     @Test
     void shouldReturnAllCustomers() throws Exception {
         //given
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         CustomerDTO customer2 = new CustomerDTO("Łukasz", "Gryziewicz");
-        customerService.addCustomer(customer);
-        customerService.addCustomer(customer2);
+        customerFacade.addCustomer(customer);
+        customerFacade.addCustomer(customer2);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.get("/customer"))
                 .andDo(print())
@@ -65,7 +65,7 @@ public class CustomerControllerTest {
     void shouldReturnCustomerWithGivenId() throws Exception {
         //given
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
-        customerService.addCustomer(customer);
+        customerFacade.addCustomer(customer);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.get("/customer/" + customer.getCustomerId()))
                 .andDo(print())
@@ -78,7 +78,7 @@ public class CustomerControllerTest {
     void shouldFindCustomerById() throws Exception {
         //given
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
-        customerService.addCustomer(customer);
+        customerFacade.addCustomer(customer);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.get("/customer/" + customer.getCustomerId()))
                 .andDo(print())
@@ -92,7 +92,7 @@ public class CustomerControllerTest {
         //given
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         CustomerDTO customer2 = new CustomerDTO("Łukasz", "Gryziewicz");
-        customerService.addCustomer(customer);
+        customerFacade.addCustomer(customer);
         String content = objectMapper.writeValueAsString(customer2);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.put("/customer/update/" + customer.getCustomerId())
@@ -108,7 +108,7 @@ public class CustomerControllerTest {
     void shouldDeleteCustomer() throws Exception {
         //given
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
-        customerService.addCustomer(customer);
+        customerFacade.addCustomer(customer);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.delete("/customer/delete/" + customer.getCustomerId()))
                 .andExpect(status().isOk());

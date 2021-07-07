@@ -7,7 +7,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class CustomerService {
+class CustomerService {
 
     private final CustomerRepository customerRepository;
 
@@ -31,26 +31,26 @@ public class CustomerService {
         return customer;
     }
 
-    public List<CustomerDTO> getCustomers() {
+    List<CustomerDTO> getCustomers() {
         return customerRepository.findAll()
                 .stream()
                 .map(this::convertCustomerToDTO)
                 .collect(Collectors.toList());
     }
 
-    public CustomerDTO addCustomer(CustomerDTO customerDTO) {
+    CustomerDTO addCustomer(CustomerDTO customerDTO) {
         customerRepository.save(convertDTOToCustomer(customerDTO));
         return customerDTO;
     }
 
-    public CustomerDTO findCustomer(UUID customerId) {
+    CustomerDTO findCustomer(UUID customerId) {
         final Customer customer = customerRepository.findCustomerByCustomerId(customerId)
                 .orElseThrow(CustomerNotFoundException::new);
         return convertCustomerToDTO(customer);
 
     }
 
-    public CustomerDTO updateCustomer(UUID customerId, CustomerDTO newCustomer) {
+    CustomerDTO updateCustomer(UUID customerId, CustomerDTO newCustomer) {
         final CustomerDTO existingCustomerDTO = findCustomer(customerId);
         final Customer existingCustomer = convertDTOToCustomer(existingCustomerDTO);
         existingCustomer.update(convertDTOToCustomer(newCustomer));
@@ -58,12 +58,12 @@ public class CustomerService {
         return convertCustomerToDTO(existingCustomer);
     }
 
-    public void deleteCustomer(UUID customerId) {
+    void deleteCustomer(UUID customerId) {
         checkIfCustomerExistById(customerId);
         customerRepository.deleteCustomerByCustomerId(customerId);
     }
 
-    public void checkIfCustomerExistById(UUID customerId) {
+    void checkIfCustomerExistById(UUID customerId) {
         final boolean exists = customerRepository.existsByCustomerId(customerId);
         if (!exists) {
             throw new CustomerNotFoundException();

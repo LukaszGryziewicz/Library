@@ -11,7 +11,7 @@ import java.util.UUID;
 @RestController
 @EnableWebMvc
 @RequestMapping("/book")
-public class BookController {
+class BookController {
     private final BookFacade bookFacade;
 
     public BookController(BookFacade bookFacade) {
