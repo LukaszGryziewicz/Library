@@ -5,6 +5,7 @@ import com.library.customer.Customer;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 public class Rental {
@@ -12,6 +13,8 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private long id;
+
+    private UUID rentalId;
 
     @ManyToOne
     private Customer customer;
@@ -27,8 +30,19 @@ public class Rental {
         this.book = book;
     }
 
+    public Rental(UUID rentalId, Customer customer, Book book) {
+    }
+
     public long getId() {
         return id;
+    }
+
+    public UUID getRentalId() {
+        return rentalId;
+    }
+
+    public void setRentalId(UUID rentalId) {
+        this.rentalId = rentalId;
     }
 
     public Customer getCustomer() {

@@ -15,7 +15,7 @@ class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    private CustomerDTO convertCustomerToDTO(Customer customer) {
+    CustomerDTO convertCustomerToDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setCustomerId(customer.getCustomerId());
         customerDTO.setFirstName(customer.getFirstName());
@@ -23,7 +23,7 @@ class CustomerService {
         return customerDTO;
     }
 
-    private Customer convertDTOToCustomer(CustomerDTO customerDTO) {
+    Customer convertDTOToCustomer(CustomerDTO customerDTO) {
         Customer customer = new Customer();
         customer.setCustomerId(customerDTO.getCustomerId());
         customer.setFirstName(customerDTO.getFirstName());

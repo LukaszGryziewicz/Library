@@ -14,6 +14,14 @@ public class CustomerFacade {
         this.customerService = customerService;
     }
 
+    public CustomerDTO convertCustomerToDTO(Customer customer) {
+        return customerService.convertCustomerToDTO(customer);
+    }
+
+    public Customer convertDTOToCustomer(CustomerDTO customerDTO) {
+        return customerService.convertDTOToCustomer(customerDTO);
+    }
+
     List<CustomerDTO> getCustomers() {
         return customerService.getCustomers();
     }

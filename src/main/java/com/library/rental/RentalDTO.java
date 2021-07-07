@@ -4,23 +4,25 @@ import com.library.book.Book;
 import com.library.customer.Customer;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class RentalDTO {
-    private long id;
+    private UUID rentalId;
     private Customer customer;
     private Book book;
 
-    public RentalDTO(Customer customer, Book book) {
+    public RentalDTO(UUID rentalId, Customer customer, Book book) {
+        this.rentalId = rentalId;
         this.customer = customer;
         this.book = book;
     }
 
-    public long getId() {
-        return id;
+    public UUID getRentalId() {
+        return rentalId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setRentalId(UUID rentalId) {
+        this.rentalId = rentalId;
     }
 
     public Customer getCustomer() {
@@ -44,11 +46,11 @@ public class RentalDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RentalDTO rentalDTO = (RentalDTO) o;
-        return id == rentalDTO.id && Objects.equals(customer, rentalDTO.customer) && Objects.equals(book, rentalDTO.book);
+        return Objects.equals(rentalId, rentalDTO.rentalId) && Objects.equals(customer, rentalDTO.customer) && Objects.equals(book, rentalDTO.book);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customer, book);
+        return Objects.hash(rentalId, customer, book);
     }
 }

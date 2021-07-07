@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/rental")
@@ -17,44 +18,44 @@ public class RentalController {
     }
 
     @GetMapping()
-    ResponseEntity<List<Rental>> getAllRentalsOfCustomer() {
-        final List<Rental> rentals = rentalService.getAllRentals();
+    ResponseEntity<List<RentalDTO>> getAllRentalsOfCustomer() {
+        final List<RentalDTO> rentals = rentalService.getAllRentals();
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 
     @GetMapping("/customerRentals/{id}")
-    ResponseEntity<List<Rental>> getRentalsOfCustomer(@PathVariable("id") Long id) {
-        final List<Rental> rentals = rentalService.getRentalsOfCustomer(id);
+    ResponseEntity<List<RentalDTO>> getRentalsOfCustomer(@PathVariable("id") UUID customerId) {
+        final List<RentalDTO> rentals = rentalService.getRentalsOfCustomer(customerId);
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 
     @GetMapping("/bookRentals/{id}")
-    ResponseEntity<List<Rental>> getRentalsOfBook(@PathVariable("id") Long id) {
-        final List<Rental> rentalsOfBook = rentalService.getRentalsOfBook(id);
+    ResponseEntity<List<RentalDTO>> getRentalsOfBook(@PathVariable("id") UUID customerId) {
+        final List<RentalDTO> rentalsOfBook = rentalService.getRentalsOfBook(customerId);
         return new ResponseEntity<>(rentalsOfBook, HttpStatus.OK);
     }
 
     @PostMapping("/{customerId}/{title}/{author}")
-    ResponseEntity<Rental> addNewRental(@PathVariable("customerId") Long customerId, @PathVariable("title") String title, @PathVariable("author") String author) throws ExceededMaximumNumberOfRentalsException {
-        final Rental newRental = rentalService.rent(customerId, title, author, LocalDateTime.now());
+    ResponseEntity<RentalDTO> addNewRental(@PathVariable("customerId") UUID customerId, @PathVariable("title") String title, @PathVariable("author") String author) throws ExceededMaximumNumberOfRentalsException {
+        final RentalDTO newRental = rentalService.rent(customerId, title, author, LocalDateTime.now());
         return new ResponseEntity<>(newRental, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Rental> findRentalById(@PathVariable("id") Long id) {
-        Rental rentalById = rentalService.findRental(id);
+    ResponseEntity<RentalDTO> findRentalById(@PathVariable("id") UUID rentalId) {
+        RentalDTO rentalById = rentalService.findRental(rentalId);
         return new ResponseEntity<>(rentalById, HttpStatus.OK);
     }
 
     @PostMapping("/endRental/{id}")
-    ResponseEntity<Rental> endRental(@PathVariable("id") Long id) {
-        rentalService.returnBook(id, LocalDateTime.now());
+    ResponseEntity<RentalDTO> endRental(@PathVariable("id") UUID customerId) {
+        rentalService.returnBook(customerId, LocalDateTime.now());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    ResponseEntity<?> deleteRental(@PathVariable("id") Long id) {
-        rentalService.deleteRental(id);
+    ResponseEntity<?> deleteRental(@PathVariable("id") UUID customerId) {
+        rentalService.deleteRental(customerId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
