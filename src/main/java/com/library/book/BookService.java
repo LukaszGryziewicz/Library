@@ -50,9 +50,13 @@ class BookService {
     }
 
     BookDTO findBook(UUID bookId) {
-        final Book book = bookRepository.findBookByBookId(bookId)
-                .orElseThrow(BookNotFoundException::new);
+        final Book book = findBookEntity(bookId);
         return convertBookToDTO(book);
+    }
+
+    private Book findBookEntity(UUID bookId) {
+        return bookRepository.findBookByBookId(bookId)
+                .orElseThrow(BookNotFoundException::new);
     }
 
     List<BookDTO> findBooksByTitleAndAuthor(String title, String author) {
@@ -69,12 +73,11 @@ class BookService {
         return convertBookToDTO(book);
     }
 
-    BookDTO updateBook(UUID bookId, BookDTO newBookDTO) {
-        final BookDTO existingBookDTO = findBook(bookId);
-        final Book book = covertDTOToBook(existingBookDTO);
-        book.update(covertDTOToBook(newBookDTO));
-        bookRepository.save(book);
-        return newBookDTO;
+    BookDTO updateBook(UUID bookId, BookDTO updatedBookDTO) {
+        final Book existingBook = findBookEntity(bookId);
+        existingBook.update(covertDTOToBook(updatedBookDTO));
+        bookRepository.save(existingBook);
+        return updatedBookDTO;
     }
 
     void deleteBook(UUID bookId) {
