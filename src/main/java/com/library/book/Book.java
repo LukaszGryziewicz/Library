@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-public class Book {
+class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
@@ -16,61 +16,61 @@ public class Book {
     private String isbn;
     private boolean rented;
 
-    public Book() {
+    Book() {
     }
 
-    public Book(String title, String author, String isbn) {
+    Book(String title, String author, String isbn) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
     }
 
-    public UUID getBookId() {
+    UUID getBookId() {
         return bookId;
     }
 
-    public void setBookId(UUID bookId) {
+    void setBookId(UUID bookId) {
         this.bookId = bookId;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public void setRented(boolean rented) {
-        this.rented = rented;
-    }
-
-    public long getId() {
+    long getId() {
         return id;
     }
 
-    public String getTitle() {
+    void setId(long id) {
+        this.id = id;
+    }
+
+    String getTitle() {
         return title;
     }
 
-    public String getAuthor() {
+    void setTitle(String title) {
+        this.title = title;
+    }
+
+    String getAuthor() {
         return author;
     }
 
-    public String getIsbn() {
+    void setAuthor(String author) {
+        this.author = author;
+    }
+
+    String getIsbn() {
         return isbn;
     }
 
-    public boolean isRented() {
+    void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    boolean isRented() {
         return rented;
+    }
+
+    void setRented(boolean rented) {
+        this.rented = rented;
     }
 
     @Override
@@ -86,15 +86,15 @@ public class Book {
         return Objects.hash(id, bookId, title, author, isbn, rented);
     }
 
-    public void rent() {
+    void rent() {
         rented = true;
     }
 
-    public void returnBook() {
+    void returnBook() {
         rented = false;
     }
 
-    public void update(Book book) {
+    void update(Book book) {
         this.title = book.getTitle();
         this.author = book.getAuthor();
         this.isbn = book.getIsbn();

@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-public class Rental {
+class Rental {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
@@ -15,44 +15,44 @@ public class Rental {
     private UUID customerId;
     private UUID bookId;
 
-    public Rental() {
+    Rental() {
     }
 
-    public Rental(UUID rentalId, UUID customerId, UUID bookId) {
+    Rental(UUID rentalId, UUID customerId, UUID bookId) {
         this.rentalId = rentalId;
         this.customerId = customerId;
         this.bookId = bookId;
     }
 
-    public long getId() {
+    long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    void setId(long id) {
         this.id = id;
     }
 
-    public UUID getRentalId() {
+    UUID getRentalId() {
         return rentalId;
     }
 
-    public void setRentalId(UUID rentalId) {
+    void setRentalId(UUID rentalId) {
         this.rentalId = rentalId;
     }
 
-    public UUID getCustomerId() {
+    UUID getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(UUID customerId) {
+    void setCustomerId(UUID customerId) {
         this.customerId = customerId;
     }
 
-    public UUID getBookId() {
+    UUID getBookId() {
         return bookId;
     }
 
-    public void setBookId(UUID bookId) {
+    void setBookId(UUID bookId) {
         this.bookId = bookId;
     }
 

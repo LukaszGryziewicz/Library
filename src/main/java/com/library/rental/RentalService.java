@@ -1,6 +1,5 @@
 package com.library.rental;
 
-import com.library.book.Book;
 import com.library.book.BookDTO;
 import com.library.book.BookFacade;
 import com.library.customer.CustomerFacade;
@@ -45,8 +44,7 @@ public class RentalService {
         checkIfCustomerIsEligibleForRental(customerId);
         bookFacade.findBooksByTitleAndAuthor(title, author);
         final BookDTO availableBook = bookFacade.findFirstAvailableBookByTitleAndAuthor(title, author);
-        final Book book = bookFacade.covertDTOToBook(availableBook);
-        bookFacade.rentBook(book.getBookId());
+        bookFacade.rentBook(availableBook.getBookId());
         Rental rental = new Rental(UUID.randomUUID(), customerId, availableBook.getBookId());
         rentalRepository.save(rental);
         return convertRentalToDTO(rental);

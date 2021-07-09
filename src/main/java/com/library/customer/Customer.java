@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-public class Customer {
+class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
@@ -54,6 +54,11 @@ public class Customer {
         this.lastName = lastName;
     }
 
+    void update(Customer customer) {
+        this.firstName = customer.getFirstName();
+        this.lastName = customer.getLastName();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,10 +70,5 @@ public class Customer {
     @Override
     public int hashCode() {
         return Objects.hash(id, customerId, firstName, lastName);
-    }
-
-    public void update(Customer customer) {
-        this.firstName = customer.getFirstName();
-        this.lastName = customer.getLastName();
     }
 }
