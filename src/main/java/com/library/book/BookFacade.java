@@ -9,6 +9,14 @@ import java.util.UUID;
 public class BookFacade {
     private final BookService bookService;
 
+    public BookDTO convertBookToDTO(Book book) {
+        return bookService.convertBookToDTO(book);
+    }
+
+    public Book covertDTOToBook(BookDTO bookDTO) {
+        return bookService.covertDTOToBook(bookDTO);
+    }
+
     BookFacade(BookService bookService) {
         this.bookService = bookService;
     }
@@ -33,7 +41,7 @@ public class BookFacade {
         return bookService.findFirstAvailableBookByTitleAndAuthor(title, author);
     }
 
-    BookDTO updateBook(UUID bookId, BookDTO newBook) {
+    public BookDTO updateBook(UUID bookId, BookDTO newBook) {
         return bookService.updateBook(bookId, newBook);
     }
 
@@ -44,5 +52,14 @@ public class BookFacade {
     public void checkIfBookExistById(UUID bookId) {
         bookService.checkIfBookExistById(bookId);
     }
+
+    public void returnBook(UUID bookId) {
+        bookService.returnBook(bookId);
+    }
+
+    public void rentBook(UUID bookId) {
+        bookService.rentBook(bookId);
+    }
+
 
 }

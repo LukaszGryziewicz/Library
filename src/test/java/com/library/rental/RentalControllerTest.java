@@ -1,9 +1,9 @@
 package com.library.rental;
 
-import com.library.book.Book;
+import com.library.book.BookDTO;
 import com.library.book.BookFacade;
-import com.library.customer.Customer;
-import com.library.customer.CustomerService;
+import com.library.customer.CustomerDTO;
+import com.library.customer.CustomerFacade;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,7 +27,7 @@ public class RentalControllerTest {
     MockMvc mockMvc;
 
     @Autowired
-    CustomerService customerService;
+    CustomerFacade customerFacade;
 
     @Autowired
     BookFacade bookFacade;
@@ -38,124 +38,122 @@ public class RentalControllerTest {
     @Test
     void shouldReturnAllRentals() throws Exception {
         //given
-        Customer customer = new Customer("Adam", "Dominik");
-        Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        customerService.addCustomer(customer);
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
+        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        customerFacade.addCustomer(customer);
         bookFacade.addNewBook(book);
-        final Rental rental = rentalService.rent(
-                customer.getId(), book.getTitle(),
+        final RentalDTO rental = rentalService.rent(
+                customer.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
         //expect
         mockMvc.perform(get("/rental"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].customer").value(rental.getCustomer()))
-                .andExpect(jsonPath("$[0].book").value(rental.getBook()));
+                .andExpect(jsonPath("$[0].customerId").value(rental.getCustomerId().toString()))
+                .andExpect(jsonPath("$[0].bookId").value(rental.getBookId().toString()));
     }
 
     @Test
     void shouldFindRentalsOfCustomer() throws Exception {
         //given
-        Customer customer = new Customer("Adam", "Dominik");
-        Customer customer2 = new Customer("Łukasz", "Gryziewicz");
-        Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        Book book2 = new Book("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        customerService.addCustomer(customer);
-        customerService.addCustomer(customer2);
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
+        CustomerDTO customer2 = new CustomerDTO("Łukasz", "Gryziewicz");
+        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
+        customerFacade.addCustomer(customer);
+        customerFacade.addCustomer(customer2);
         bookFacade.addNewBook(book);
         bookFacade.addNewBook(book2);
         rentalService.rent(
-                customer.getId(), book2.getTitle(),
+                customer.getCustomerId(), book2.getTitle(),
                 book2.getAuthor(), LocalDateTime.now()
         );
         rentalService.rent(
-                customer2.getId(), book.getTitle(),
+                customer2.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
         //expect
-        mockMvc.perform(get("/rental/customerRentals/" + customer.getId()))
+        mockMvc.perform(get("/rental/customerRentals/" + customer.getCustomerId()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].customer").value(customer))
-                .andExpect(jsonPath("$[0].book").value(book2));
+                .andExpect(jsonPath("$[0].customerId").value(customer.getCustomerId().toString()))
+                .andExpect(jsonPath("$[0].bookId").value(book2.getBookId().toString()));
     }
 
     @Test
     void shouldFindRentalsOfBook() throws Exception {
         //given
-        Customer customer = new Customer("Adam", "Dominik");
-        Customer customer2 = new Customer("Łukasz", "Gryziewicz");
-        Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        customerService.addCustomer(customer);
-        customerService.addCustomer(customer2);
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
+        CustomerDTO customer2 = new CustomerDTO("Łukasz", "Gryziewicz");
+        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        customerFacade.addCustomer(customer);
+        customerFacade.addCustomer(customer2);
         bookFacade.addNewBook(book);
-        rentalService.rent(
-                customer.getId(), book.getTitle(),
+        final RentalDTO rental1 = rentalService.rent(
+                customer.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
-        book.returnBook();
+        rentalService.returnBook(rental1.getRentalId(), LocalDateTime.now());
         rentalService.rent(
-                customer2.getId(), book.getTitle(),
+                customer2.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
         //expect
-        mockMvc.perform(get("/rental/bookRentals/" + book.getId()))
+        mockMvc.perform(get("/rental/bookRentals/" + book.getBookId()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].customer").value(customer))
-                .andExpect(jsonPath("$[0].book").value(book))
-                .andExpect(jsonPath("$[1].customer").value(customer2))
-                .andExpect(jsonPath("$[1].book").value(book));
+                .andExpect(jsonPath("$[0].customerId").value(customer2.getCustomerId().toString()))
+                .andExpect(jsonPath("$[0].bookId").value(book.getBookId().toString()));
     }
 
     @Test
     void shouldAddRental() throws Exception {
         //when
-        Customer customer = new Customer("Adam", "Dominik");
-        Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        customerService.addCustomer(customer);
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
+        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        customerFacade.addCustomer(customer);
         bookFacade.addNewBook(book);
         //expect
-        mockMvc.perform(post(("/rental/" + customer.getId() + "/" + book.getTitle()) + "/" + book.getAuthor()))
+        mockMvc.perform(post(("/rental/" + customer.getCustomerId() + "/" + book.getTitle()) + "/" + book.getAuthor()))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.customer").value(customer))
-                .andExpect(jsonPath("$.book").value(book));
+                .andExpect(jsonPath("$.customerId").value(customer.getCustomerId().toString()))
+                .andExpect(jsonPath("$.bookId").value(book.getBookId().toString()));
     }
 
     @Test
     void shouldFindRentalById() throws Exception {
         //when
-        Customer customer = new Customer("Adam", "Dominik");
-        Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        customerService.addCustomer(customer);
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
+        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        customerFacade.addCustomer(customer);
         bookFacade.addNewBook(book);
-        final Rental rental = rentalService.rent(
-                customer.getId(), book.getTitle(),
+        final RentalDTO rental = rentalService.rent(
+                customer.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
         //expect
-        mockMvc.perform(get("/rental/" + rental.getId()))
+        mockMvc.perform(get("/rental/" + rental.getRentalId()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.customer").value(customer))
-                .andExpect(jsonPath("$.book").value(book));
+                .andExpect(jsonPath("$.customerId").value(customer.getCustomerId().toString()))
+                .andExpect(jsonPath("$.bookId").value(book.getBookId().toString()));
     }
 
     @Test
     void shouldEndRental() throws Exception {
         //when
-        Customer customer = new Customer("Adam", "Dominik");
-        Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        customerService.addCustomer(customer);
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
+        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        customerFacade.addCustomer(customer);
         bookFacade.addNewBook(book);
-        Rental rental = rentalService.rent(
-                customer.getId(), book.getTitle(),
+        RentalDTO rental = rentalService.rent(
+                customer.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
         //expect
-        mockMvc.perform(post("/rental/endRental/" + rental.getId()))
+        mockMvc.perform(post("/rental/endRental/" + rental.getRentalId()))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -163,16 +161,16 @@ public class RentalControllerTest {
     @Test
     void shouldDeleteRental() throws Exception {
         //when
-        Customer customer = new Customer("Adam", "Dominik");
-        Book book = new Book("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        customerService.addCustomer(customer);
+        CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
+        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        customerFacade.addCustomer(customer);
         bookFacade.addNewBook(book);
-        Rental rental = rentalService.rent(
-                customer.getId(), book.getTitle(),
+        RentalDTO rental = rentalService.rent(
+                customer.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
         //expect
-        mockMvc.perform(delete("/rental/delete/" + rental.getId()))
+        mockMvc.perform(delete("/rental/delete/" + rental.getRentalId()))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

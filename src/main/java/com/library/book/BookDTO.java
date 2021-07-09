@@ -8,6 +8,7 @@ public class BookDTO {
     private String title;
     private String author;
     private String isbn;
+    private boolean rented;
 
     public BookDTO() {
     }
@@ -49,6 +50,14 @@ public class BookDTO {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public boolean isRented() {
+        return rented;
+    }
+
+    public void setRented(boolean rented) {
+        this.rented = rented;
     }
 
     @Override

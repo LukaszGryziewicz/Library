@@ -15,22 +15,35 @@ class BookService {
         this.bookRepository = bookRepository;
     }
 
-    private BookDTO convertBookToDTO(Book book) {
+    BookDTO convertBookToDTO(Book book) {
         BookDTO bookDTO = new BookDTO();
         bookDTO.setBookId(book.getBookId());
         bookDTO.setTitle(book.getTitle());
         bookDTO.setAuthor(book.getAuthor());
         bookDTO.setIsbn(book.getIsbn());
+        bookDTO.setRented(book.isRented());
         return bookDTO;
     }
 
-    private Book covertDTOToBook(BookDTO bookDTO) {
+    Book covertDTOToBook(BookDTO bookDTO) {
         Book book = new Book();
         book.setBookId(bookDTO.getBookId());
         book.setTitle(bookDTO.getTitle());
         book.setAuthor(bookDTO.getAuthor());
         book.setIsbn(bookDTO.getIsbn());
         return book;
+    }
+
+    void returnBook(UUID bookId) {
+        final Book book = findBookEntity(bookId);
+        book.returnBook();
+        bookRepository.save(book);
+    }
+
+    void rentBook(UUID bookId) {
+        final Book book = findBookEntity(bookId);
+        book.rent();
+        bookRepository.save(book);
     }
 
     List<BookDTO> convertListOfBookToDTO(List<Book> listOfBooks) {
