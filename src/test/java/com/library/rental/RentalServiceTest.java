@@ -1,7 +1,9 @@
 package com.library.rental;
 
-import com.library.book.*;
-import com.library.customer.Customer;
+import com.library.book.BookDTO;
+import com.library.book.BookFacade;
+import com.library.book.BookNotFoundException;
+import com.library.book.NoBookAvailableException;
 import com.library.customer.CustomerDTO;
 import com.library.customer.CustomerFacade;
 import com.library.customer.CustomerNotFoundException;
@@ -54,7 +56,8 @@ public class RentalServiceTest {
         //when
         final RentalDTO rental1 = rentalService.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
         //then
-        assertThat(rental1.getBook().isRented()).isTrue();
+        final BookDTO book = bookFacade.findBook(rental1.getBookId());
+        assertThat(book.isRented()).isTrue();
     }
 
 
@@ -65,6 +68,7 @@ public class RentalServiceTest {
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
         bookFacade.addNewBook(book1);
         customerFacade.addCustomer(customer1);
+        rentalService.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
         //when
         Throwable thrown = catchThrowable(() -> rentalService.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now()));
         //then
@@ -123,14 +127,6 @@ public class RentalServiceTest {
         rentalService.returnBook(rental1.getRentalId(), LocalDateTime.now());
         //then
         assertThat(rentalService.getAllRentals()).isEmpty();
-        assertThat(historicalRentalRepository.findAll().size()).isEqualTo(1);
-        final Customer customer = rental1.getCustomer();
-        final Book book = rental1.getBook();
-        assertThat(historicalRentalRepository.findHistoricalRentalsByFirstNameAndLastNameAndTitleAndAuthor(
-                customer.getFirstName(),
-                customer.getLastName(),
-                book.getTitle(),
-                book.getAuthor())).isNotEmpty();
     }
 
     @Test
@@ -161,11 +157,8 @@ public class RentalServiceTest {
         //given
         BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
         BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
         CustomerDTO customer2 = new CustomerDTO("Adam", "Dominik");
-
-
         bookFacade.addNewBook(book1);
         bookFacade.addNewBook(book2);
         customerFacade.addCustomer(customer1);
@@ -178,8 +171,8 @@ public class RentalServiceTest {
         assertThat(rentalByCustomer).hasSize(1);
         final RentalDTO rentalFromDB = rentalByCustomer.get(0);
         assertThat(rentalFromDB.getRentalId()).isEqualTo(rental1.getRentalId());
-        assertThat(rentalFromDB.getBook().getIsbn()).isEqualTo(book1.getIsbn());
-        assertThat(rentalFromDB.getCustomer().getCustomerId()).isEqualTo(customer1.getCustomerId());
+        assertThat(rentalFromDB.getCustomerId()).isEqualTo(rental1.getCustomerId());
+        assertThat(rentalFromDB.getBookId()).isEqualTo(rental1.getBookId());
     }
 
     @Test
@@ -195,11 +188,13 @@ public class RentalServiceTest {
         customerFacade.addCustomer(customer2);
         final RentalDTO rental1 = rentalService.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
         rentalService.returnBook(rental1.getRentalId(), LocalDateTime.now());
-        rentalService.rent(customer2.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
+        final RentalDTO rental2 = rentalService.rent(customer2.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
         //when
         final List<RentalDTO> rentalByBook = rentalService.getRentalsOfBook(book1.getBookId());
         //than
-        assertThat(rentalByBook).hasSize(2);
+        assertThat(rentalByBook).hasSize(1);
+        final RentalDTO rentalFromDB = rentalByBook.get(0);
+        assertThat(rentalFromDB.getRentalId()).isEqualTo(rental2.getRentalId());
     }
 
     @Test

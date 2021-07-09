@@ -57,4 +57,9 @@ public class BookFacade {
         bookService.returnBook(bookId);
     }
 
+    public void rentBook(UUID bookId) {
+        bookService.rentBook(bookId);
+    }
+
+
 }

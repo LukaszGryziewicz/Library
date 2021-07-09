@@ -21,6 +21,7 @@ class BookService {
         bookDTO.setTitle(book.getTitle());
         bookDTO.setAuthor(book.getAuthor());
         bookDTO.setIsbn(book.getIsbn());
+        bookDTO.setRented(book.isRented());
         return bookDTO;
     }
 
@@ -36,8 +37,14 @@ class BookService {
     void returnBook(UUID bookId) {
         final Book book = findBookEntity(bookId);
         book.returnBook();
+        bookRepository.save(book);
     }
 
+    void rentBook(UUID bookId) {
+        final Book book = findBookEntity(bookId);
+        book.rent();
+        bookRepository.save(book);
+    }
 
     List<BookDTO> convertListOfBookToDTO(List<Book> listOfBooks) {
         return listOfBooks.stream()

@@ -3,10 +3,7 @@ package com.library.rental;
 import com.library.book.Book;
 import com.library.book.BookDTO;
 import com.library.book.BookFacade;
-import com.library.customer.Customer;
-import com.library.customer.CustomerDTO;
 import com.library.customer.CustomerFacade;
-import com.library.rentalHistory.HistoricalRental;
 import com.library.rentalHistory.HistoricalRentalRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,29 +34,20 @@ public class RentalService {
 
     private RentalDTO convertRentalToDTO(Rental rental) {
         return new RentalDTO(
-                UUID.randomUUID(),
-                rental.getCustomer(),
-                rental.getBook()
-        );
-    }
-
-    private Rental convertDTOToRental(RentalDTO rentalDTO) {
-        return new Rental(
-                rentalDTO.getRentalId(),
-                rentalDTO.getCustomer(),
-                rentalDTO.getBook()
+                rental.getRentalId(),
+                rental.getCustomerId(),
+                rental.getBookId()
         );
     }
 
     public RentalDTO rent(UUID customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
-        final CustomerDTO customer = customerFacade.findCustomer(customerId);
+        customerFacade.findCustomer(customerId);
+        checkIfCustomerIsEligibleForRental(customerId);
         bookFacade.findBooksByTitleAndAuthor(title, author);
         final BookDTO availableBook = bookFacade.findFirstAvailableBookByTitleAndAuthor(title, author);
-        checkIfCustomerIsEligibleForRental(customerId);
         final Book book = bookFacade.covertDTOToBook(availableBook);
-        final Customer customer1 = customerFacade.convertDTOToCustomer(customer);
-        Rental rental = new Rental(customer1, book);
-        book.rent();
+        bookFacade.rentBook(book.getBookId());
+        Rental rental = new Rental(UUID.randomUUID(), customerId, availableBook.getBookId());
         rentalRepository.save(rental);
         return convertRentalToDTO(rental);
     }
@@ -71,7 +59,7 @@ public class RentalService {
     }
 
     private int booksRentedByCustomer(UUID customerId) {
-        return rentalRepository.countRentalsByCustomer_CustomerId(customerId);
+        return rentalRepository.countRentalsByCustomerId(customerId);
     }
 
     public RentalDTO findRental(UUID rentalId) {
@@ -83,16 +71,7 @@ public class RentalService {
     @Transactional
     public void returnBook(UUID rentalId, LocalDateTime dateOfReturn) {
         final RentalDTO rental = findRental(rentalId);
-        final Book book = rental.getBook();
-        final Customer customer = rental.getCustomer();
-        HistoricalRental historicalRental = new HistoricalRental(
-                book.getTitle(),
-                book.getAuthor(),
-                book.getIsbn(),
-                customer.getFirstName(),
-                customer.getLastName());
-        historicalRentalRepository.save(historicalRental);
-        bookFacade.returnBook(book.getBookId());
+        bookFacade.returnBook(rental.getBookId());
         rentalRepository.deleteRentalByRentalId(rental.getRentalId());
     }
 
@@ -115,14 +94,14 @@ public class RentalService {
     }
 
     public List<RentalDTO> getRentalsOfCustomer(UUID customerId) {
-        return rentalRepository.findRentalsByCustomer_CustomerId(customerId)
+        return rentalRepository.findRentalsByCustomerId(customerId)
                 .stream()
                 .map(this::convertRentalToDTO)
                 .collect(Collectors.toList());
     }
 
     public List<RentalDTO> getRentalsOfBook(UUID bookId) {
-        return rentalRepository.findRentalByBookBookId(bookId)
+        return rentalRepository.findRentalByBookId(bookId)
                 .stream()
                 .map(this::convertRentalToDTO)
                 .collect(Collectors.toList());

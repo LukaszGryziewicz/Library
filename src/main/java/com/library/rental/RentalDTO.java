@@ -1,20 +1,19 @@
 package com.library.rental;
 
-import com.library.book.Book;
-import com.library.customer.Customer;
-
-import java.util.Objects;
 import java.util.UUID;
 
 public class RentalDTO {
     private UUID rentalId;
-    private Customer customer;
-    private Book book;
+    private UUID customerId;
+    private UUID bookId;
 
-    public RentalDTO(UUID rentalId, Customer customer, Book book) {
+    public RentalDTO() {
+    }
+
+    public RentalDTO(UUID rentalId, UUID customerId, UUID bookId) {
         this.rentalId = rentalId;
-        this.customer = customer;
-        this.book = book;
+        this.customerId = customerId;
+        this.bookId = bookId;
     }
 
     public UUID getRentalId() {
@@ -25,32 +24,19 @@ public class RentalDTO {
         this.rentalId = rentalId;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public UUID getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
     }
 
-    public Book getBook() {
-        return book;
+    public UUID getBookId() {
+        return bookId;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RentalDTO rentalDTO = (RentalDTO) o;
-        return Objects.equals(rentalId, rentalDTO.rentalId) && Objects.equals(customer, rentalDTO.customer) && Objects.equals(book, rentalDTO.book);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(rentalId, customer, book);
+    public void setBookId(UUID bookId) {
+        this.bookId = bookId;
     }
 }

@@ -10,11 +10,11 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
 
     Optional<Rental> findRentalByRentalId(UUID rentalId);
 
-    List<Rental> findRentalsByCustomer_CustomerId(UUID id);
+    List<Rental> findRentalsByCustomerId(UUID id);
 
-    int countRentalsByCustomer_CustomerId(UUID id);
+    int countRentalsByCustomerId(UUID id);
 
-    List<Rental> findRentalByBookBookId(UUID id);
+    List<Rental> findRentalByBookId(UUID id);
 
     void deleteRentalByRentalId(UUID rentalId);
 

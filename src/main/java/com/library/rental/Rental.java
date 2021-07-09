@@ -1,8 +1,5 @@
 package com.library.rental;
 
-import com.library.book.Book;
-import com.library.customer.Customer;
-
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
@@ -15,26 +12,24 @@ public class Rental {
     private long id;
 
     private UUID rentalId;
-
-    @ManyToOne
-    private Customer customer;
-
-    @ManyToOne
-    private Book book;
+    private UUID customerId;
+    private UUID bookId;
 
     public Rental() {
     }
 
-    public Rental(Customer customer, Book book) {
-        this.customer = customer;
-        this.book = book;
-    }
-
-    public Rental(UUID rentalId, Customer customer, Book book) {
+    public Rental(UUID rentalId, UUID customerId, UUID bookId) {
+        this.rentalId = rentalId;
+        this.customerId = customerId;
+        this.bookId = bookId;
     }
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public UUID getRentalId() {
@@ -45,20 +40,20 @@ public class Rental {
         this.rentalId = rentalId;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public UUID getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
     }
 
-    public Book getBook() {
-        return book;
+    public UUID getBookId() {
+        return bookId;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public void setBookId(UUID bookId) {
+        this.bookId = bookId;
     }
 
     @Override
@@ -66,11 +61,11 @@ public class Rental {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rental rental = (Rental) o;
-        return id == rental.id && Objects.equals(customer, rental.customer) && Objects.equals(book, rental.book);
+        return id == rental.id && Objects.equals(rentalId, rental.rentalId) && Objects.equals(customerId, rental.customerId) && Objects.equals(bookId, rental.bookId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customer, book);
+        return Objects.hash(id, rentalId, customerId, bookId);
     }
 }
