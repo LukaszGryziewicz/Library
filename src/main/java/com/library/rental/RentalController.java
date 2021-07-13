@@ -10,10 +10,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/rental")
-public class RentalController {
+class RentalController {
     private final RentalService rentalService;
 
-    public RentalController(RentalService rentalService) {
+    RentalController(RentalService rentalService) {
         this.rentalService = rentalService;
     }
 
