@@ -14,43 +14,43 @@ class Customer {
     private String firstName;
     private String lastName;
 
-    public Customer() {
+    Customer() {
     }
 
-    public Customer(String firstName, String lastName) {
+    Customer(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public long getId() {
+    long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    void setId(long id) {
         this.id = id;
     }
 
-    public UUID getCustomerId() {
+    UUID getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(UUID customerId) {
+    void setCustomerId(UUID customerId) {
         this.customerId = customerId;
     }
 
-    public String getFirstName() {
+    String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public String getLastName() {
+    String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
