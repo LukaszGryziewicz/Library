@@ -15,7 +15,7 @@ class CustomerController {
 
     private final CustomerFacade customerFacade;
 
-    public CustomerController(CustomerFacade customerFacade) {
+    CustomerController(CustomerFacade customerFacade) {
         this.customerFacade = customerFacade;
     }
 
