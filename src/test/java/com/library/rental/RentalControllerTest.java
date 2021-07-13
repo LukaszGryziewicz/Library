@@ -33,7 +33,7 @@ public class RentalControllerTest {
     BookFacade bookFacade;
 
     @Autowired
-    RentalService rentalService;
+    RentalFacade rentalFacade;
 
     @Test
     void shouldReturnAllRentals() throws Exception {
@@ -42,7 +42,7 @@ public class RentalControllerTest {
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerFacade.addCustomer(customer);
         bookFacade.addNewBook(book);
-        final RentalDTO rental = rentalService.rent(
+        final RentalDTO rental = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
@@ -65,11 +65,11 @@ public class RentalControllerTest {
         customerFacade.addCustomer(customer2);
         bookFacade.addNewBook(book);
         bookFacade.addNewBook(book2);
-        rentalService.rent(
+        rentalFacade.rent(
                 customer.getCustomerId(), book2.getTitle(),
                 book2.getAuthor(), LocalDateTime.now()
         );
-        rentalService.rent(
+        rentalFacade.rent(
                 customer2.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
@@ -90,12 +90,12 @@ public class RentalControllerTest {
         customerFacade.addCustomer(customer);
         customerFacade.addCustomer(customer2);
         bookFacade.addNewBook(book);
-        final RentalDTO rental1 = rentalService.rent(
+        final RentalDTO rental1 = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
-        rentalService.returnBook(rental1.getRentalId(), LocalDateTime.now());
-        rentalService.rent(
+        rentalFacade.returnBook(rental1.getRentalId(), LocalDateTime.now());
+        rentalFacade.rent(
                 customer2.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
@@ -129,7 +129,7 @@ public class RentalControllerTest {
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerFacade.addCustomer(customer);
         bookFacade.addNewBook(book);
-        final RentalDTO rental = rentalService.rent(
+        final RentalDTO rental = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
@@ -148,7 +148,7 @@ public class RentalControllerTest {
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerFacade.addCustomer(customer);
         bookFacade.addNewBook(book);
-        RentalDTO rental = rentalService.rent(
+        RentalDTO rental = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );
@@ -165,7 +165,7 @@ public class RentalControllerTest {
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerFacade.addCustomer(customer);
         bookFacade.addNewBook(book);
-        RentalDTO rental = rentalService.rent(
+        RentalDTO rental = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
                 book.getAuthor(), LocalDateTime.now()
         );

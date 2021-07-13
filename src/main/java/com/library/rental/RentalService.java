@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class RentalService {
+class RentalService {
 
     private static final int MAX_ALLOWED_RENTALS = 3;
     private final RentalRepository rentalRepository;
@@ -21,10 +21,10 @@ public class RentalService {
     private final BookFacade bookFacade;
     private final CustomerFacade customerFacade;
 
-    public RentalService(RentalRepository rentalRepository,
-                         HistoricalRentalRepository historicalRentalRepository,
-                         BookFacade bookFacade,
-                         CustomerFacade customerFacade) {
+    RentalService(RentalRepository rentalRepository,
+                  HistoricalRentalRepository historicalRentalRepository,
+                  BookFacade bookFacade,
+                  CustomerFacade customerFacade) {
         this.rentalRepository = rentalRepository;
         this.bookFacade = bookFacade;
         this.customerFacade = customerFacade;
@@ -39,7 +39,7 @@ public class RentalService {
         );
     }
 
-    public RentalDTO rent(UUID customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
+    RentalDTO rent(UUID customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
         customerFacade.findCustomer(customerId);
         checkIfCustomerIsEligibleForRental(customerId);
         bookFacade.findBooksByTitleAndAuthor(title, author);
@@ -60,14 +60,14 @@ public class RentalService {
         return rentalRepository.countRentalsByCustomerId(customerId);
     }
 
-    public RentalDTO findRental(UUID rentalId) {
+    RentalDTO findRental(UUID rentalId) {
         final Rental rental = rentalRepository.findRentalByRentalId(rentalId)
                 .orElseThrow(RentalNotFoundException::new);
         return convertRentalToDTO(rental);
     }
 
     @Transactional
-    public void returnBook(UUID rentalId, LocalDateTime dateOfReturn) {
+    void returnBook(UUID rentalId, LocalDateTime dateOfReturn) {
         final RentalDTO rental = findRental(rentalId);
         bookFacade.returnBook(rental.getBookId());
         rentalRepository.deleteRentalByRentalId(rental.getRentalId());
@@ -78,27 +78,27 @@ public class RentalService {
         rentalRepository.deleteRentalByRentalId(rentalId);
     }
 
-    public void checkIfRentalExists(UUID rentalId) {
+    void checkIfRentalExists(UUID rentalId) {
         if (!rentalRepository.existsByRentalId(rentalId)) {
             throw new RentalNotFoundException();
         }
     }
 
-    public List<RentalDTO> getAllRentals() {
+    List<RentalDTO> getAllRentals() {
         return rentalRepository.findAll()
                 .stream()
                 .map(this::convertRentalToDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<RentalDTO> getRentalsOfCustomer(UUID customerId) {
+    List<RentalDTO> getRentalsOfCustomer(UUID customerId) {
         return rentalRepository.findRentalsByCustomerId(customerId)
                 .stream()
                 .map(this::convertRentalToDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<RentalDTO> getRentalsOfBook(UUID bookId) {
+    List<RentalDTO> getRentalsOfBook(UUID bookId) {
         return rentalRepository.findRentalByBookId(bookId)
                 .stream()
                 .map(this::convertRentalToDTO)
