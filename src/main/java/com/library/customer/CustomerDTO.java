@@ -13,7 +13,6 @@ public class CustomerDTO {
     }
 
     public CustomerDTO(String firstName, String lastName) {
-        this.customerId = UUID.randomUUID();
         this.firstName = firstName;
         this.lastName = lastName;
     }

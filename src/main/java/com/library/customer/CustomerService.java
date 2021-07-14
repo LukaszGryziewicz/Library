@@ -39,6 +39,7 @@ class CustomerService {
     }
 
     CustomerDTO addCustomer(CustomerDTO customerDTO) {
+        customerDTO.setCustomerId(UUID.randomUUID());
         customerRepository.save(convertDTOToCustomer(customerDTO));
         return customerDTO;
     }
