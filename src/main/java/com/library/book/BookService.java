@@ -58,6 +58,7 @@ class BookService {
     }
 
     BookDTO addNewBook(BookDTO bookDTO) {
+        bookDTO.setBookId(UUID.randomUUID());
         bookRepository.save(covertDTOToBook(bookDTO));
         return bookDTO;
     }

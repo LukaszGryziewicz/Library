@@ -14,7 +14,6 @@ public class BookDTO {
     }
 
     public BookDTO(String title, String author, String isbn) {
-        this.bookId = UUID.randomUUID();
         this.title = title;
         this.author = author;
         this.isbn = isbn;
