@@ -51,12 +51,16 @@ class CustomerService {
 
     }
 
-    CustomerDTO updateCustomer(UUID customerId, CustomerDTO newCustomer) {
-        final CustomerDTO existingCustomerDTO = findCustomer(customerId);
-        final Customer existingCustomer = convertDTOToCustomer(existingCustomerDTO);
-        existingCustomer.update(convertDTOToCustomer(newCustomer));
+    private Customer findCustomerEntity(UUID customerId) {
+        return customerRepository.findCustomerByCustomerId(customerId)
+                .orElseThrow(CustomerNotFoundException::new);
+    }
+
+    CustomerDTO updateCustomer(UUID customerId, CustomerDTO updatedCustomer) {
+        final Customer existingCustomer = findCustomerEntity(customerId);
+        existingCustomer.update(convertDTOToCustomer(updatedCustomer));
         customerRepository.save(existingCustomer);
-        return convertCustomerToDTO(existingCustomer);
+        return updatedCustomer;
     }
 
     void deleteCustomer(UUID customerId) {

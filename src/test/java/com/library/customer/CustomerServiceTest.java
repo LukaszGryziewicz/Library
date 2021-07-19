@@ -103,9 +103,9 @@ public class CustomerServiceTest {
         customerFacade.updateCustomer(customer1.getCustomerId(), customer2);
         //then
         final List<CustomerDTO> customers = customerFacade.getCustomers();
-        assertThat(customers.get(1).getCustomerId()).isEqualTo(customer1.getCustomerId());
-        assertThat(customers.get(1).getFirstName()).isEqualTo(customer2.getFirstName());
-        assertThat(customers.get(1).getLastName()).isEqualTo(customer2.getLastName());
+        assertThat(customers.get(0).getCustomerId()).isEqualTo(customer1.getCustomerId());
+        assertThat(customers.get(0).getFirstName()).isEqualTo(customer2.getFirstName());
+        assertThat(customers.get(0).getLastName()).isEqualTo(customer2.getLastName());
     }
 
     @Test
