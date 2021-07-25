@@ -39,12 +39,14 @@ public class CustomerServiceTest {
         final List<CustomerDTO> customers = customerFacade.getCustomers();
         //then
         assertThat(customers.size()).isEqualTo(2);
-        assertThat(customers.get(0).getCustomerId()).isEqualTo(customer1.getCustomerId());
-        assertThat(customers.get(0).getFirstName()).isEqualTo(customer1.getFirstName());
-        assertThat(customers.get(0).getLastName()).isEqualTo(customer1.getLastName());
-        assertThat(customers.get(1).getCustomerId()).isEqualTo(customer2.getCustomerId());
-        assertThat(customers.get(1).getFirstName()).isEqualTo(customer2.getFirstName());
-        assertThat(customers.get(1).getLastName()).isEqualTo(customer2.getLastName());
+        CustomerDTO customerFromDB1 = customers.get(0);
+        assertThat(customerFromDB1.getCustomerId()).isEqualTo(customer1.getCustomerId());
+        assertThat(customerFromDB1.getFirstName()).isEqualTo(customer1.getFirstName());
+        assertThat(customerFromDB1.getLastName()).isEqualTo(customer1.getLastName());
+        CustomerDTO customerFromDB2 = customers.get(1);
+        assertThat(customerFromDB2.getCustomerId()).isEqualTo(customer2.getCustomerId());
+        assertThat(customerFromDB2.getFirstName()).isEqualTo(customer2.getFirstName());
+        assertThat(customerFromDB2.getLastName()).isEqualTo(customer2.getLastName());
 
     }
 
@@ -103,9 +105,10 @@ public class CustomerServiceTest {
         customerFacade.updateCustomer(customer1.getCustomerId(), customer2);
         //then
         final List<CustomerDTO> customers = customerFacade.getCustomers();
-        assertThat(customers.get(0).getCustomerId()).isEqualTo(customer1.getCustomerId());
-        assertThat(customers.get(0).getFirstName()).isEqualTo(customer2.getFirstName());
-        assertThat(customers.get(0).getLastName()).isEqualTo(customer2.getLastName());
+        CustomerDTO customerFromDB = customers.get(0);
+        assertThat(customerFromDB.getCustomerId()).isEqualTo(customer1.getCustomerId());
+        assertThat(customerFromDB.getFirstName()).isEqualTo(customer2.getFirstName());
+        assertThat(customerFromDB.getLastName()).isEqualTo(customer2.getLastName());
     }
 
     @Test
