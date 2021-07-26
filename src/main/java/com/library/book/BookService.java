@@ -34,6 +34,12 @@ class BookService {
         return book;
     }
 
+    List<BookDTO> convertListOfBookToDTO(List<Book> listOfBooks) {
+        return listOfBooks.stream()
+                .map(this::convertBookToDTO)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
     void returnBook(String bookId) {
         final Book book = findBookEntity(bookId);
         book.returnBook();
@@ -44,12 +50,6 @@ class BookService {
         final Book book = findBookEntity(bookId);
         book.rent();
         bookRepository.save(book);
-    }
-
-    List<BookDTO> convertListOfBookToDTO(List<Book> listOfBooks) {
-        return listOfBooks.stream()
-                .map(this::convertBookToDTO)
-                .collect(Collectors.toUnmodifiableList());
     }
 
     List<BookDTO> getBooks() {
