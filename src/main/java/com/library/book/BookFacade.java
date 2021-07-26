@@ -8,16 +8,16 @@ import java.util.List;
 public class BookFacade {
     private final BookService bookService;
 
+    public BookFacade(BookService bookService) {
+        this.bookService = bookService;
+    }
+
     public BookDTO convertBookToDTO(Book book) {
         return bookService.convertBookToDTO(book);
     }
 
     public Book covertDTOToBook(BookDTO bookDTO) {
         return bookService.covertDTOToBook(bookDTO);
-    }
-
-    BookFacade(BookService bookService) {
-        this.bookService = bookService;
     }
 
     List<BookDTO> getBooks() {
