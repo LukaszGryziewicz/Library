@@ -39,7 +39,7 @@ class RentalService {
         );
     }
 
-    RentalDTO rent(UUID customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
+    RentalDTO rent(String customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
         customerFacade.findCustomer(customerId);
         checkIfCustomerIsEligibleForRental(customerId);
         bookFacade.findBooksByTitleAndAuthor(title, author);
@@ -50,13 +50,13 @@ class RentalService {
         return convertRentalToDTO(rental);
     }
 
-    private void checkIfCustomerIsEligibleForRental(UUID customerId) {
+    private void checkIfCustomerIsEligibleForRental(String customerId) {
         if (booksRentedByCustomer(customerId) >= MAX_ALLOWED_RENTALS) {
             throw new ExceededMaximumNumberOfRentalsException();
         }
     }
 
-    private int booksRentedByCustomer(UUID customerId) {
+    private int booksRentedByCustomer(String customerId) {
         return rentalRepository.countRentalsByCustomerId(customerId);
     }
 
@@ -91,7 +91,7 @@ class RentalService {
                 .collect(Collectors.toList());
     }
 
-    List<RentalDTO> getRentalsOfCustomer(UUID customerId) {
+    List<RentalDTO> getRentalsOfCustomer(String customerId) {
         return rentalRepository.findRentalsByCustomerId(customerId)
                 .stream()
                 .map(this::convertRentalToDTO)

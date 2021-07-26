@@ -4,13 +4,13 @@ import java.util.UUID;
 
 public class RentalDTO {
     private UUID rentalId;
-    private UUID customerId;
+    private String customerId;
     private String bookId;
 
     public RentalDTO() {
     }
 
-    public RentalDTO(UUID rentalId, UUID customerId, String bookId) {
+    public RentalDTO(UUID rentalId, String customerId, String bookId) {
         this.rentalId = rentalId;
         this.customerId = customerId;
         this.bookId = bookId;
@@ -24,11 +24,11 @@ public class RentalDTO {
         this.rentalId = rentalId;
     }
 
-    public UUID getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(UUID customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 

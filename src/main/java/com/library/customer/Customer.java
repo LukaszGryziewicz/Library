@@ -2,7 +2,6 @@ package com.library.customer;
 
 import javax.persistence.*;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 class Customer {
@@ -10,7 +9,7 @@ class Customer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private long id;
-    private UUID customerId;
+    private String customerId;
     private String firstName;
     private String lastName;
 
@@ -30,11 +29,11 @@ class Customer {
         this.id = id;
     }
 
-    UUID getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    void setCustomerId(UUID customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 

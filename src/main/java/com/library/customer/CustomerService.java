@@ -39,36 +39,36 @@ class CustomerService {
     }
 
     CustomerDTO addCustomer(CustomerDTO customerDTO) {
-        customerDTO.setCustomerId(UUID.randomUUID());
+        customerDTO.setCustomerId(UUID.randomUUID().toString());
         customerRepository.save(convertDTOToCustomer(customerDTO));
         return customerDTO;
     }
 
-    CustomerDTO findCustomer(UUID customerId) {
+    CustomerDTO findCustomer(String customerId) {
         final Customer customer = customerRepository.findCustomerByCustomerId(customerId)
                 .orElseThrow(CustomerNotFoundException::new);
         return convertCustomerToDTO(customer);
 
     }
 
-    private Customer findCustomerEntity(UUID customerId) {
+    private Customer findCustomerEntity(String customerId) {
         return customerRepository.findCustomerByCustomerId(customerId)
                 .orElseThrow(CustomerNotFoundException::new);
     }
 
-    CustomerDTO updateCustomer(UUID customerId, CustomerDTO updatedCustomer) {
+    CustomerDTO updateCustomer(String customerId, CustomerDTO updatedCustomer) {
         final Customer existingCustomer = findCustomerEntity(customerId);
         existingCustomer.update(convertDTOToCustomer(updatedCustomer));
         customerRepository.save(existingCustomer);
         return updatedCustomer;
     }
 
-    void deleteCustomer(UUID customerId) {
+    void deleteCustomer(String customerId) {
         checkIfCustomerExistById(customerId);
         customerRepository.deleteCustomerByCustomerId(customerId);
     }
 
-    void checkIfCustomerExistById(UUID customerId) {
+    void checkIfCustomerExistById(String customerId) {
         final boolean exists = customerRepository.existsByCustomerId(customerId);
         if (!exists) {
             throw new CustomerNotFoundException();

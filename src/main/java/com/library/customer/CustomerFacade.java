@@ -3,7 +3,6 @@ package com.library.customer;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class CustomerFacade {
@@ -30,19 +29,19 @@ public class CustomerFacade {
         return customerService.addCustomer(customerDTO);
     }
 
-    public CustomerDTO findCustomer(UUID customerId) {
+    public CustomerDTO findCustomer(String customerId) {
         return customerService.findCustomer(customerId);
     }
 
-    CustomerDTO updateCustomer(UUID customerId, CustomerDTO newCustomer) {
+    CustomerDTO updateCustomer(String customerId, CustomerDTO newCustomer) {
         return customerService.updateCustomer(customerId, newCustomer);
     }
 
-    void deleteCustomer(UUID customerId) {
+    void deleteCustomer(String customerId) {
         customerService.deleteCustomer(customerId);
     }
 
-    void checkIfCustomerExistById(UUID customerId) {
+    void checkIfCustomerExistById(String customerId) {
         customerService.checkIfCustomerExistById(customerId);
     }
 }

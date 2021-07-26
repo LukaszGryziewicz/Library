@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @EnableWebMvc
@@ -32,19 +31,19 @@ class CustomerController {
     }
 
     @GetMapping("{id}")
-    ResponseEntity<CustomerDTO> findCustomer(@PathVariable("id") UUID customerId) {
+    ResponseEntity<CustomerDTO> findCustomer(@PathVariable("id") String customerId) {
         CustomerDTO customer = customerFacade.findCustomer(customerId);
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
-    ResponseEntity<CustomerDTO> updateCustomer(@PathVariable("id") UUID customerId, @RequestBody CustomerDTO customerDTO) {
+    ResponseEntity<CustomerDTO> updateCustomer(@PathVariable("id") String customerId, @RequestBody CustomerDTO customerDTO) {
         CustomerDTO updatedCustomer = customerFacade.updateCustomer(customerId, customerDTO);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    ResponseEntity<?> deleteCustomer(@PathVariable("id") UUID customerId) {
+    ResponseEntity<?> deleteCustomer(@PathVariable("id") String customerId) {
         customerFacade.deleteCustomer(customerId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

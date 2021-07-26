@@ -1,11 +1,9 @@
 package com.library.customer;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class CustomerDTO {
-    private long id;
-    private UUID customerId;
+    private String customerId;
     private String firstName;
     private String lastName;
 
@@ -17,19 +15,11 @@ public class CustomerDTO {
         this.lastName = lastName;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public UUID getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(UUID customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 
@@ -54,11 +44,11 @@ public class CustomerDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomerDTO that = (CustomerDTO) o;
-        return id == that.id && Objects.equals(customerId, that.customerId) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName);
+        return Objects.equals(customerId, that.customerId) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customerId, firstName, lastName);
+        return Objects.hash(customerId, firstName, lastName);
     }
 }

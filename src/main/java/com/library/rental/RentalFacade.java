@@ -15,7 +15,7 @@ public class RentalFacade {
         this.rentalService = rentalService;
     }
 
-    public RentalDTO rent(UUID customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
+    public RentalDTO rent(String customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
         return rentalService.rent(customerId, title, author, dateOfRental);
     }
 
@@ -35,7 +35,7 @@ public class RentalFacade {
         return rentalService.getAllRentals();
     }
 
-    public List<RentalDTO> getRentalsOfCustomer(UUID customerId) {
+    public List<RentalDTO> getRentalsOfCustomer(String customerId) {
         return rentalService.getRentalsOfCustomer(customerId);
     }
 

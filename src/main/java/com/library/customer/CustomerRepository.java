@@ -3,13 +3,12 @@ package com.library.customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    Optional<Customer> findCustomerByCustomerId(UUID customerId);
+    Optional<Customer> findCustomerByCustomerId(String customerId);
 
-    boolean existsByCustomerId(UUID customerId);
+    boolean existsByCustomerId(String customerId);
 
-    void deleteCustomerByCustomerId(UUID customerId);
+    void deleteCustomerByCustomerId(String customerId);
 }
