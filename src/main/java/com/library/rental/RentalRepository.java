@@ -4,11 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface RentalRepository extends JpaRepository<Rental, Long> {
 
-    Optional<Rental> findRentalByRentalId(UUID rentalId);
+    Optional<Rental> findRentalByRentalId(String rentalId);
 
     List<Rental> findRentalsByCustomerId(String id);
 
@@ -16,8 +15,8 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
 
     List<Rental> findRentalByBookId(String id);
 
-    void deleteRentalByRentalId(UUID rentalId);
+    void deleteRentalByRentalId(String rentalId);
 
-    boolean existsByRentalId(UUID rentalId);
+    boolean existsByRentalId(String rentalId);
 
 }

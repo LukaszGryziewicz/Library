@@ -45,7 +45,7 @@ class RentalService {
         bookFacade.findBooksByTitleAndAuthor(title, author);
         final BookDTO availableBook = bookFacade.findFirstAvailableBookByTitleAndAuthor(title, author);
         bookFacade.rentBook(availableBook.getBookId());
-        Rental rental = new Rental(UUID.randomUUID(), customerId, availableBook.getBookId());
+        Rental rental = new Rental(UUID.randomUUID().toString(), customerId, availableBook.getBookId());
         rentalRepository.save(rental);
         return convertRentalToDTO(rental);
     }
@@ -60,25 +60,25 @@ class RentalService {
         return rentalRepository.countRentalsByCustomerId(customerId);
     }
 
-    RentalDTO findRental(UUID rentalId) {
+    RentalDTO findRental(String rentalId) {
         final Rental rental = rentalRepository.findRentalByRentalId(rentalId)
                 .orElseThrow(RentalNotFoundException::new);
         return convertRentalToDTO(rental);
     }
 
     @Transactional
-    void returnBook(UUID rentalId, LocalDateTime dateOfReturn) {
+    void returnBook(String rentalId, LocalDateTime dateOfReturn) {
         final RentalDTO rental = findRental(rentalId);
         bookFacade.returnBook(rental.getBookId());
         rentalRepository.deleteRentalByRentalId(rental.getRentalId());
     }
 
-    void deleteRental(UUID rentalId) {
+    void deleteRental(String rentalId) {
         checkIfRentalExists(rentalId);
         rentalRepository.deleteRentalByRentalId(rentalId);
     }
 
-    void checkIfRentalExists(UUID rentalId) {
+    void checkIfRentalExists(String rentalId) {
         if (!rentalRepository.existsByRentalId(rentalId)) {
             throw new RentalNotFoundException();
         }

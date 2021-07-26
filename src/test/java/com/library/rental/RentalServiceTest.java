@@ -215,7 +215,7 @@ public class RentalServiceTest {
     @Test
     public void shouldThrowExceptionWhenRentalIsNotFound() {
         //when
-        Throwable thrown = catchThrowable(() -> rentalFacade.findRental(UUID.randomUUID()));
+        Throwable thrown = catchThrowable(() -> rentalFacade.findRental(UUID.randomUUID().toString()));
         //then
         assertThat(thrown).isInstanceOf(RentalNotFoundException.class);
     }
@@ -237,7 +237,7 @@ public class RentalServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenTryingToDeleteRentalThatDoesNotExist() {
-        Throwable thrown = catchThrowable(() -> rentalFacade.deleteRental(UUID.randomUUID()));
+        Throwable thrown = catchThrowable(() -> rentalFacade.deleteRental(UUID.randomUUID().toString()));
         //then
         assertThat(thrown).isInstanceOf(RentalNotFoundException.class);
     }

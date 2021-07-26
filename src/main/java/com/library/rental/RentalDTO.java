@@ -1,26 +1,24 @@
 package com.library.rental;
 
-import java.util.UUID;
-
 public class RentalDTO {
-    private UUID rentalId;
+    private String rentalId;
     private String customerId;
     private String bookId;
 
     public RentalDTO() {
     }
 
-    public RentalDTO(UUID rentalId, String customerId, String bookId) {
+    public RentalDTO(String rentalId, String customerId, String bookId) {
         this.rentalId = rentalId;
         this.customerId = customerId;
         this.bookId = bookId;
     }
 
-    public UUID getRentalId() {
+    public String getRentalId() {
         return rentalId;
     }
 
-    public void setRentalId(UUID rentalId) {
+    public void setRentalId(String rentalId) {
         this.rentalId = rentalId;
     }
 

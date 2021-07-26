@@ -2,7 +2,6 @@ package com.library.rental;
 
 import javax.persistence.*;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 class Rental {
@@ -11,14 +10,14 @@ class Rental {
     @Column(nullable = false, updatable = false)
     private long id;
 
-    private UUID rentalId;
+    private String rentalId;
     private String customerId;
     private String bookId;
 
     Rental() {
     }
 
-    Rental(UUID rentalId, String customerId, String bookId) {
+    Rental(String rentalId, String customerId, String bookId) {
         this.rentalId = rentalId;
         this.customerId = customerId;
         this.bookId = bookId;
@@ -33,11 +32,11 @@ class Rental {
         this.id = id;
     }
 
-    UUID getRentalId() {
+    public String getRentalId() {
         return rentalId;
     }
 
-    void setRentalId(UUID rentalId) {
+    public void setRentalId(String rentalId) {
         this.rentalId = rentalId;
     }
 

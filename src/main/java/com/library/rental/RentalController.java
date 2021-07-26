@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/rental")
@@ -42,19 +41,19 @@ class RentalController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<RentalDTO> findRentalById(@PathVariable("id") UUID rentalId) {
+    ResponseEntity<RentalDTO> findRentalById(@PathVariable("id") String rentalId) {
         RentalDTO rentalById = rentalService.findRental(rentalId);
         return new ResponseEntity<>(rentalById, HttpStatus.OK);
     }
 
     @PostMapping("/endRental/{id}")
-    ResponseEntity<RentalDTO> endRental(@PathVariable("id") UUID rentalId) {
+    ResponseEntity<RentalDTO> endRental(@PathVariable("id") String rentalId) {
         rentalService.returnBook(rentalId, LocalDateTime.now());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    ResponseEntity<?> deleteRental(@PathVariable("id") UUID rentalId) {
+    ResponseEntity<?> deleteRental(@PathVariable("id") String rentalId) {
         rentalService.deleteRental(rentalId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
