@@ -13,16 +13,17 @@ class Rental {
 
     private UUID rentalId;
     private UUID customerId;
-    private UUID bookId;
+    private String bookId;
 
     Rental() {
     }
 
-    Rental(UUID rentalId, UUID customerId, UUID bookId) {
+    Rental(UUID rentalId, UUID customerId, String bookId) {
         this.rentalId = rentalId;
         this.customerId = customerId;
         this.bookId = bookId;
     }
+
 
     long getId() {
         return id;
@@ -48,11 +49,11 @@ class Rental {
         this.customerId = customerId;
     }
 
-    UUID getBookId() {
+    String getBookId() {
         return bookId;
     }
 
-    void setBookId(UUID bookId) {
+    void setBookId(String bookId) {
         this.bookId = bookId;
     }
 

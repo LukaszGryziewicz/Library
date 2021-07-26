@@ -39,7 +39,7 @@ public class RentalFacade {
         return rentalService.getRentalsOfCustomer(customerId);
     }
 
-    public List<RentalDTO> getRentalsOfBook(UUID bookId) {
+    public List<RentalDTO> getRentalsOfBook(String bookId) {
         return rentalService.getRentalsOfBook(bookId);
     }
 }

@@ -1,10 +1,9 @@
 package com.library.book;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class BookDTO {
-    private UUID bookId;
+    private String bookId;
     private String title;
     private String author;
     private String isbn;
@@ -19,11 +18,11 @@ public class BookDTO {
         this.isbn = isbn;
     }
 
-    public UUID getBookId() {
+    public String getBookId() {
         return bookId;
     }
 
-    public void setBookId(UUID bookId) {
+    public void setBookId(String bookId) {
         this.bookId = bookId;
     }
 

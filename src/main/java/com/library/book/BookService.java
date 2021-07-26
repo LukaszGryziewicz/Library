@@ -34,13 +34,13 @@ class BookService {
         return book;
     }
 
-    void returnBook(UUID bookId) {
+    void returnBook(String bookId) {
         final Book book = findBookEntity(bookId);
         book.returnBook();
         bookRepository.save(book);
     }
 
-    void rentBook(UUID bookId) {
+    void rentBook(String bookId) {
         final Book book = findBookEntity(bookId);
         book.rent();
         bookRepository.save(book);
@@ -58,17 +58,17 @@ class BookService {
     }
 
     BookDTO addNewBook(BookDTO bookDTO) {
-        bookDTO.setBookId(UUID.randomUUID());
+        bookDTO.setBookId(UUID.randomUUID().toString());
         bookRepository.save(covertDTOToBook(bookDTO));
         return bookDTO;
     }
 
-    BookDTO findBook(UUID bookId) {
+    BookDTO findBook(String bookId) {
         final Book book = findBookEntity(bookId);
         return convertBookToDTO(book);
     }
 
-    private Book findBookEntity(UUID bookId) {
+    private Book findBookEntity(String bookId) {
         return bookRepository.findBookByBookId(bookId)
                 .orElseThrow(BookNotFoundException::new);
     }
@@ -87,19 +87,19 @@ class BookService {
         return convertBookToDTO(book);
     }
 
-    BookDTO updateBook(UUID bookId, BookDTO updatedBookDTO) {
+    BookDTO updateBook(String bookId, BookDTO updatedBookDTO) {
         final Book existingBook = findBookEntity(bookId);
         existingBook.update(covertDTOToBook(updatedBookDTO));
         bookRepository.save(existingBook);
         return updatedBookDTO;
     }
 
-    void deleteBook(UUID bookId) {
+    void deleteBook(String bookId) {
         checkIfBookExistById(bookId);
         bookRepository.deleteBookByBookId(bookId);
     }
 
-    void checkIfBookExistById(UUID bookId) {
+    void checkIfBookExistById(String bookId) {
         final boolean exists = bookRepository.existsByBookId(bookId);
         if (!exists) {
             throw new BookNotFoundException();

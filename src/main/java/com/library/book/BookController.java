@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @EnableWebMvc
@@ -31,7 +30,7 @@ class BookController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<BookDTO> findBookById(@PathVariable("id") UUID bookId) {
+    ResponseEntity<BookDTO> findBookById(@PathVariable("id") String bookId) {
         BookDTO bookById = bookFacade.findBook(bookId);
         return new ResponseEntity<>(bookById, HttpStatus.OK);
     }
@@ -43,13 +42,13 @@ class BookController {
     }
 
     @PutMapping("/update/{id}")
-    ResponseEntity<BookDTO> updateBook(@PathVariable("id") UUID bookId, @RequestBody BookDTO book) {
+    ResponseEntity<BookDTO> updateBook(@PathVariable("id") String bookId, @RequestBody BookDTO book) {
         BookDTO updatedBook = bookFacade.updateBook(bookId, book);
         return new ResponseEntity<>(updatedBook, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    ResponseEntity<?> deleteBook(@PathVariable("id") UUID bookId) {
+    ResponseEntity<?> deleteBook(@PathVariable("id") String bookId) {
         bookFacade.deleteBook(bookId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

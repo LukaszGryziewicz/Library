@@ -30,7 +30,7 @@ class RentalController {
     }
 
     @GetMapping("/bookRentals/{id}")
-    ResponseEntity<List<RentalDTO>> getRentalsOfBook(@PathVariable("id") UUID customerId) {
+    ResponseEntity<List<RentalDTO>> getRentalsOfBook(@PathVariable("id") String customerId) {
         final List<RentalDTO> rentalsOfBook = rentalService.getRentalsOfBook(customerId);
         return new ResponseEntity<>(rentalsOfBook, HttpStatus.OK);
     }

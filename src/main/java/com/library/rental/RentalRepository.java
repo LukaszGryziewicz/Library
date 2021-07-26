@@ -14,7 +14,7 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
 
     int countRentalsByCustomerId(UUID id);
 
-    List<Rental> findRentalByBookId(UUID id);
+    List<Rental> findRentalByBookId(String id);
 
     void deleteRentalByRentalId(UUID rentalId);
 

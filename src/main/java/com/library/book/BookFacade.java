@@ -3,7 +3,6 @@ package com.library.book;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class BookFacade {
@@ -29,7 +28,7 @@ public class BookFacade {
         return bookService.addNewBook(book);
     }
 
-    public BookDTO findBook(UUID bookId) {
+    public BookDTO findBook(String bookId) {
         return bookService.findBook(bookId);
     }
 
@@ -41,23 +40,23 @@ public class BookFacade {
         return bookService.findFirstAvailableBookByTitleAndAuthor(title, author);
     }
 
-    public BookDTO updateBook(UUID bookId, BookDTO newBook) {
+    public BookDTO updateBook(String bookId, BookDTO newBook) {
         return bookService.updateBook(bookId, newBook);
     }
 
-    void deleteBook(UUID bookId) {
+    void deleteBook(String bookId) {
         bookService.deleteBook(bookId);
     }
 
-    public void checkIfBookExistById(UUID bookId) {
+    public void checkIfBookExistById(String bookId) {
         bookService.checkIfBookExistById(bookId);
     }
 
-    public void returnBook(UUID bookId) {
+    public void returnBook(String bookId) {
         bookService.returnBook(bookId);
     }
 
-    public void rentBook(UUID bookId) {
+    public void rentBook(String bookId) {
         bookService.rentBook(bookId);
     }
 

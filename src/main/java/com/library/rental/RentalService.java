@@ -98,7 +98,7 @@ class RentalService {
                 .collect(Collectors.toList());
     }
 
-    List<RentalDTO> getRentalsOfBook(UUID bookId) {
+    List<RentalDTO> getRentalsOfBook(String bookId) {
         return rentalRepository.findRentalByBookId(bookId)
                 .stream()
                 .map(this::convertRentalToDTO)

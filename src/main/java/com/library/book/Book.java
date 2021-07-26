@@ -2,7 +2,6 @@ package com.library.book;
 
 import javax.persistence.*;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 class Book {
@@ -10,7 +9,7 @@ class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private long id;
-    private UUID bookId;
+    private String bookId;
     private String title;
     private String author;
     private String isbn;
@@ -25,11 +24,11 @@ class Book {
         this.isbn = isbn;
     }
 
-    UUID getBookId() {
+    public String getBookId() {
         return bookId;
     }
 
-    void setBookId(UUID bookId) {
+    public void setBookId(String bookId) {
         this.bookId = bookId;
     }
 
