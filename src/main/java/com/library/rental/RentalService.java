@@ -2,11 +2,11 @@ package com.library.rental;
 
 import com.library.book.BookDTO;
 import com.library.book.BookFacade;
+import com.library.customer.CustomerDTO;
 import com.library.customer.CustomerFacade;
 import com.library.rentalHistory.HistoricalRentalRepository;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -32,10 +32,18 @@ class RentalService {
     }
 
     private RentalDTO convertRentalToDTO(Rental rental) {
+        final BookDTO book = bookFacade.findBook(rental.getBookId());
+        final CustomerDTO customer = customerFacade.findCustomer(rental.getCustomerId());
         return new RentalDTO(
                 rental.getRentalId(),
                 rental.getCustomerId(),
-                rental.getBookId()
+                customer.getFirstName(),
+                customer.getLastName(),
+                rental.getBookId(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getIsbn(),
+                book.isRented()
         );
     }
 
@@ -66,7 +74,6 @@ class RentalService {
         return convertRentalToDTO(rental);
     }
 
-    @Transactional
     void returnBook(String rentalId, LocalDateTime dateOfReturn) {
         final RentalDTO rental = findRental(rentalId);
         bookFacade.returnBook(rental.getBookId());
