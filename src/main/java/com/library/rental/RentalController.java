@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -36,7 +35,7 @@ class RentalController {
 
     @PostMapping("/{customerId}/{title}/{author}")
     ResponseEntity<RentalDTO> addNewRental(@PathVariable("customerId") String customerId, @PathVariable("title") String title, @PathVariable("author") String author) throws ExceededMaximumNumberOfRentalsException {
-        final RentalDTO newRental = rentalService.rent(customerId, title, author, LocalDateTime.now());
+        final RentalDTO newRental = rentalService.rent(customerId, title, author);
         return new ResponseEntity<>(newRental, HttpStatus.CREATED);
     }
 
@@ -48,7 +47,7 @@ class RentalController {
 
     @PostMapping("/endRental/{id}")
     ResponseEntity<RentalDTO> endRental(@PathVariable("id") String rentalId) {
-        rentalService.returnBook(rentalId, LocalDateTime.now());
+        rentalService.returnBook(rentalId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

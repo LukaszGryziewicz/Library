@@ -2,7 +2,6 @@ package com.library.rental;
 
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -14,16 +13,16 @@ public class RentalFacade {
         this.rentalService = rentalService;
     }
 
-    public RentalDTO rent(String customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
-        return rentalService.rent(customerId, title, author, dateOfRental);
+    public RentalDTO rent(String customerId, String title, String author) throws ExceededMaximumNumberOfRentalsException {
+        return rentalService.rent(customerId, title, author);
     }
 
     public RentalDTO findRental(String rentalId) {
         return rentalService.findRental(rentalId);
     }
 
-    public void returnBook(String rentalId, LocalDateTime dateOfReturn) {
-        rentalService.returnBook(rentalId, dateOfReturn);
+    public void returnBook(String rentalId) {
+        rentalService.returnBook(rentalId);
     }
 
     void deleteRental(String rentalId) {

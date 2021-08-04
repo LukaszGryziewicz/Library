@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,7 +40,7 @@ public class RentalServiceTest {
         bookFacade.addNewBook(book1);
         customerFacade.addCustomer(customer1);
         //when
-        RentalDTO rental = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
+        RentalDTO rental = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //then
         assertThat(rentalFacade.findRental(rental.getRentalId())).isNotNull();
     }
@@ -54,7 +53,7 @@ public class RentalServiceTest {
         bookFacade.addNewBook(book1);
         customerFacade.addCustomer(customer1);
         //when
-        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
+        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //then
         final BookDTO book = bookFacade.findBook(rental1.getBookId());
         assertThat(book.isRented()).isTrue();
@@ -68,9 +67,9 @@ public class RentalServiceTest {
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
         bookFacade.addNewBook(book1);
         customerFacade.addCustomer(customer1);
-        rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
+        rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
-        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now()));
+        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor()));
         //then
         assertThat(thrown).isInstanceOf(NoBookAvailableException.class);
 
@@ -83,7 +82,7 @@ public class RentalServiceTest {
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
         bookFacade.addNewBook(book1);
         //when
-        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now()));
+        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor()));
         //then
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class);
     }
@@ -95,7 +94,7 @@ public class RentalServiceTest {
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
         customerFacade.addCustomer(customer1);
         //when
-        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now()));
+        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor()));
         //then
         assertThat(thrown).isInstanceOf(BookNotFoundException.class);
     }
@@ -107,9 +106,9 @@ public class RentalServiceTest {
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
         bookFacade.addNewBook(book1);
         customerFacade.addCustomer(customer1);
-        rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
+        rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
-        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now()));
+        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor()));
         //then
         assertThat(thrown).isInstanceOf(NoBookAvailableException.class);
 
@@ -122,9 +121,9 @@ public class RentalServiceTest {
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
         bookFacade.addNewBook(book1);
         customerFacade.addCustomer(customer1);
-        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
+        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
-        rentalFacade.returnBook(rental1.getRentalId(), LocalDateTime.now());
+        rentalFacade.returnBook(rental1.getRentalId());
         //then
         assertThat(rentalFacade.getAllRentals()).isEmpty();
     }
@@ -143,8 +142,8 @@ public class RentalServiceTest {
         customerFacade.addCustomer(customer1);
         customerFacade.addCustomer(customer2);
 
-        rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
-        rentalFacade.rent(customer2.getCustomerId(), book2.getTitle(), book2.getAuthor(), LocalDateTime.now());
+        rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
+        rentalFacade.rent(customer2.getCustomerId(), book2.getTitle(), book2.getAuthor());
         //when
         final List<RentalDTO> allRentals = rentalFacade.getAllRentals();
         //then
@@ -163,8 +162,8 @@ public class RentalServiceTest {
         bookFacade.addNewBook(book2);
         customerFacade.addCustomer(customer1);
         customerFacade.addCustomer(customer2);
-        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
-        rentalFacade.rent(customer2.getCustomerId(), book2.getTitle(), book2.getAuthor(), LocalDateTime.now());
+        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
+        rentalFacade.rent(customer2.getCustomerId(), book2.getTitle(), book2.getAuthor());
         //when
         final List<RentalDTO> rentalByCustomer = rentalFacade.getRentalsOfCustomer(customer1.getCustomerId());
         //than
@@ -186,9 +185,9 @@ public class RentalServiceTest {
         bookFacade.addNewBook(book1);
         customerFacade.addCustomer(customer1);
         customerFacade.addCustomer(customer2);
-        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
-        rentalFacade.returnBook(rental1.getRentalId(), LocalDateTime.now());
-        final RentalDTO rental2 = rentalFacade.rent(customer2.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
+        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
+        rentalFacade.returnBook(rental1.getRentalId());
+        final RentalDTO rental2 = rentalFacade.rent(customer2.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
         final List<RentalDTO> rentalByBook = rentalFacade.getRentalsOfBook(book1.getBookId());
         //than
@@ -205,7 +204,7 @@ public class RentalServiceTest {
 
         bookFacade.addNewBook(book1);
         customerFacade.addCustomer(customer1);
-        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
+        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
         RentalDTO rental = rentalFacade.findRental(rental1.getRentalId());
         //then
@@ -228,7 +227,7 @@ public class RentalServiceTest {
 
         bookFacade.addNewBook(book1);
         customerFacade.addCustomer(customer1);
-        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
+        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
         rentalFacade.deleteRental(rental1.getRentalId());
         //then
@@ -256,10 +255,10 @@ public class RentalServiceTest {
         bookFacade.addNewBook(book4);
         customerFacade.addCustomer(customer1);
         //when
-        rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor(), LocalDateTime.now());
-        rentalFacade.rent(customer1.getCustomerId(), book2.getTitle(), book2.getAuthor(), LocalDateTime.now());
-        rentalFacade.rent(customer1.getCustomerId(), book2.getTitle(), book3.getAuthor(), LocalDateTime.now());
-        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book4.getTitle(), book4.getAuthor(), LocalDateTime.now()));
+        rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
+        rentalFacade.rent(customer1.getCustomerId(), book2.getTitle(), book2.getAuthor());
+        rentalFacade.rent(customer1.getCustomerId(), book2.getTitle(), book3.getAuthor());
+        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book4.getTitle(), book4.getAuthor()));
         //then
         assertThat(thrown).isInstanceOf(ExceededMaximumNumberOfRentalsException.class);
     }

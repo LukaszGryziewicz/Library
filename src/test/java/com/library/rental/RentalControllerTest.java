@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -44,14 +43,14 @@ public class RentalControllerTest {
         bookFacade.addNewBook(book);
         final RentalDTO rental = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
-                book.getAuthor(), LocalDateTime.now()
+                book.getAuthor()
         );
         //expect
         mockMvc.perform(get("/rental"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].customerId").value(rental.getCustomerId().toString()))
-                .andExpect(jsonPath("$[0].bookId").value(rental.getBookId().toString()));
+                .andExpect(jsonPath("$[0].customerId").value(rental.getCustomerId()))
+                .andExpect(jsonPath("$[0].bookId").value(rental.getBookId()));
     }
 
     @Test
@@ -67,18 +66,18 @@ public class RentalControllerTest {
         bookFacade.addNewBook(book2);
         rentalFacade.rent(
                 customer.getCustomerId(), book2.getTitle(),
-                book2.getAuthor(), LocalDateTime.now()
+                book2.getAuthor()
         );
         rentalFacade.rent(
                 customer2.getCustomerId(), book.getTitle(),
-                book.getAuthor(), LocalDateTime.now()
+                book.getAuthor()
         );
         //expect
         mockMvc.perform(get("/rental/customerRentals/" + customer.getCustomerId()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].customerId").value(customer.getCustomerId().toString()))
-                .andExpect(jsonPath("$[0].bookId").value(book2.getBookId().toString()));
+                .andExpect(jsonPath("$[0].customerId").value(customer.getCustomerId()))
+                .andExpect(jsonPath("$[0].bookId").value(book2.getBookId()));
     }
 
     @Test
@@ -92,19 +91,19 @@ public class RentalControllerTest {
         bookFacade.addNewBook(book);
         final RentalDTO rental1 = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
-                book.getAuthor(), LocalDateTime.now()
+                book.getAuthor()
         );
-        rentalFacade.returnBook(rental1.getRentalId(), LocalDateTime.now());
+        rentalFacade.returnBook(rental1.getRentalId());
         rentalFacade.rent(
                 customer2.getCustomerId(), book.getTitle(),
-                book.getAuthor(), LocalDateTime.now()
+                book.getAuthor()
         );
         //expect
         mockMvc.perform(get("/rental/bookRentals/" + book.getBookId()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].customerId").value(customer2.getCustomerId().toString()))
-                .andExpect(jsonPath("$[0].bookId").value(book.getBookId().toString()));
+                .andExpect(jsonPath("$[0].customerId").value(customer2.getCustomerId()))
+                .andExpect(jsonPath("$[0].bookId").value(book.getBookId()));
     }
 
     @Test
@@ -118,8 +117,8 @@ public class RentalControllerTest {
         mockMvc.perform(post(("/rental/" + customer.getCustomerId() + "/" + book.getTitle()) + "/" + book.getAuthor()))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.customerId").value(customer.getCustomerId().toString()))
-                .andExpect(jsonPath("$.bookId").value(book.getBookId().toString()));
+                .andExpect(jsonPath("$.customerId").value(customer.getCustomerId()))
+                .andExpect(jsonPath("$.bookId").value(book.getBookId()));
     }
 
     @Test
@@ -131,14 +130,14 @@ public class RentalControllerTest {
         bookFacade.addNewBook(book);
         final RentalDTO rental = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
-                book.getAuthor(), LocalDateTime.now()
+                book.getAuthor()
         );
         //expect
         mockMvc.perform(get("/rental/" + rental.getRentalId()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.customerId").value(customer.getCustomerId().toString()))
-                .andExpect(jsonPath("$.bookId").value(book.getBookId().toString()));
+                .andExpect(jsonPath("$.customerId").value(customer.getCustomerId()))
+                .andExpect(jsonPath("$.bookId").value(book.getBookId()));
     }
 
     @Test
@@ -150,7 +149,7 @@ public class RentalControllerTest {
         bookFacade.addNewBook(book);
         RentalDTO rental = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
-                book.getAuthor(), LocalDateTime.now()
+                book.getAuthor()
         );
         //expect
         mockMvc.perform(post("/rental/endRental/" + rental.getRentalId()))
@@ -167,7 +166,7 @@ public class RentalControllerTest {
         bookFacade.addNewBook(book);
         RentalDTO rental = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
-                book.getAuthor(), LocalDateTime.now()
+                book.getAuthor()
         );
         //expect
         mockMvc.perform(delete("/rental/delete/" + rental.getRentalId()))

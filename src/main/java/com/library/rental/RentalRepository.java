@@ -19,4 +19,5 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
 
     boolean existsByRentalId(String rentalId);
 
+    int countFinesByCustomerId(String customerId);
 }

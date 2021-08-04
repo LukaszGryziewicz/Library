@@ -1,7 +1,10 @@
 package com.library.rental;
 
+import java.time.Instant;
+
 public class RentalDTO {
     private String rentalId;
+    private Instant timeOfRental;
     private String customerId;
     private String firstName;
     private String lastName;
@@ -9,13 +12,13 @@ public class RentalDTO {
     private String title;
     private String author;
     private String isbn;
-    private boolean rented;
 
     public RentalDTO() {
     }
 
-    public RentalDTO(String rentalId, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn, boolean rented) {
+    public RentalDTO(String rentalId, Instant timeOfRental, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn) {
         this.rentalId = rentalId;
+        this.timeOfRental = timeOfRental;
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -23,7 +26,6 @@ public class RentalDTO {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
-        this.rented = rented;
     }
 
     public String getRentalId() {
@@ -32,6 +34,14 @@ public class RentalDTO {
 
     public void setRentalId(String rentalId) {
         this.rentalId = rentalId;
+    }
+
+    public Instant getTimeOfRental() {
+        return timeOfRental;
+    }
+
+    public void setTimeOfRental(Instant timeOfRental) {
+        this.timeOfRental = timeOfRental;
     }
 
     public String getCustomerId() {
@@ -88,13 +98,5 @@ public class RentalDTO {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
-    }
-
-    public boolean isRented() {
-        return rented;
-    }
-
-    public void setRented(boolean rented) {
-        this.rented = rented;
     }
 }

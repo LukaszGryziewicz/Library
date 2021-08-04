@@ -7,7 +7,7 @@ import com.library.customer.CustomerFacade;
 import com.library.rentalHistory.HistoricalRentalRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -36,24 +36,24 @@ class RentalService {
         final CustomerDTO customer = customerFacade.findCustomer(rental.getCustomerId());
         return new RentalDTO(
                 rental.getRentalId(),
+                rental.getTimeOfRental(),
                 rental.getCustomerId(),
                 customer.getFirstName(),
                 customer.getLastName(),
                 rental.getBookId(),
                 book.getTitle(),
                 book.getAuthor(),
-                book.getIsbn(),
-                book.isRented()
+                book.getIsbn()
         );
     }
 
-    RentalDTO rent(String customerId, String title, String author, LocalDateTime dateOfRental) throws ExceededMaximumNumberOfRentalsException {
+    RentalDTO rent(String customerId, String title, String author) throws ExceededMaximumNumberOfRentalsException {
         customerFacade.findCustomer(customerId);
         checkIfCustomerIsEligibleForRental(customerId);
         bookFacade.findBooksByTitleAndAuthor(title, author);
         final BookDTO availableBook = bookFacade.findFirstAvailableBookByTitleAndAuthor(title, author);
         bookFacade.rentBook(availableBook.getBookId());
-        Rental rental = new Rental(UUID.randomUUID().toString(), customerId, availableBook.getBookId());
+        Rental rental = new Rental(UUID.randomUUID().toString(), Instant.now(), customerId, availableBook.getBookId());
         rentalRepository.save(rental);
         return convertRentalToDTO(rental);
     }
@@ -74,7 +74,7 @@ class RentalService {
         return convertRentalToDTO(rental);
     }
 
-    void returnBook(String rentalId, LocalDateTime dateOfReturn) {
+    void returnBook(String rentalId) {
         final RentalDTO rental = findRental(rentalId);
         bookFacade.returnBook(rental.getBookId());
         rentalRepository.deleteRentalByRentalId(rental.getRentalId());
@@ -85,7 +85,7 @@ class RentalService {
         rentalRepository.deleteRentalByRentalId(rentalId);
     }
 
-    void checkIfRentalExists(String rentalId) {
+    private void checkIfRentalExists(String rentalId) {
         if (!rentalRepository.existsByRentalId(rentalId)) {
             throw new RentalNotFoundException();
         }
