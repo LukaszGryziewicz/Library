@@ -1,4 +1,4 @@
-package com.library.rentalHistory;
+package com.library.historicalRental;
 
 import java.time.Instant;
 

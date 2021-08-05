@@ -4,7 +4,7 @@ import com.library.book.BookDTO;
 import com.library.book.BookFacade;
 import com.library.customer.CustomerDTO;
 import com.library.customer.CustomerFacade;
-import com.library.rentalHistory.HistoricalRentalRepository;
+import com.library.historicalRental.HistoricalRentalRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

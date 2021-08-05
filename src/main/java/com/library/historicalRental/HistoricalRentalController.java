@@ -1,4 +1,4 @@
-package com.library.rentalHistory;
+package com.library.historicalRental;
 
 public class HistoricalRentalController {
 

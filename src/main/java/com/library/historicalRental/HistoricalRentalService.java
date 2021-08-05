@@ -1,4 +1,4 @@
-package com.library.rentalHistory;
+package com.library.historicalRental;
 
 import org.springframework.stereotype.Service;
 
