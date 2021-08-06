@@ -1,5 +1,7 @@
 package com.library.historicalRental;
 
+import com.library.book.BookFacade;
+import com.library.customer.CustomerFacade;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +12,13 @@ import static java.util.stream.Collectors.toList;
 public class HistoricalRentalService {
 
     private final HistoricalRentalRepository historicalRentalRepository;
+    private final CustomerFacade customerFacade;
+    private final BookFacade bookFacade;
 
-    public HistoricalRentalService(HistoricalRentalRepository historicalRentalRepository) {
+    public HistoricalRentalService(HistoricalRentalRepository historicalRentalRepository, CustomerFacade customerFacade, BookFacade bookFacade) {
         this.historicalRentalRepository = historicalRentalRepository;
+        this.customerFacade = customerFacade;
+        this.bookFacade = bookFacade;
     }
 
     private HistoricalRentalDTO convertHistoricalRentalToDTO(HistoricalRental historicalRental) {
@@ -45,13 +51,35 @@ public class HistoricalRentalService {
         );
     }
 
+    private List<HistoricalRentalDTO> convertListOfHistoricalRentalsToDTO(List<HistoricalRental> historicalRentals) {
+        return historicalRentals.stream()
+                .map(this::convertHistoricalRentalToDTO)
+                .collect(toList());
+    }
+
     public HistoricalRentalDTO createHistoricalRental(HistoricalRentalDTO historicalRentalDTO) {
         historicalRentalRepository.save(convertDTOToHistoricalRental(historicalRentalDTO));
         return historicalRentalDTO;
     }
 
-    public List<HistoricalRentalDTO> findAllHistoricalRentals() {
+    List<HistoricalRentalDTO> findAllHistoricalRentals() {
         return historicalRentalRepository.findAll()
+                .stream()
+                .map(this::convertHistoricalRentalToDTO)
+                .collect(toList());
+    }
+
+    List<HistoricalRentalDTO> findHistoricalRentalsOfCustomer(String customerId) {
+        customerFacade.checkIfCustomerExistById(customerId);
+        return historicalRentalRepository.findHistoricalRentalsByCustomerId(customerId)
+                .stream()
+                .map(this::convertHistoricalRentalToDTO)
+                .collect(toList());
+    }
+
+    List<HistoricalRentalDTO> findHistoricalRentalsOfBook(String bookId) {
+        bookFacade.checkIfBookExistById(bookId);
+        return historicalRentalRepository.findHistoricalRentalsByBookId(bookId)
                 .stream()
                 .map(this::convertHistoricalRentalToDTO)
                 .collect(toList());

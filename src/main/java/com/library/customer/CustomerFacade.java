@@ -41,7 +41,7 @@ public class CustomerFacade {
         customerService.deleteCustomer(customerId);
     }
 
-    void checkIfCustomerExistById(String customerId) {
+    public void checkIfCustomerExistById(String customerId) {
         customerService.checkIfCustomerExistById(customerId);
     }
 }
