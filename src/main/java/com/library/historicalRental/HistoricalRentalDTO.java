@@ -3,32 +3,39 @@ package com.library.historicalRental;
 import java.time.Instant;
 
 public class HistoricalRentalDTO {
-    private final String historicalRentalId;
-    private final String isbn;
-    private final String customerId;
+    private String historicalRentalId;
     private Instant dateCreated;
     private Instant dateEnded;
+    private String customerId;
+    private String firstName;
+    private String lastName;
     private String bookId;
     private String title;
     private String author;
-    private String firstName;
-    private String lastName;
+    private String isbn;
 
-    public HistoricalRentalDTO(String historicalRentalId, Instant dateCreated, Instant dateEnded, String bookId, String title, String author, String isbn, String customerId, String firstName, String lastName) {
+    public HistoricalRentalDTO() {
+    }
+
+    public HistoricalRentalDTO(String historicalRentalId, Instant dateCreated, Instant dateEnded, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn) {
         this.historicalRentalId = historicalRentalId;
         this.dateCreated = dateCreated;
         this.dateEnded = dateEnded;
+        this.customerId = customerId;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.bookId = bookId;
         this.title = title;
         this.author = author;
         this.isbn = isbn;
-        this.customerId = customerId;
-        this.firstName = firstName;
-        this.lastName = lastName;
     }
 
     public String getHistoricalRentalId() {
         return historicalRentalId;
+    }
+
+    public void setHistoricalRentalId(String historicalRentalId) {
+        this.historicalRentalId = historicalRentalId;
     }
 
     public Instant getDateCreated() {
@@ -45,6 +52,30 @@ public class HistoricalRentalDTO {
 
     public void setDateEnded(Instant dateEnded) {
         this.dateEnded = dateEnded;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getBookId() {
@@ -75,24 +106,7 @@ public class HistoricalRentalDTO {
         return isbn;
     }
 
-    public String getCustomerId() {
-        return customerId;
-    }
-
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 }

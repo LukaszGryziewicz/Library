@@ -12,15 +12,15 @@ class HistoricalRental {
     private String historicalRentalId;
     private Instant dateCreated;
     private Instant dateEnded;
+    //customer
+    private String customerId;
+    private String firstName;
+    private String lastName;
     //book
     private String bookId;
     private String title;
     private String author;
     private String isbn;
-    //customer
-    private String customerId;
-    private String firstName;
-    private String lastName;
 
     HistoricalRental() {
     }
@@ -38,84 +38,92 @@ class HistoricalRental {
         this.lastName = lastName;
     }
 
-    long getId() {
+    public long getId() {
         return id;
     }
 
-    String getHistoricalRentalId() {
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getHistoricalRentalId() {
         return historicalRentalId;
     }
 
-    void setHistoricalRentalId(String historicalRentalId) {
+    public void setHistoricalRentalId(String historicalRentalId) {
         this.historicalRentalId = historicalRentalId;
     }
 
-    Instant getDateCreated() {
+    public Instant getDateCreated() {
         return dateCreated;
     }
 
-    void setDateCreated(Instant dateCreated) {
+    public void setDateCreated(Instant dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    Instant getDateEnded() {
+    public Instant getDateEnded() {
         return dateEnded;
     }
 
-    void setDateEnded(Instant dateEnded) {
+    public void setDateEnded(Instant dateEnded) {
         this.dateEnded = dateEnded;
     }
 
-    String getBookId() {
-        return bookId;
-    }
-
-    void setBookId(String bookId) {
-        this.bookId = bookId;
-    }
-
-    String getTitle() {
-        return title;
-    }
-
-    void setTitle(String title) {
-        this.title = title;
-    }
-
-    String getAuthor() {
-        return author;
-    }
-
-    void setAuthor(String author) {
-        this.author = author;
-    }
-
-    String getIsbn() {
-        return isbn;
-    }
-
-    void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    String getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    String getFirstName() {
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getFirstName() {
         return firstName;
     }
 
-    void setFirstName(String firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    String getLastName() {
+    public String getLastName() {
         return lastName;
     }
 
-    void setLastName(String lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 }
 

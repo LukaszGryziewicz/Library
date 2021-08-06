@@ -2,8 +2,6 @@ package com.library.historicalRental;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class HistoricalRentalService {
 
@@ -13,16 +11,34 @@ public class HistoricalRentalService {
         this.historicalRentalRepository = historicalRentalRepository;
     }
 
-    List<HistoricalRental> getAllHistoricalRentals() {
-        return historicalRentalRepository.findAll();
+    HistoricalRentalDTO convertHistoricalRentalToDTO(HistoricalRental historicalRental) {
+        return new HistoricalRentalDTO(
+                historicalRental.getHistoricalRentalId(),
+                historicalRental.getDateCreated(),
+                historicalRental.getDateEnded(),
+                historicalRental.getCustomerId(),
+                historicalRental.getFirstName(),
+                historicalRental.getLastName(),
+                historicalRental.getTitle(),
+                historicalRental.getBookId(),
+                historicalRental.getTitle(),
+                historicalRental.getIsbn()
+        );
     }
 
-    List<HistoricalRental> getHistoricalRentalsOfBook(String title, String author) {
-        return historicalRentalRepository.findHistoricalRentalsByTitleAndAuthor(title, author);
-    }
-
-    List<HistoricalRental> getHistoricalRentalsOfCustomer(String firstName, String lastName) {
-        return historicalRentalRepository.findHistoricalRentalsByFirstNameAndLastName(firstName, lastName);
+    HistoricalRental convertDTOToHistoricalRental(HistoricalRentalDTO historicalRentalDTO) {
+        return new HistoricalRental(
+                historicalRentalDTO.getHistoricalRentalId(),
+                historicalRentalDTO.getDateCreated(),
+                historicalRentalDTO.getDateEnded(),
+                historicalRentalDTO.getCustomerId(),
+                historicalRentalDTO.getFirstName(),
+                historicalRentalDTO.getLastName(),
+                historicalRentalDTO.getTitle(),
+                historicalRentalDTO.getBookId(),
+                historicalRentalDTO.getTitle(),
+                historicalRentalDTO.getIsbn()
+        );
     }
 
 }
