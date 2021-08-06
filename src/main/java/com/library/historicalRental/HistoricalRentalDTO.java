@@ -1,6 +1,7 @@
 package com.library.historicalRental;
 
 import java.time.Instant;
+import java.util.Objects;
 
 public class HistoricalRentalDTO {
     private String historicalRentalId;
@@ -108,5 +109,18 @@ public class HistoricalRentalDTO {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HistoricalRentalDTO that = (HistoricalRentalDTO) o;
+        return Objects.equals(historicalRentalId, that.historicalRentalId) && Objects.equals(dateCreated, that.dateCreated) && Objects.equals(dateEnded, that.dateEnded) && Objects.equals(customerId, that.customerId) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(bookId, that.bookId) && Objects.equals(title, that.title) && Objects.equals(author, that.author) && Objects.equals(isbn, that.isbn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(historicalRentalId, dateCreated, dateEnded, customerId, firstName, lastName, bookId, title, author, isbn);
     }
 }

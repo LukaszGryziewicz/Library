@@ -1,6 +1,7 @@
 package com.library.rental;
 
 import java.time.Instant;
+import java.util.Objects;
 
 public class RentalDTO {
     private String rentalId;
@@ -98,5 +99,18 @@ public class RentalDTO {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RentalDTO rentalDTO = (RentalDTO) o;
+        return Objects.equals(rentalId, rentalDTO.rentalId) && Objects.equals(timeOfRental, rentalDTO.timeOfRental) && Objects.equals(customerId, rentalDTO.customerId) && Objects.equals(firstName, rentalDTO.firstName) && Objects.equals(lastName, rentalDTO.lastName) && Objects.equals(bookId, rentalDTO.bookId) && Objects.equals(title, rentalDTO.title) && Objects.equals(author, rentalDTO.author) && Objects.equals(isbn, rentalDTO.isbn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(rentalId, timeOfRental, customerId, firstName, lastName, bookId, title, author, isbn);
     }
 }
