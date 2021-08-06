@@ -2,6 +2,10 @@ package com.library.historicalRental;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 @Service
 public class HistoricalRentalService {
 
@@ -11,7 +15,7 @@ public class HistoricalRentalService {
         this.historicalRentalRepository = historicalRentalRepository;
     }
 
-    HistoricalRentalDTO convertHistoricalRentalToDTO(HistoricalRental historicalRental) {
+    private HistoricalRentalDTO convertHistoricalRentalToDTO(HistoricalRental historicalRental) {
         return new HistoricalRentalDTO(
                 historicalRental.getHistoricalRentalId(),
                 historicalRental.getDateCreated(),
@@ -19,14 +23,14 @@ public class HistoricalRentalService {
                 historicalRental.getCustomerId(),
                 historicalRental.getFirstName(),
                 historicalRental.getLastName(),
-                historicalRental.getTitle(),
                 historicalRental.getBookId(),
                 historicalRental.getTitle(),
+                historicalRental.getAuthor(),
                 historicalRental.getIsbn()
         );
     }
 
-    HistoricalRental convertDTOToHistoricalRental(HistoricalRentalDTO historicalRentalDTO) {
+    private HistoricalRental convertDTOToHistoricalRental(HistoricalRentalDTO historicalRentalDTO) {
         return new HistoricalRental(
                 historicalRentalDTO.getHistoricalRentalId(),
                 historicalRentalDTO.getDateCreated(),
@@ -34,11 +38,23 @@ public class HistoricalRentalService {
                 historicalRentalDTO.getCustomerId(),
                 historicalRentalDTO.getFirstName(),
                 historicalRentalDTO.getLastName(),
-                historicalRentalDTO.getTitle(),
                 historicalRentalDTO.getBookId(),
                 historicalRentalDTO.getTitle(),
+                historicalRentalDTO.getAuthor(),
                 historicalRentalDTO.getIsbn()
         );
+    }
+
+    public HistoricalRentalDTO createHistoricalRental(HistoricalRentalDTO historicalRentalDTO) {
+        historicalRentalRepository.save(convertDTOToHistoricalRental(historicalRentalDTO));
+        return historicalRentalDTO;
+    }
+
+    public List<HistoricalRentalDTO> findAllHistoricalRentals() {
+        return historicalRentalRepository.findAll()
+                .stream()
+                .map(this::convertHistoricalRentalToDTO)
+                .collect(toList());
     }
 
 }

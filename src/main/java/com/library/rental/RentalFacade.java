@@ -21,8 +21,8 @@ public class RentalFacade {
         return rentalService.findRental(rentalId);
     }
 
-    public void returnBook(String rentalId) {
-        rentalService.returnBook(rentalId);
+    public void endRental(String rentalId) {
+        rentalService.endRental(rentalId);
     }
 
     void deleteRental(String rentalId) {

@@ -25,17 +25,17 @@ class HistoricalRental {
     HistoricalRental() {
     }
 
-    HistoricalRental(String historicalRentalId, Instant dateCreated, Instant dateEnded, String bookId, String title, String author, String isbn, String customerId, String firstName, String lastName) {
+    public HistoricalRental(String historicalRentalId, Instant dateCreated, Instant dateEnded, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn) {
         this.historicalRentalId = historicalRentalId;
         this.dateCreated = dateCreated;
         this.dateEnded = dateEnded;
+        this.customerId = customerId;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.bookId = bookId;
         this.title = title;
         this.author = author;
         this.isbn = isbn;
-        this.customerId = customerId;
-        this.firstName = firstName;
-        this.lastName = lastName;
     }
 
     public long getId() {

@@ -123,7 +123,7 @@ public class RentalServiceTest {
         customerFacade.addCustomer(customer1);
         final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
-        rentalFacade.returnBook(rental1.getRentalId());
+        rentalFacade.endRental(rental1.getRentalId());
         //then
         assertThat(rentalFacade.getAllRentals()).isEmpty();
     }
@@ -166,7 +166,7 @@ public class RentalServiceTest {
         rentalFacade.rent(customer2.getCustomerId(), book2.getTitle(), book2.getAuthor());
         //when
         final List<RentalDTO> rentalByCustomer = rentalFacade.getRentalsOfCustomer(customer1.getCustomerId());
-        //than
+        //then
         assertThat(rentalByCustomer).hasSize(1);
         final RentalDTO rentalFromDB = rentalByCustomer.get(0);
         assertThat(rentalFromDB.getRentalId()).isEqualTo(rental1.getRentalId());
@@ -186,11 +186,11 @@ public class RentalServiceTest {
         customerFacade.addCustomer(customer1);
         customerFacade.addCustomer(customer2);
         final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
-        rentalFacade.returnBook(rental1.getRentalId());
+        rentalFacade.endRental(rental1.getRentalId());
         final RentalDTO rental2 = rentalFacade.rent(customer2.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
         final List<RentalDTO> rentalByBook = rentalFacade.getRentalsOfBook(book1.getBookId());
-        //than
+        //then
         assertThat(rentalByBook).hasSize(1);
         final RentalDTO rentalFromDB = rentalByBook.get(0);
         assertThat(rentalFromDB.getRentalId()).isEqualTo(rental2.getRentalId());

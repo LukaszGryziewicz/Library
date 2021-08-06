@@ -47,7 +47,7 @@ class RentalController {
 
     @PostMapping("/endRental/{id}")
     ResponseEntity<RentalDTO> endRental(@PathVariable("id") String rentalId) {
-        rentalService.returnBook(rentalId);
+        rentalService.endRental(rentalId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

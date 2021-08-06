@@ -93,7 +93,7 @@ public class RentalControllerTest {
                 customer.getCustomerId(), book.getTitle(),
                 book.getAuthor()
         );
-        rentalFacade.returnBook(rental1.getRentalId());
+        rentalFacade.endRental(rental1.getRentalId());
         rentalFacade.rent(
                 customer2.getCustomerId(), book.getTitle(),
                 book.getAuthor()
