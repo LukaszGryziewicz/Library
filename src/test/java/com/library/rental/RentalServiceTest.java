@@ -7,7 +7,6 @@ import com.library.book.NoBookAvailableException;
 import com.library.customer.CustomerDTO;
 import com.library.customer.CustomerFacade;
 import com.library.customer.CustomerNotFoundException;
-import com.library.historicalRental.HistoricalRentalRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,8 +28,6 @@ public class RentalServiceTest {
     private CustomerFacade customerFacade;
     @Autowired
     private BookFacade bookFacade;
-    @Autowired
-    private HistoricalRentalRepository historicalRentalRepository;
 
     @Test
     void shouldAddRentalToDatabase() {
