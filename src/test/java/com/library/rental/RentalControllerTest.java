@@ -40,7 +40,7 @@ public class RentalControllerTest {
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerFacade.addCustomer(customer);
-        bookFacade.addNewBook(book);
+        bookFacade.addBook(book);
         final RentalDTO rental = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
                 book.getAuthor()
@@ -62,8 +62,8 @@ public class RentalControllerTest {
         BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
         customerFacade.addCustomer(customer);
         customerFacade.addCustomer(customer2);
-        bookFacade.addNewBook(book);
-        bookFacade.addNewBook(book2);
+        bookFacade.addBook(book);
+        bookFacade.addBook(book2);
         rentalFacade.rent(
                 customer.getCustomerId(), book2.getTitle(),
                 book2.getAuthor()
@@ -88,7 +88,7 @@ public class RentalControllerTest {
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerFacade.addCustomer(customer);
         customerFacade.addCustomer(customer2);
-        bookFacade.addNewBook(book);
+        bookFacade.addBook(book);
         final RentalDTO rental1 = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
                 book.getAuthor()
@@ -112,7 +112,7 @@ public class RentalControllerTest {
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerFacade.addCustomer(customer);
-        bookFacade.addNewBook(book);
+        bookFacade.addBook(book);
         //expect
         mockMvc.perform(post(("/rental/" + customer.getCustomerId() + "/" + book.getTitle()) + "/" + book.getAuthor()))
                 .andDo(print())
@@ -127,7 +127,7 @@ public class RentalControllerTest {
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerFacade.addCustomer(customer);
-        bookFacade.addNewBook(book);
+        bookFacade.addBook(book);
         final RentalDTO rental = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
                 book.getAuthor()
@@ -146,7 +146,7 @@ public class RentalControllerTest {
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerFacade.addCustomer(customer);
-        bookFacade.addNewBook(book);
+        bookFacade.addBook(book);
         RentalDTO rental = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
                 book.getAuthor()
@@ -163,7 +163,7 @@ public class RentalControllerTest {
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         customerFacade.addCustomer(customer);
-        bookFacade.addNewBook(book);
+        bookFacade.addBook(book);
         RentalDTO rental = rentalFacade.rent(
                 customer.getCustomerId(), book.getTitle(),
                 book.getAuthor()

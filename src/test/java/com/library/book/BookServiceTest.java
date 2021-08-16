@@ -22,7 +22,7 @@ public class BookServiceTest {
         //given
         BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         //when
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         //then
         final int bookListSize = bookFacade.findBooksByTitleAndAuthor(book1.getTitle(), book1.getAuthor()).size();
         assertThat(bookListSize).isEqualTo(1);
@@ -33,8 +33,8 @@ public class BookServiceTest {
         //given
         BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        bookFacade.addNewBook(book1);
-        bookFacade.addNewBook(book2);
+        bookFacade.addBook(book1);
+        bookFacade.addBook(book2);
         //when
         List<BookDTO> bookList = bookFacade.getBooks();
         //then
@@ -45,7 +45,7 @@ public class BookServiceTest {
     void shouldDeleteBookFromDatabase() {
         //given
         BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         //when
         bookFacade.deleteBook(book1.getBookId());
         //then
@@ -69,7 +69,7 @@ public class BookServiceTest {
     void shouldFindBookById() {
         //given
         BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         //when
         final BookDTO book = bookFacade.findBook(book1.getBookId());
         //than
@@ -93,7 +93,7 @@ public class BookServiceTest {
         //given
         BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         //when
         bookFacade.updateBook(book1.getBookId(), book2);
         //then

@@ -38,7 +38,7 @@ public class HistoricalRentalServiceTest {
 
     private BookDTO createBook(String title, String author, String isbn) {
         BookDTO book = new BookDTO(title, author, isbn);
-        bookFacade.addNewBook(book);
+        bookFacade.addBook(book);
         return book;
     }
 

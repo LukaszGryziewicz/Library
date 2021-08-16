@@ -57,7 +57,7 @@ class BookService {
         return convertListOfBookToDTO(books);
     }
 
-    BookDTO addNewBook(BookDTO bookDTO) {
+    BookDTO addBook(BookDTO bookDTO) {
         bookDTO.setBookId(UUID.randomUUID().toString());
         bookRepository.save(covertDTOToBook(bookDTO));
         return bookDTO;

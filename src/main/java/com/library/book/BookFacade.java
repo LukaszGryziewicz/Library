@@ -24,8 +24,8 @@ public class BookFacade {
         return bookService.getBooks();
     }
 
-    public BookDTO addNewBook(BookDTO book) {
-        return bookService.addNewBook(book);
+    public BookDTO addBook(BookDTO book) {
+        return bookService.addBook(book);
     }
 
     public BookDTO findBook(String bookId) {

@@ -25,7 +25,7 @@ class BookController {
 
     @PostMapping()
     ResponseEntity<BookDTO> addNewBook(@RequestBody BookDTO book) {
-        final BookDTO newBook = bookFacade.addNewBook(book);
+        final BookDTO newBook = bookFacade.addBook(book);
         return new ResponseEntity<>(newBook, HttpStatus.CREATED);
     }
 

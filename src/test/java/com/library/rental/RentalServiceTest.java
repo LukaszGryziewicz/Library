@@ -34,7 +34,7 @@ public class RentalServiceTest {
         //given
         BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         customerFacade.addCustomer(customer1);
         //when
         RentalDTO rental = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
@@ -47,7 +47,7 @@ public class RentalServiceTest {
         //given
         BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         customerFacade.addCustomer(customer1);
         //when
         final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
@@ -62,7 +62,7 @@ public class RentalServiceTest {
         //given
         BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         customerFacade.addCustomer(customer1);
         rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
@@ -77,7 +77,7 @@ public class RentalServiceTest {
         //given
         BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         //when
         Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor()));
         //then
@@ -101,7 +101,7 @@ public class RentalServiceTest {
         //given
         BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         customerFacade.addCustomer(customer1);
         rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
@@ -116,7 +116,7 @@ public class RentalServiceTest {
         //given
         BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         customerFacade.addCustomer(customer1);
         final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
@@ -134,8 +134,8 @@ public class RentalServiceTest {
         BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
         CustomerDTO customer2 = new CustomerDTO("Adam", "Dominik");
 
-        bookFacade.addNewBook(book1);
-        bookFacade.addNewBook(book2);
+        bookFacade.addBook(book1);
+        bookFacade.addBook(book2);
         customerFacade.addCustomer(customer1);
         customerFacade.addCustomer(customer2);
 
@@ -155,8 +155,8 @@ public class RentalServiceTest {
         BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
         CustomerDTO customer2 = new CustomerDTO("Adam", "Dominik");
-        bookFacade.addNewBook(book1);
-        bookFacade.addNewBook(book2);
+        bookFacade.addBook(book1);
+        bookFacade.addBook(book2);
         customerFacade.addCustomer(customer1);
         customerFacade.addCustomer(customer2);
         final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
@@ -179,7 +179,7 @@ public class RentalServiceTest {
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
         CustomerDTO customer2 = new CustomerDTO("Adam", "Dominik");
 
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         customerFacade.addCustomer(customer1);
         customerFacade.addCustomer(customer2);
         final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
@@ -199,7 +199,7 @@ public class RentalServiceTest {
         BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
 
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         customerFacade.addCustomer(customer1);
         final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
@@ -222,7 +222,7 @@ public class RentalServiceTest {
         BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
 
-        bookFacade.addNewBook(book1);
+        bookFacade.addBook(book1);
         customerFacade.addCustomer(customer1);
         final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
         //when
@@ -246,10 +246,10 @@ public class RentalServiceTest {
         BookDTO book3 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
         BookDTO book4 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
         CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addNewBook(book1);
-        bookFacade.addNewBook(book2);
-        bookFacade.addNewBook(book3);
-        bookFacade.addNewBook(book4);
+        bookFacade.addBook(book1);
+        bookFacade.addBook(book2);
+        bookFacade.addBook(book3);
+        bookFacade.addBook(book4);
         customerFacade.addCustomer(customer1);
         //when
         rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());

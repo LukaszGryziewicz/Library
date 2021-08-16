@@ -31,8 +31,8 @@ public class BookControllerTest {
         //given
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        bookFacade.addNewBook(book);
-        bookFacade.addNewBook(book2);
+        bookFacade.addBook(book);
+        bookFacade.addBook(book2);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.get("/book"))
                 .andExpect(jsonPath("$[0].title").value(book.getTitle()))
@@ -47,7 +47,7 @@ public class BookControllerTest {
     void shouldReturnBookWithGivenId() throws Exception {
         //given
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addNewBook(book);
+        bookFacade.addBook(book);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.get("/book/" + book.getBookId()))
                 .andDo(print())
@@ -63,7 +63,7 @@ public class BookControllerTest {
     void shouldReturnBookWithGivenTitleAndAuthor() throws Exception {
         //given
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addNewBook(book);
+        bookFacade.addBook(book);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.get("/book/" + book.getTitle() + "/" + book.getAuthor()))
                 .andDo(print())
@@ -97,7 +97,7 @@ public class BookControllerTest {
     void shouldFindBookById() throws Exception {
         //given
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addNewBook(book);
+        bookFacade.addBook(book);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.get("/book/" + book.getBookId()))
                 .andDo(print())
@@ -112,8 +112,8 @@ public class BookControllerTest {
         //given
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         BookDTO book2 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addNewBook(book);
-        bookFacade.addNewBook(book2);
+        bookFacade.addBook(book);
+        bookFacade.addBook(book2);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.get("/book/" + book.getTitle() + "/" + book.getAuthor()))
                 .andExpect(status().isOk())
@@ -131,7 +131,7 @@ public class BookControllerTest {
         //given
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        bookFacade.addNewBook(book);
+        bookFacade.addBook(book);
         String content = objectMapper.writeValueAsString(book2);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.put("/book/update/" + book.getBookId())
@@ -148,7 +148,7 @@ public class BookControllerTest {
     void shouldDeleteBook() throws Exception {
         //given
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addNewBook(book);
+        bookFacade.addBook(book);
         //expect
         mockMvc.perform(MockMvcRequestBuilders.delete("/book/delete/" + book.getBookId()))
                 .andDo(print())
