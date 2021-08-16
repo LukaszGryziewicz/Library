@@ -9,5 +9,4 @@ interface HistoricalRentalRepository extends JpaRepository<HistoricalRental, Lon
     List<HistoricalRental> findHistoricalRentalsByCustomerId(String customerId);
 
     List<HistoricalRental> findHistoricalRentalsByBookId(String bookId);
-
 }

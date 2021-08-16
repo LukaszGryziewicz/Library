@@ -81,5 +81,4 @@ public class HistoricalRentalService {
                 historicalRentalRepository.findHistoricalRentalsByBookId(bookId)
         );
     }
-
 }
