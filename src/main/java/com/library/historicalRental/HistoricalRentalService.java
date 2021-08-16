@@ -63,26 +63,23 @@ public class HistoricalRentalService {
     }
 
     List<HistoricalRentalDTO> findAllHistoricalRentals() {
-        return historicalRentalRepository.findAll()
-                .stream()
-                .map(this::convertHistoricalRentalToDTO)
-                .collect(toList());
+        return convertListOfHistoricalRentalsToDTO(
+                historicalRentalRepository.findAll()
+        );
     }
 
     List<HistoricalRentalDTO> findHistoricalRentalsOfCustomer(String customerId) {
         customerFacade.checkIfCustomerExistById(customerId);
-        return historicalRentalRepository.findHistoricalRentalsByCustomerId(customerId)
-                .stream()
-                .map(this::convertHistoricalRentalToDTO)
-                .collect(toList());
+        return convertListOfHistoricalRentalsToDTO(
+                historicalRentalRepository.findHistoricalRentalsByCustomerId(customerId)
+        );
     }
 
     List<HistoricalRentalDTO> findHistoricalRentalsOfBook(String bookId) {
         bookFacade.checkIfBookExistById(bookId);
-        return historicalRentalRepository.findHistoricalRentalsByBookId(bookId)
-                .stream()
-                .map(this::convertHistoricalRentalToDTO)
-                .collect(toList());
+        return convertListOfHistoricalRentalsToDTO(
+                historicalRentalRepository.findHistoricalRentalsByBookId(bookId)
+        );
     }
 
 }

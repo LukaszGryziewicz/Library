@@ -58,8 +58,8 @@ public class HistoricalRentalServiceTest {
         rentalFacade.endRental(rental.getRentalId());
         //then
         final List<HistoricalRentalDTO> allHistoricalRentals = historicalRentalService.findAllHistoricalRentals();
-        final HistoricalRentalDTO historicalRentalFromDB = allHistoricalRentals.get(0);
         assertThat(allHistoricalRentals.size()).isEqualTo(1);
+        final HistoricalRentalDTO historicalRentalFromDB = allHistoricalRentals.get(0);
         assertThat(historicalRentalFromDB.getHistoricalRentalId()).isEqualTo(rental.getRentalId());
         assertThat(historicalRentalFromDB.getDateCreated()).isEqualTo(rental.getTimeOfRental());
         assertThat(historicalRentalFromDB.getCustomerId()).isEqualTo(rental.getCustomerId());
