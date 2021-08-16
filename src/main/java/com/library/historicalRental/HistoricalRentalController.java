@@ -2,7 +2,10 @@ package com.library.historicalRental;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
@@ -15,12 +18,6 @@ public class HistoricalRentalController {
 
     public HistoricalRentalController(HistoricalRentalService historicalRentalService) {
         this.historicalRentalService = historicalRentalService;
-    }
-
-    @PostMapping()
-    ResponseEntity<HistoricalRentalDTO> createHistoricalRental(@RequestBody HistoricalRentalDTO historicalRentalDTO) {
-        HistoricalRentalDTO historicalRental = historicalRentalService.createHistoricalRental(historicalRentalDTO);
-        return new ResponseEntity<>(historicalRental, HttpStatus.CREATED);
     }
 
     @GetMapping("/customer/{customerId}")
