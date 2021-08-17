@@ -14,27 +14,27 @@ import java.util.List;
 @EnableWebMvc
 @RequestMapping("/historical")
 public class HistoricalRentalController {
-    private final HistoricalRentalService historicalRentalService;
+    private final HistoricalRentalFacade historicalRentalFacade;
 
-    public HistoricalRentalController(HistoricalRentalService historicalRentalService) {
-        this.historicalRentalService = historicalRentalService;
+    public HistoricalRentalController(HistoricalRentalFacade historicalRentalFacade) {
+        this.historicalRentalFacade = historicalRentalFacade;
     }
 
     @GetMapping()
     ResponseEntity<List<HistoricalRentalDTO>> getAllHistoricalRentals() {
-        List<HistoricalRentalDTO> historicalRentals = historicalRentalService.findAllHistoricalRentals();
+        List<HistoricalRentalDTO> historicalRentals = historicalRentalFacade.findAllHistoricalRentals();
         return new ResponseEntity<>(historicalRentals, HttpStatus.OK);
     }
 
     @GetMapping("/customer/{customerId}")
     ResponseEntity<List<HistoricalRentalDTO>> getHistoricalRentalsOfCustomer(@PathVariable("customerId") String customerId) {
-        List<HistoricalRentalDTO> ofCustomer = historicalRentalService.findHistoricalRentalsOfCustomer(customerId);
+        List<HistoricalRentalDTO> ofCustomer = historicalRentalFacade.findHistoricalRentalsOfCustomer(customerId);
         return new ResponseEntity<>(ofCustomer, HttpStatus.OK);
     }
 
     @GetMapping("/book/{bookId}")
     ResponseEntity<List<HistoricalRentalDTO>> getHistoricalRentalsOfBook(@PathVariable("bookId") String bookId) {
-        List<HistoricalRentalDTO> ofBook = historicalRentalService.findHistoricalRentalsOfBook(bookId);
+        List<HistoricalRentalDTO> ofBook = historicalRentalFacade.findHistoricalRentalsOfBook(bookId);
         return new ResponseEntity<>(ofBook, HttpStatus.OK);
     }
 

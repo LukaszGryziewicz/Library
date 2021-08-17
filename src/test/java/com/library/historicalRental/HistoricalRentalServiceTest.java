@@ -29,7 +29,7 @@ public class HistoricalRentalServiceTest {
     private RentalFacade rentalFacade;
 
     @Autowired
-    private HistoricalRentalService historicalRentalService;
+    private HistoricalRentalFacade historicalRentalFacade;
 
 
     private RentalDTO createRental(CustomerDTO customer, BookDTO book) {
@@ -57,7 +57,7 @@ public class HistoricalRentalServiceTest {
         //when
         rentalFacade.endRental(rental.getRentalId());
         //then
-        final List<HistoricalRentalDTO> allHistoricalRentals = historicalRentalService.findAllHistoricalRentals();
+        final List<HistoricalRentalDTO> allHistoricalRentals = historicalRentalFacade.findAllHistoricalRentals();
         assertThat(allHistoricalRentals.size()).isEqualTo(1);
         final HistoricalRentalDTO historicalRentalFromDB = allHistoricalRentals.get(0);
         assertThat(historicalRentalFromDB.getHistoricalRentalId()).isEqualTo(rental.getRentalId());
@@ -83,7 +83,7 @@ public class HistoricalRentalServiceTest {
         RentalDTO rental2 = createRental(customer2, book2);
         rentalFacade.endRental(rental2.getRentalId());
         //when
-        final List<HistoricalRentalDTO> allHistoricalRentals = historicalRentalService.findAllHistoricalRentals();
+        final List<HistoricalRentalDTO> allHistoricalRentals = historicalRentalFacade.findAllHistoricalRentals();
         //assert
         assertThat(allHistoricalRentals.size()).isEqualTo(2);
     }
@@ -100,7 +100,7 @@ public class HistoricalRentalServiceTest {
         RentalDTO rental2 = createRental(customer2, book2);
         rentalFacade.endRental(rental2.getRentalId());
         //when
-        final List<HistoricalRentalDTO> historicalRentalsOfCustomer = historicalRentalService
+        final List<HistoricalRentalDTO> historicalRentalsOfCustomer = historicalRentalFacade
                 .findHistoricalRentalsOfCustomer(customer.getCustomerId());
         //assert
         assertThat(historicalRentalsOfCustomer.size()).isEqualTo(1);
@@ -122,7 +122,7 @@ public class HistoricalRentalServiceTest {
         RentalDTO rental2 = createRental(customer2, book2);
         rentalFacade.endRental(rental2.getRentalId());
         //when
-        List<HistoricalRentalDTO> historicalRentalsOfBook = historicalRentalService
+        List<HistoricalRentalDTO> historicalRentalsOfBook = historicalRentalFacade
                 .findHistoricalRentalsOfBook(book.getBookId());
         //assert
         assertThat(historicalRentalsOfBook.size()).isEqualTo(1);

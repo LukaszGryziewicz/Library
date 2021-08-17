@@ -5,7 +5,7 @@ import com.library.book.BookFacade;
 import com.library.customer.CustomerDTO;
 import com.library.customer.CustomerFacade;
 import com.library.historicalRental.HistoricalRentalDTO;
-import com.library.historicalRental.HistoricalRentalService;
+import com.library.historicalRental.HistoricalRentalFacade;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,15 +21,15 @@ class RentalService {
     private final RentalRepository rentalRepository;
     private final BookFacade bookFacade;
     private final CustomerFacade customerFacade;
-    private final HistoricalRentalService historicalRentalService;
+    private final HistoricalRentalFacade historicalRentalFacade;
 
     RentalService(RentalRepository rentalRepository,
                   BookFacade bookFacade,
-                  CustomerFacade customerFacade, HistoricalRentalService historicalRentalService) {
+                  CustomerFacade customerFacade, HistoricalRentalFacade historicalRentalFacade) {
         this.rentalRepository = rentalRepository;
         this.bookFacade = bookFacade;
         this.customerFacade = customerFacade;
-        this.historicalRentalService = historicalRentalService;
+        this.historicalRentalFacade = historicalRentalFacade;
     }
 
     private RentalDTO convertRentalToDTO(Rental rental) {
@@ -93,7 +93,7 @@ class RentalService {
                 book.getAuthor(),
                 book.getIsbn()
         );
-        historicalRentalService.createHistoricalRental(historicalRentalDTO);
+        historicalRentalFacade.createHistoricalRental(historicalRentalDTO);
         rentalRepository.deleteRentalByRentalId(rentalId);
         bookFacade.returnBook(book.getBookId());
     }

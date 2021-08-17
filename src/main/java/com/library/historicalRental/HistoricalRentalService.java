@@ -57,9 +57,8 @@ public class HistoricalRentalService {
                 .collect(toList());
     }
 
-    public HistoricalRentalDTO createHistoricalRental(HistoricalRentalDTO historicalRentalDTO) {
+    void createHistoricalRental(HistoricalRentalDTO historicalRentalDTO) {
         historicalRentalRepository.save(convertDTOToHistoricalRental(historicalRentalDTO));
-        return historicalRentalDTO;
     }
 
     List<HistoricalRentalDTO> findAllHistoricalRentals() {
