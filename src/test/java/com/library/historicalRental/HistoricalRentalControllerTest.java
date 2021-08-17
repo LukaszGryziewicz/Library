@@ -54,8 +54,40 @@ public class HistoricalRentalControllerTest {
     }
 
     @Test
+    void shouldFindAllHistoricalRentals() throws Exception {
+        //given
+        CustomerDTO customer = createCustomer("Adam", "Dominik");
+        BookDTO book = createBook("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        RentalDTO rental = createRental(customer, book);
+        endRental(rental);
+        CustomerDTO customer2 = createCustomer("Łukasz", "Gryziewicz");
+        BookDTO book2 = createBook("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
+        RentalDTO rental2 = createRental(customer2, book2);
+        endRental(rental2);
+        //expect
+        mockMvc.perform(get("/historical"))
+                .andExpect((status().isOk()))
+                .andExpect(jsonPath("$[0].historicalRentalId").value(rental.getRentalId()))
+                .andExpect(jsonPath("$[0].customerId").value(customer.getCustomerId()))
+                .andExpect(jsonPath("$[0].firstName").value(customer.getFirstName()))
+                .andExpect(jsonPath("$[0].lastName").value(customer.getLastName()))
+                .andExpect(jsonPath("$[0].bookId").value(book.getBookId()))
+                .andExpect(jsonPath("$[0].title").value(book.getTitle()))
+                .andExpect(jsonPath("$[0].author").value(book.getAuthor()))
+                .andExpect(jsonPath("$[0].isbn").value(book.getIsbn()))
+                .andExpect(jsonPath("$[1].historicalRentalId").value(rental2.getRentalId()))
+                .andExpect(jsonPath("$[1].customerId").value(customer2.getCustomerId()))
+                .andExpect(jsonPath("$[1].firstName").value(customer2.getFirstName()))
+                .andExpect(jsonPath("$[1].lastName").value(customer2.getLastName()))
+                .andExpect(jsonPath("$[1].bookId").value(book2.getBookId()))
+                .andExpect(jsonPath("$[1].title").value(book2.getTitle()))
+                .andExpect(jsonPath("$[1].author").value(book2.getAuthor()))
+                .andExpect(jsonPath("$[1].isbn").value(book2.getIsbn()));
+    }
+
+    @Test
     void shouldFindHistoricalRentalsByCustomerId() throws Exception {
-        //when
+        //given
         CustomerDTO customer = createCustomer("Adam", "Dominik");
         BookDTO book = createBook("Adam z Nikiszowca", "Adam Dominik", "123456789");
         RentalDTO rental = createRental(customer, book);
@@ -75,7 +107,7 @@ public class HistoricalRentalControllerTest {
 
     @Test
     void shouldFindHistoricalRentalsByBookId() throws Exception {
-        //when
+        //given
         CustomerDTO customer = createCustomer("Adam", "Dominik");
         BookDTO book = createBook("Adam z Nikiszowca", "Adam Dominik", "123456789");
         RentalDTO rental = createRental(customer, book);

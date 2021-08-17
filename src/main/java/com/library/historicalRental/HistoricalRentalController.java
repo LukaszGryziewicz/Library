@@ -20,6 +20,12 @@ public class HistoricalRentalController {
         this.historicalRentalService = historicalRentalService;
     }
 
+    @GetMapping()
+    ResponseEntity<List<HistoricalRentalDTO>> getAllHistoricalRentals() {
+        List<HistoricalRentalDTO> historicalRentals = historicalRentalService.findAllHistoricalRentals();
+        return new ResponseEntity<>(historicalRentals, HttpStatus.OK);
+    }
+
     @GetMapping("/customer/{customerId}")
     ResponseEntity<List<HistoricalRentalDTO>> getHistoricalRentalsOfCustomer(@PathVariable("customerId") String customerId) {
         List<HistoricalRentalDTO> ofCustomer = historicalRentalService.findHistoricalRentalsOfCustomer(customerId);
