@@ -87,4 +87,47 @@ public class HistoricalRentalServiceTest {
         //assert
         assertThat(allHistoricalRentals.size()).isEqualTo(2);
     }
+
+    @Test
+    void shouldFindHistoricalRentalsOfCustomer() {
+        //given
+        CustomerDTO customer = createCustomer("Adam", "Dominik");
+        BookDTO book = createBook("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        RentalDTO rental = createRental(customer, book);
+        rentalFacade.endRental(rental.getRentalId());
+        CustomerDTO customer2 = createCustomer("Łukasz", "Gryziewicz");
+        BookDTO book2 = createBook("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
+        RentalDTO rental2 = createRental(customer2, book2);
+        rentalFacade.endRental(rental2.getRentalId());
+        //when
+        final List<HistoricalRentalDTO> historicalRentalsOfCustomer = historicalRentalService
+                .findHistoricalRentalsOfCustomer(customer.getCustomerId());
+        //assert
+        assertThat(historicalRentalsOfCustomer.size()).isEqualTo(1);
+        HistoricalRentalDTO firstHistoricalRentalOfCustomer = historicalRentalsOfCustomer.get(0);
+        assertThat(firstHistoricalRentalOfCustomer.getCustomerId()).isEqualTo(customer.getCustomerId());
+        assertThat(firstHistoricalRentalOfCustomer.getBookId()).isEqualTo(book.getBookId());
+    }
+
+
+    @Test
+    void shouldFindHistoricalRentalsOfBook() {
+        //given
+        CustomerDTO customer = createCustomer("Adam", "Dominik");
+        BookDTO book = createBook("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        RentalDTO rental = createRental(customer, book);
+        rentalFacade.endRental(rental.getRentalId());
+        CustomerDTO customer2 = createCustomer("Łukasz", "Gryziewicz");
+        BookDTO book2 = createBook("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
+        RentalDTO rental2 = createRental(customer2, book2);
+        rentalFacade.endRental(rental2.getRentalId());
+        //when
+        List<HistoricalRentalDTO> historicalRentalsOfBook = historicalRentalService
+                .findHistoricalRentalsOfBook(book.getBookId());
+        //assert
+        assertThat(historicalRentalsOfBook.size()).isEqualTo(1);
+        HistoricalRentalDTO firstHistoricalRentalOfBook = historicalRentalsOfBook.get(0);
+        assertThat(firstHistoricalRentalOfBook.getCustomerId()).isEqualTo(customer.getCustomerId());
+        assertThat(firstHistoricalRentalOfBook.getBookId()).isEqualTo(book.getBookId());
+    }
 }
