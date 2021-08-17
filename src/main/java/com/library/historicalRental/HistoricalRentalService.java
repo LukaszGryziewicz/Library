@@ -9,7 +9,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Service
-public class HistoricalRentalService {
+class HistoricalRentalService {
 
     private final HistoricalRentalRepository historicalRentalRepository;
     private final CustomerFacade customerFacade;

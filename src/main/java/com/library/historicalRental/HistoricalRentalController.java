@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @EnableWebMvc
 @RequestMapping("/historical")
-public class HistoricalRentalController {
+class HistoricalRentalController {
     private final HistoricalRentalFacade historicalRentalFacade;
 
     public HistoricalRentalController(HistoricalRentalFacade historicalRentalFacade) {
