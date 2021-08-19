@@ -12,7 +12,8 @@ import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 class RentalService {
@@ -48,6 +49,12 @@ class RentalService {
         );
     }
 
+    private List<RentalDTO> convertListOfHistoricalRentalsToDTO(List<Rental> rentals) {
+        return rentals.stream()
+                .map(this::convertRentalToDTO)
+                .collect(toList());
+    }
+
     RentalDTO rent(String customerId, String title, String author) {
         customerFacade.findCustomer(customerId);
         checkIfCustomerIsEligibleForRental(customerId);
@@ -60,7 +67,7 @@ class RentalService {
     }
 
     private void checkIfCustomerIsEligibleForRental(String customerId) {
-        if (booksRentedByCustomer(customerId) >= MAX_ALLOWED_RENTALS) {
+        if ( booksRentedByCustomer(customerId) >= MAX_ALLOWED_RENTALS ) {
             throw new ExceededMaximumNumberOfRentalsException();
         }
     }
@@ -104,30 +111,27 @@ class RentalService {
     }
 
     private void checkIfRentalExists(String rentalId) {
-        if (!rentalRepository.existsByRentalId(rentalId)) {
+        if ( !rentalRepository.existsByRentalId(rentalId) ) {
             throw new RentalNotFoundException();
         }
     }
 
     List<RentalDTO> getAllRentals() {
-        return rentalRepository.findAll()
-                .stream()
-                .map(this::convertRentalToDTO)
-                .collect(Collectors.toList());
+        return convertListOfHistoricalRentalsToDTO(
+                rentalRepository.findAll()
+        );
     }
 
     List<RentalDTO> getRentalsOfCustomer(String customerId) {
-        return rentalRepository.findRentalsByCustomerId(customerId)
-                .stream()
-                .map(this::convertRentalToDTO)
-                .collect(Collectors.toList());
+        return convertListOfHistoricalRentalsToDTO(
+                rentalRepository.findRentalsByCustomerId(customerId)
+        );
     }
 
     List<RentalDTO> getRentalsOfBook(String bookId) {
-        return rentalRepository.findRentalByBookId(bookId)
-                .stream()
-                .map(this::convertRentalToDTO)
-                .collect(Collectors.toList());
+        return convertListOfHistoricalRentalsToDTO(
+                rentalRepository.findRentalByBookId(bookId)
+        );
     }
 
 }
