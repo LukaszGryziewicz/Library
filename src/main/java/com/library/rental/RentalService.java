@@ -123,12 +123,14 @@ class RentalService {
     }
 
     List<RentalDTO> getRentalsOfCustomer(String customerId) {
+        customerFacade.checkIfCustomerExistById(customerId);
         return convertListOfHistoricalRentalsToDTO(
                 rentalRepository.findRentalsByCustomerId(customerId)
         );
     }
 
     List<RentalDTO> getRentalsOfBook(String bookId) {
+        bookFacade.checkIfBookExistById(bookId);
         return convertListOfHistoricalRentalsToDTO(
                 rentalRepository.findRentalByBookId(bookId)
         );
