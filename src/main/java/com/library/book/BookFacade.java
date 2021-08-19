@@ -12,14 +12,6 @@ public class BookFacade {
         this.bookService = bookService;
     }
 
-    public BookDTO convertBookToDTO(Book book) {
-        return bookService.convertBookToDTO(book);
-    }
-
-    public Book covertDTOToBook(BookDTO bookDTO) {
-        return bookService.covertDTOToBook(bookDTO);
-    }
-
     List<BookDTO> getBooks() {
         return bookService.getBooks();
     }
