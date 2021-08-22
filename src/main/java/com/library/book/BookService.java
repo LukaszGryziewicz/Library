@@ -75,7 +75,7 @@ class BookService {
 
     List<BookDTO> findBooksByTitleAndAuthor(String title, String author) {
         List<Book> booksByTitleAndAuthor = bookRepository.findBooksByTitleAndAuthor(title, author);
-        if (booksByTitleAndAuthor.isEmpty()) {
+        if ( booksByTitleAndAuthor.isEmpty() ) {
             throw new BookNotFoundException();
         }
         return convertListOfBookToDTO(booksByTitleAndAuthor);
@@ -101,7 +101,7 @@ class BookService {
 
     void checkIfBookExistById(String bookId) {
         final boolean exists = bookRepository.existsByBookId(bookId);
-        if (!exists) {
+        if ( !exists ) {
             throw new BookNotFoundException();
         }
     }

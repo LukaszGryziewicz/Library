@@ -70,7 +70,7 @@ class CustomerService {
 
     void checkIfCustomerExistById(String customerId) {
         final boolean exists = customerRepository.existsByCustomerId(customerId);
-        if (!exists) {
+        if ( !exists ) {
             throw new CustomerNotFoundException();
         }
     }

@@ -103,8 +103,8 @@ public class RentalDTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
         RentalDTO rentalDTO = (RentalDTO) o;
         return Objects.equals(rentalId, rentalDTO.rentalId) && Objects.equals(timeOfRental, rentalDTO.timeOfRental) && Objects.equals(customerId, rentalDTO.customerId) && Objects.equals(firstName, rentalDTO.firstName) && Objects.equals(lastName, rentalDTO.lastName) && Objects.equals(bookId, rentalDTO.bookId) && Objects.equals(title, rentalDTO.title) && Objects.equals(author, rentalDTO.author) && Objects.equals(isbn, rentalDTO.isbn);
     }
