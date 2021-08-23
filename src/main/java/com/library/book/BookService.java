@@ -15,7 +15,7 @@ class BookService {
         this.bookRepository = bookRepository;
     }
 
-    BookDTO convertBookToDTO(Book book) {
+    private BookDTO convertBookToDTO(Book book) {
         BookDTO bookDTO = new BookDTO();
         bookDTO.setBookId(book.getBookId());
         bookDTO.setTitle(book.getTitle());
@@ -25,7 +25,7 @@ class BookService {
         return bookDTO;
     }
 
-    Book covertDTOToBook(BookDTO bookDTO) {
+    private Book covertDTOToBook(BookDTO bookDTO) {
         Book book = new Book();
         book.setBookId(bookDTO.getBookId());
         book.setTitle(bookDTO.getTitle());
@@ -34,7 +34,7 @@ class BookService {
         return book;
     }
 
-    List<BookDTO> convertListOfBookToDTO(List<Book> listOfBooks) {
+    private List<BookDTO> convertListOfBookToDTO(List<Book> listOfBooks) {
         return listOfBooks.stream()
                 .map(this::convertBookToDTO)
                 .collect(Collectors.toUnmodifiableList());
@@ -75,7 +75,7 @@ class BookService {
 
     List<BookDTO> findBooksByTitleAndAuthor(String title, String author) {
         List<Book> booksByTitleAndAuthor = bookRepository.findBooksByTitleAndAuthor(title, author);
-        if ( booksByTitleAndAuthor.isEmpty() ) {
+        if (booksByTitleAndAuthor.isEmpty()) {
             throw new BookNotFoundException();
         }
         return convertListOfBookToDTO(booksByTitleAndAuthor);
@@ -101,7 +101,7 @@ class BookService {
 
     void checkIfBookExistById(String bookId) {
         final boolean exists = bookRepository.existsByBookId(bookId);
-        if ( !exists ) {
+        if (!exists) {
             throw new BookNotFoundException();
         }
     }

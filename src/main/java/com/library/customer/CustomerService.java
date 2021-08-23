@@ -15,7 +15,7 @@ class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    CustomerDTO convertCustomerToDTO(Customer customer) {
+    private CustomerDTO convertCustomerToDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setCustomerId(customer.getCustomerId());
         customerDTO.setFirstName(customer.getFirstName());
@@ -23,7 +23,7 @@ class CustomerService {
         return customerDTO;
     }
 
-    Customer convertDTOToCustomer(CustomerDTO customerDTO) {
+    private Customer convertDTOToCustomer(CustomerDTO customerDTO) {
         Customer customer = new Customer();
         customer.setCustomerId(customerDTO.getCustomerId());
         customer.setFirstName(customerDTO.getFirstName());
@@ -70,7 +70,7 @@ class CustomerService {
 
     void checkIfCustomerExistById(String customerId) {
         final boolean exists = customerRepository.existsByCustomerId(customerId);
-        if ( !exists ) {
+        if (!exists) {
             throw new CustomerNotFoundException();
         }
     }
