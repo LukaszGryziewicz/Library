@@ -35,7 +35,7 @@ public class CustomerControllerTest {
         customerFacade.addCustomer(customer);
         customerFacade.addCustomer(customer2);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/customer"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/customers"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].firstName").value(customer.getFirstName()))
@@ -50,10 +50,10 @@ public class CustomerControllerTest {
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         String content = objectMapper.writeValueAsString(customer);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.post("/customer")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
-                .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.post("/customers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName").value(customer.getFirstName()))
@@ -67,7 +67,7 @@ public class CustomerControllerTest {
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         customerFacade.addCustomer(customer);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/customer/" + customer.getCustomerId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/customers/" + customer.getCustomerId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value(customer.getFirstName()))
@@ -80,7 +80,7 @@ public class CustomerControllerTest {
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         customerFacade.addCustomer(customer);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/customer/" + customer.getCustomerId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/customers/" + customer.getCustomerId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value(customer.getFirstName()))
@@ -95,10 +95,10 @@ public class CustomerControllerTest {
         customerFacade.addCustomer(customer);
         String content = objectMapper.writeValueAsString(customer2);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.put("/customer/update/" + customer.getCustomerId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
-                .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.put("/customers/" + customer.getCustomerId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value(customer2.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(customer2.getLastName()));
@@ -110,7 +110,7 @@ public class CustomerControllerTest {
         CustomerDTO customer = new CustomerDTO("Adam", "Dominik");
         customerFacade.addCustomer(customer);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.delete("/customer/delete/" + customer.getCustomerId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/customers/" + customer.getCustomerId()))
                 .andExpect(status().isOk());
 
     }

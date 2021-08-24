@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @EnableWebMvc
-@RequestMapping("/customer")
+@RequestMapping("/customers")
 class CustomerController {
 
     private final CustomerFacade customerFacade;
@@ -36,13 +36,13 @@ class CustomerController {
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<CustomerDTO> updateCustomer(@PathVariable("id") String customerId, @RequestBody CustomerDTO customerDTO) {
         CustomerDTO updatedCustomer = customerFacade.updateCustomer(customerId, customerDTO);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<?> deleteCustomer(@PathVariable("id") String customerId) {
         customerFacade.deleteCustomer(customerId);
         return new ResponseEntity<>(HttpStatus.OK);
