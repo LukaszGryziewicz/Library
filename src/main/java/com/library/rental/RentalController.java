@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rental")
+@RequestMapping("/rentals")
 class RentalController {
     private final RentalService rentalService;
 
@@ -21,13 +21,13 @@ class RentalController {
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 
-    @GetMapping("/customerRentals/{id}")
+    @GetMapping("/customer/{id}")
     ResponseEntity<List<RentalDTO>> getRentalsOfCustomer(@PathVariable("id") String customerId) {
         final List<RentalDTO> rentals = rentalService.getRentalsOfCustomer(customerId);
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 
-    @GetMapping("/bookRentals/{id}")
+    @GetMapping("/book/{id}")
     ResponseEntity<List<RentalDTO>> getRentalsOfBook(@PathVariable("id") String customerId) {
         final List<RentalDTO> rentalsOfBook = rentalService.getRentalsOfBook(customerId);
         return new ResponseEntity<>(rentalsOfBook, HttpStatus.OK);
@@ -45,13 +45,13 @@ class RentalController {
         return new ResponseEntity<>(rentalById, HttpStatus.OK);
     }
 
-    @PostMapping("/endRental/{id}")
+    @PostMapping("/end/{id}")
     ResponseEntity<RentalDTO> endRental(@PathVariable("id") String rentalId) {
         rentalService.endRental(rentalId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<?> deleteRental(@PathVariable("id") String rentalId) {
         rentalService.deleteRental(rentalId);
         return new ResponseEntity<>(HttpStatus.OK);
