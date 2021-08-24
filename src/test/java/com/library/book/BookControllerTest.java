@@ -34,7 +34,7 @@ public class BookControllerTest {
         bookFacade.addBook(book);
         bookFacade.addBook(book2);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/book"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/books"))
                 .andExpect(jsonPath("$[0].title").value(book.getTitle()))
                 .andExpect(jsonPath("$[0].author").value(book.getAuthor()))
                 .andExpect(jsonPath("$[0].isbn").value(book.getIsbn()))
@@ -49,7 +49,7 @@ public class BookControllerTest {
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         bookFacade.addBook(book);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/book/" + book.getBookId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/books/" + book.getBookId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -65,7 +65,7 @@ public class BookControllerTest {
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         bookFacade.addBook(book);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/book/" + book.getTitle() + "/" + book.getAuthor()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/books/" + book.getTitle() + "/" + book.getAuthor()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -81,10 +81,10 @@ public class BookControllerTest {
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         String content = objectMapper.writeValueAsString(book);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.post("/book")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
-                .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.post("/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
@@ -99,7 +99,7 @@ public class BookControllerTest {
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         bookFacade.addBook(book);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/book/" + book.getBookId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/books/" + book.getBookId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
@@ -115,7 +115,7 @@ public class BookControllerTest {
         bookFacade.addBook(book);
         bookFacade.addBook(book2);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/book/" + book.getTitle() + "/" + book.getAuthor()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/books/" + book.getTitle() + "/" + book.getAuthor()))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$[0].title").value(book.getTitle()))
@@ -134,10 +134,10 @@ public class BookControllerTest {
         bookFacade.addBook(book);
         String content = objectMapper.writeValueAsString(book2);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.put("/book/update/" + book.getBookId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
-                .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.put("/books/" + book.getBookId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value(book2.getTitle()))
                 .andExpect(jsonPath("$.author").value(book2.getAuthor()))
@@ -150,7 +150,7 @@ public class BookControllerTest {
         BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
         bookFacade.addBook(book);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.delete("/book/delete/" + book.getBookId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/books/" + book.getBookId()))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

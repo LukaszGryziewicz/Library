@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @EnableWebMvc
-@RequestMapping("/book")
+@RequestMapping("/books")
 class BookController {
     private final BookFacade bookFacade;
 
@@ -41,13 +41,13 @@ class BookController {
         return new ResponseEntity<>(booksByTitleAndAuthor, HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<BookDTO> updateBook(@PathVariable("id") String bookId, @RequestBody BookDTO book) {
         BookDTO updatedBook = bookFacade.updateBook(bookId, book);
         return new ResponseEntity<>(updatedBook, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<?> deleteBook(@PathVariable("id") String bookId) {
         bookFacade.deleteBook(bookId);
         return new ResponseEntity<>(HttpStatus.OK);
