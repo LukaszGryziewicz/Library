@@ -20,6 +20,7 @@ class CustomerService {
         customerDTO.setCustomerId(customer.getCustomerId());
         customerDTO.setFirstName(customer.getFirstName());
         customerDTO.setLastName(customer.getLastName());
+        customerDTO.setFines(customer.getFines());
         return customerDTO;
     }
 
@@ -75,4 +76,10 @@ class CustomerService {
         }
     }
 
+    void addFines(List<String> customersId, String fine) {
+        List<Customer> customersByCustomerId = customerRepository.findCustomersByCustomerIdIn(customersId);
+        customersByCustomerId
+                .forEach(customer -> customer.addFine(fine));
+        customerRepository.saveAll(customersByCustomerId);
+    }
 }

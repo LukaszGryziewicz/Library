@@ -40,4 +40,8 @@ public class RentalFacade {
     public List<RentalDTO> getRentalsOfBook(String bookId) {
         return rentalService.getRentalsOfBook(bookId);
     }
+
+    void scanForOverdueRentals() {
+        rentalService.scanForOverdueRentals();
+    }
 }

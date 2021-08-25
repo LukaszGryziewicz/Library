@@ -36,4 +36,8 @@ public class CustomerFacade {
     public void checkIfCustomerExistById(String customerId) {
         customerService.checkIfCustomerExistById(customerId);
     }
+
+    public void addFines(List<String> customersId, String fine) {
+        customerService.addFines(customersId, fine);
+    }
 }

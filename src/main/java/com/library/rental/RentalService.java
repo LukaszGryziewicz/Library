@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+import static java.time.Instant.now;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -56,24 +57,36 @@ class RentalService {
     }
 
     RentalDTO rent(String customerId, String title, String author) {
-        customerFacade.findCustomer(customerId);
+        customerFacade.checkIfCustomerExistById(customerId);
         checkIfCustomerIsEligibleForRental(customerId);
         bookFacade.findBooksByTitleAndAuthor(title, author);
         final BookDTO availableBook = bookFacade.findFirstAvailableBookByTitleAndAuthor(title, author);
         bookFacade.rentBook(availableBook.getBookId());
-        Rental rental = new Rental(UUID.randomUUID().toString(), Instant.now(), customerId, availableBook.getBookId());
+        Rental rental = new Rental(UUID.randomUUID().toString(), now(), customerId, availableBook.getBookId());
         rentalRepository.save(rental);
         return convertRentalToDTO(rental);
     }
 
     private void checkIfCustomerIsEligibleForRental(String customerId) {
-        if ( booksRentedByCustomer(customerId) >= MAX_ALLOWED_RENTALS ) {
+        if (booksRentedByCustomer(customerId) >= MAX_ALLOWED_RENTALS) {
             throw new ExceededMaximumNumberOfRentalsException();
         }
     }
 
     private int booksRentedByCustomer(String customerId) {
         return rentalRepository.countRentalsByCustomerId(customerId);
+    }
+
+    void scanForOverdueRentals() {
+        long threeWeeksInSeconds = 1814400;
+        Instant threeWeeksAgo = now().minusSeconds(threeWeeksInSeconds);
+        List<Rental> overdueRentals = rentalRepository.findAll().stream()
+                .filter(rental -> rental.getTimeOfRental().isBefore(threeWeeksAgo))
+                .collect(toList());
+        List<String> customersWithOverdueRentals = overdueRentals.stream()
+                .map(Rental::getCustomerId)
+                .collect(toList());
+        customerFacade.addFines(customersWithOverdueRentals, "Overdue,50$");
     }
 
     RentalDTO findRental(String rentalId) {
@@ -87,7 +100,7 @@ class RentalService {
         final RentalDTO rental = findRental(rentalId);
         final CustomerDTO customer = customerFacade.findCustomer(rental.getCustomerId());
         final BookDTO book = bookFacade.findBook(rental.getBookId());
-        final Instant timeOfRentalEnd = Instant.now();
+        final Instant timeOfRentalEnd = now();
         HistoricalRentalDTO historicalRentalDTO = new HistoricalRentalDTO(
                 rental.getRentalId(),
                 rental.getTimeOfRental(),
@@ -111,7 +124,7 @@ class RentalService {
     }
 
     private void checkIfRentalExists(String rentalId) {
-        if ( !rentalRepository.existsByRentalId(rentalId) ) {
+        if (!rentalRepository.existsByRentalId(rentalId)) {
             throw new RentalNotFoundException();
         }
     }
