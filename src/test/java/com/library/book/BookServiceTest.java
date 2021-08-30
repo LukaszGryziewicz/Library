@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -17,49 +18,49 @@ public class BookServiceTest {
     @Autowired
     BookFacade bookFacade;
 
+    private BookDTO createBook(String title, String author, String isbn) {
+        BookDTO book = new BookDTO(title, author, isbn);
+        bookFacade.addBook(book);
+        return book;
+    }
+
     @Test
-    void shouldAddNewBookToDatabase() {
-        //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
+    void shouldAddBookToDatabase() {
         //when
-        bookFacade.addBook(book1);
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
         //then
-        final int bookListSize = bookFacade.findBooksByTitleAndAuthor(book1.getTitle(), book1.getAuthor()).size();
-        assertThat(bookListSize).isEqualTo(1);
+        BookDTO bookFromDB = bookFacade.findBook(book.getBookId());
+        assertThat(bookFromDB).isEqualTo(book);
     }
 
     @Test
     void shouldFindAllBooksInDatabase() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        bookFacade.addBook(book1);
-        bookFacade.addBook(book2);
+        BookDTO book1 = createBook("Hamlet", "William Shakespeare", "123456789");
+        BookDTO book2 = createBook("The Odyssey", "Homer", "987654321");
         //when
         List<BookDTO> bookList = bookFacade.getBooks();
         //then
-        assertThat(bookList.size()).isEqualTo(2);
+        assertThat(bookList).containsExactlyInAnyOrder(book1, book2);
     }
 
     @Test
     void shouldDeleteBookFromDatabase() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addBook(book1);
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
         //when
-        bookFacade.deleteBook(book1.getBookId());
+        bookFacade.deleteBook(book.getBookId());
         //then
-        final List<BookDTO> books = bookFacade.getBooks();
-        assertThat(books).isEmpty();
+        final List<BookDTO> bookList = bookFacade.getBooks();
+        assertThat(bookList).isEmpty();
     }
 
     @Test
     void shouldThrowExceptionWhenDeletingBookThatDoesNotExist() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        String randomId = randomUUID().toString();
         //when
-        Throwable thrown = catchThrowable(() ->
-                bookFacade.deleteBook(book1.getBookId()));
+        Throwable thrown = catchThrowable(() -> bookFacade.deleteBook(randomId));
         //then
         assertThat(thrown).isInstanceOf(BookNotFoundException.class)
                 .hasMessageContaining("Book not found");
@@ -68,52 +69,49 @@ public class BookServiceTest {
     @Test
     void shouldFindBookById() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addBook(book1);
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
         //when
-        final BookDTO book = bookFacade.findBook(book1.getBookId());
-        //than
-        assertThat(book).isNotNull();
+        final BookDTO bookFromDB = bookFacade.findBook(book.getBookId());
+        //then
+        assertThat(bookFromDB).isEqualTo(book);
     }
 
     @Test
     void shouldThrowExceptionWhenFindingBookThatDoesNotExist() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        String randomId = randomUUID().toString();
         //when
-        Throwable thrown = catchThrowable(() ->
-                bookFacade.findBook(book1.getBookId()));
+        Throwable thrown = catchThrowable(() -> bookFacade.findBook(randomId));
         //then
-        assertThat(thrown).isInstanceOf(BookNotFoundException.class)
-                .hasMessageContaining("Book not found");
+        assertThat(thrown).isInstanceOf(BookNotFoundException.class);
     }
 
     @Test
     void shouldUpdateBook() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        bookFacade.addBook(book1);
+        BookDTO book1 = createBook("Hamlet", "William Shakespeare", "123456789");
+        BookDTO book2 = new BookDTO("The Odyssey", "Homer", "987654321");
         //when
         bookFacade.updateBook(book1.getBookId(), book2);
         //then
-        final List<BookDTO> books = bookFacade.getBooks();
-        assertThat(books.size()).isEqualTo(1);
-        final BookDTO bookFromDB = books.get(0);
+        final List<BookDTO> bookList = bookFacade.getBooks();
+        assertThat(bookList.size()).isEqualTo(1);
+        final BookDTO bookFromDB = bookList.get(0);
         assertThat(bookFromDB.getBookId()).isEqualTo(book1.getBookId());
         assertThat(bookFromDB.getTitle()).isEqualTo(book2.getTitle());
         assertThat(bookFromDB.getAuthor()).isEqualTo(book2.getAuthor());
         assertThat(bookFromDB.getIsbn()).isEqualTo(book2.getIsbn());
+        assertThat(bookFromDB.isRented()).isEqualTo(book2.isRented());
     }
 
     @Test
     void shouldThrowExceptionWhenUpdatingBookThatDoesNotExist() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
+        String randomId = randomUUID().toString();
+        BookDTO book = new BookDTO("The Odyssey", "Homer", "987654321");
         //when
         Throwable thrown = catchThrowable(() ->
-                bookFacade.updateBook(book1.getBookId(), book2));
+                bookFacade.updateBook(randomId, book));
         //then
         assertThat(thrown).isInstanceOf(BookNotFoundException.class);
     }
@@ -121,11 +119,24 @@ public class BookServiceTest {
     @Test
     void shouldThrowExceptionWhenListOfBooksWithGivenTitleAndAuthorIsEmpty() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        String randomString = randomUUID().toString();
         //when
         Throwable thrown = catchThrowable(() ->
-                bookFacade.findBooksByTitleAndAuthor(book1.getTitle(), book1.getAuthor()));
+                bookFacade.findBooksByTitleAndAuthor(randomString, randomString));
         //then
         assertThat(thrown).isInstanceOf(BookNotFoundException.class);
+    }
+
+    @Test
+    void shouldFindFirstAvailableBook() {
+        //given
+        BookDTO book1 = createBook("Hamlet", "William Shakespeare", "123456789");
+        BookDTO book2 = createBook("Hamlet", "William Shakespeare", "123456789");
+        bookFacade.rentBook(book1.getBookId());
+        //when
+        BookDTO firstAvailableBook = bookFacade
+                .findFirstAvailableBookByTitleAndAuthor(book1.getTitle(), book1.getAuthor());
+        //then
+        assertThat(firstAvailableBook).isEqualTo(book2);
     }
 }
