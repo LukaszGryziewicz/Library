@@ -31,6 +31,7 @@ class BookService {
         book.setTitle(bookDTO.getTitle());
         book.setAuthor(bookDTO.getAuthor());
         book.setIsbn(bookDTO.getIsbn());
+        book.setRented(bookDTO.isRented());
         return book;
     }
 
