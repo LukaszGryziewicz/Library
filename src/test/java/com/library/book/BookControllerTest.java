@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.transaction.Transactional;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -19,138 +19,140 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureMockMvc
 public class BookControllerTest {
-
-    ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private BookFacade bookFacade;
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    private BookDTO createBook(String title, String author, String isbn) {
+        BookDTO book = new BookDTO(title, author, isbn);
+        bookFacade.addBook(book);
+        return book;
+    }
 
     @Test
     void shouldReturnAllBooks() throws Exception {
         //given
-        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        bookFacade.addBook(book);
-        bookFacade.addBook(book2);
+        BookDTO book1 = createBook("Hamlet", "William Shakespeare", "123456789");
+        BookDTO book2 = createBook("The Odyssey", "Homer", "987654321");
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/books"))
-                .andExpect(jsonPath("$[0].title").value(book.getTitle()))
-                .andExpect(jsonPath("$[0].author").value(book.getAuthor()))
-                .andExpect(jsonPath("$[0].isbn").value(book.getIsbn()))
+        mockMvc.perform(get("/books"))
+                .andExpect(jsonPath("$[0].title").value(book1.getTitle()))
+                .andExpect(jsonPath("$[0].author").value(book1.getAuthor()))
+                .andExpect(jsonPath("$[0].isbn").value(book1.getIsbn()))
+                .andExpect(jsonPath("$[0].rented").value(book1.isRented()))
                 .andExpect(jsonPath("$[1].title").value(book2.getTitle()))
                 .andExpect(jsonPath("$[1].author").value(book2.getAuthor()))
-                .andExpect(jsonPath("$[1].isbn").value(book2.getIsbn()));
+                .andExpect(jsonPath("$[1].isbn").value(book2.getIsbn()))
+                .andExpect(jsonPath("$[1].rented").value(book2.isRented()));
     }
 
     @Test
     void shouldReturnBookWithGivenId() throws Exception {
         //given
-        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addBook(book);
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/books/" + book.getBookId()))
+        mockMvc.perform(get("/books/" + book.getBookId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
                 .andExpect(jsonPath("$.author").value(book.getAuthor()))
-                .andExpect(jsonPath("$.isbn").value(book.getIsbn()));
-
+                .andExpect(jsonPath("$.isbn").value(book.getIsbn()))
+                .andExpect(jsonPath("$.rented").value(book.isRented()));
     }
 
     @Test
     void shouldReturnBookWithGivenTitleAndAuthor() throws Exception {
         //given
-        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addBook(book);
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/books/" + book.getTitle() + "/" + book.getAuthor()))
+        mockMvc.perform(get("/books/" + book.getTitle() + "/" + book.getAuthor()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$[0].title").value(book.getTitle()))
                 .andExpect(jsonPath("$[0].author").value(book.getAuthor()))
-                .andExpect(jsonPath("$[0].isbn").value(book.getIsbn()));
-
+                .andExpect(jsonPath("$[0].isbn").value(book.getIsbn()))
+                .andExpect(jsonPath("$[0].rented").value(book.isRented()));
     }
 
     @Test
     void shouldAddBook() throws Exception {
         //given
-        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
+        BookDTO book = new BookDTO("Hamlet", "William Shakespeare", "123456789");
         String content = objectMapper.writeValueAsString(book);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.post("/books")
-                        .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/books")
+                        .contentType(APPLICATION_JSON)
                         .content(content)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
                 .andExpect(jsonPath("$.author").value(book.getAuthor()))
-                .andExpect(jsonPath("$.isbn").value(book.getIsbn()));
-
+                .andExpect(jsonPath("$.isbn").value(book.getIsbn()))
+                .andExpect(jsonPath("$.rented").value(book.isRented()));
     }
 
     @Test
     void shouldFindBookById() throws Exception {
         //given
-        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addBook(book);
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/books/" + book.getBookId()))
+        mockMvc.perform(get("/books/" + book.getBookId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
                 .andExpect(jsonPath("$.author").value(book.getAuthor()))
-                .andExpect(jsonPath("$.isbn").value(book.getIsbn()));
+                .andExpect(jsonPath("$.isbn").value(book.getIsbn()))
+                .andExpect(jsonPath("$.rented").value(book.isRented()));
     }
 
     @Test
     void shouldReturnListOfBooksByGivenTitleAndAuthor() throws Exception {
         //given
-        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        BookDTO book2 = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addBook(book);
-        bookFacade.addBook(book2);
+        BookDTO book1 = createBook("Hamlet", "William Shakespeare", "123456789");
+        BookDTO book2 = createBook("Hamlet", "William Shakespeare", "123456789");
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/books/" + book.getTitle() + "/" + book.getAuthor()))
+        mockMvc.perform(get("/books/" + book1.getTitle() + "/" + book1.getAuthor()))
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("$[0].title").value(book.getTitle()))
-                .andExpect(jsonPath("$[0].author").value(book.getAuthor()))
-                .andExpect(jsonPath("$[0].isbn").value(book.getIsbn()))
+                .andExpect(jsonPath("$[0].title").value(book1.getTitle()))
+                .andExpect(jsonPath("$[0].author").value(book1.getAuthor()))
+                .andExpect(jsonPath("$[0].isbn").value(book1.getIsbn()))
+                .andExpect(jsonPath("$[0].rented").value(book1.isRented()))
                 .andExpect(jsonPath("$[1].title").value(book2.getTitle()))
                 .andExpect(jsonPath("$[1].author").value(book2.getAuthor()))
-                .andExpect(jsonPath("$[1].isbn").value(book2.getIsbn()));
+                .andExpect(jsonPath("$[1].isbn").value(book2.getIsbn()))
+                .andExpect(jsonPath("$[1].rented").value(book2.isRented()));
     }
 
     @Test
     void shouldUpdateBook() throws Exception {
         //given
-        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        bookFacade.addBook(book);
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
+        BookDTO book2 = new BookDTO("The Odyssey", "Homer", "987654321");
         String content = objectMapper.writeValueAsString(book2);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.put("/books/" + book.getBookId())
-                        .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/books/" + book.getBookId())
+                        .contentType(APPLICATION_JSON)
                         .content(content)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value(book2.getTitle()))
                 .andExpect(jsonPath("$.author").value(book2.getAuthor()))
-                .andExpect(jsonPath("$.isbn").value(book2.getIsbn()));
+                .andExpect(jsonPath("$.isbn").value(book2.getIsbn()))
+                .andExpect(jsonPath("$.rented").value(book2.isRented()));
     }
 
     @Test
     void shouldDeleteBook() throws Exception {
         //given
-        BookDTO book = new BookDTO("Adam z Nikiszowca", "Adam Dominik", "123456789");
-        bookFacade.addBook(book);
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.delete("/books/" + book.getBookId()))
+        mockMvc.perform(delete("/books/" + book.getBookId()))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
