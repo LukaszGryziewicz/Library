@@ -65,7 +65,6 @@ public class CustomerControllerTest {
                 .andExpect(jsonPath("$.lastName").value(customer.getLastName()));
     }
 
-
     @Test
     void shouldReturnCustomerWithGivenId() throws Exception {
         //given
