@@ -39,10 +39,12 @@ public class BookControllerTest {
         BookDTO book2 = createBook("The Odyssey", "Homer", "987654321");
         //expect
         mockMvc.perform(get("/books"))
+                .andExpect(jsonPath("$[0].bookId").value(book1.getBookId()))
                 .andExpect(jsonPath("$[0].title").value(book1.getTitle()))
                 .andExpect(jsonPath("$[0].author").value(book1.getAuthor()))
                 .andExpect(jsonPath("$[0].isbn").value(book1.getIsbn()))
                 .andExpect(jsonPath("$[0].rented").value(book1.isRented()))
+                .andExpect(jsonPath("$[1].bookId").value(book2.getBookId()))
                 .andExpect(jsonPath("$[1].title").value(book2.getTitle()))
                 .andExpect(jsonPath("$[1].author").value(book2.getAuthor()))
                 .andExpect(jsonPath("$[1].isbn").value(book2.getIsbn()))
@@ -58,6 +60,7 @@ public class BookControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.bookId").value(book.getBookId()))
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
                 .andExpect(jsonPath("$.author").value(book.getAuthor()))
                 .andExpect(jsonPath("$.isbn").value(book.getIsbn()))
@@ -73,6 +76,7 @@ public class BookControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$[0].bookId").value(book.getBookId()))
                 .andExpect(jsonPath("$[0].title").value(book.getTitle()))
                 .andExpect(jsonPath("$[0].author").value(book.getAuthor()))
                 .andExpect(jsonPath("$[0].isbn").value(book.getIsbn()))
@@ -105,6 +109,7 @@ public class BookControllerTest {
         mockMvc.perform(get("/books/" + book.getBookId()))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.bookId").value(book.getBookId()))
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
                 .andExpect(jsonPath("$.author").value(book.getAuthor()))
                 .andExpect(jsonPath("$.isbn").value(book.getIsbn()))
@@ -120,10 +125,12 @@ public class BookControllerTest {
         mockMvc.perform(get("/books/" + book1.getTitle() + "/" + book1.getAuthor()))
                 .andExpect(status().isOk())
                 .andDo(print())
+                .andExpect(jsonPath("$[0].bookId").value(book1.getBookId()))
                 .andExpect(jsonPath("$[0].title").value(book1.getTitle()))
                 .andExpect(jsonPath("$[0].author").value(book1.getAuthor()))
                 .andExpect(jsonPath("$[0].isbn").value(book1.getIsbn()))
                 .andExpect(jsonPath("$[0].rented").value(book1.isRented()))
+                .andExpect(jsonPath("$[1].bookId").value(book2.getBookId()))
                 .andExpect(jsonPath("$[1].title").value(book2.getTitle()))
                 .andExpect(jsonPath("$[1].author").value(book2.getAuthor()))
                 .andExpect(jsonPath("$[1].isbn").value(book2.getIsbn()))
@@ -133,15 +140,16 @@ public class BookControllerTest {
     @Test
     void shouldUpdateBook() throws Exception {
         //given
-        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
+        BookDTO book1 = createBook("Hamlet", "William Shakespeare", "123456789");
         BookDTO book2 = new BookDTO("The Odyssey", "Homer", "987654321");
         String content = objectMapper.writeValueAsString(book2);
         //expect
-        mockMvc.perform(put("/books/" + book.getBookId())
+        mockMvc.perform(put("/books/" + book1.getBookId())
                         .contentType(APPLICATION_JSON)
                         .content(content)
                         .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.bookId").value(book1.getBookId()))
                 .andExpect(jsonPath("$.title").value(book2.getTitle()))
                 .andExpect(jsonPath("$.author").value(book2.getAuthor()))
                 .andExpect(jsonPath("$.isbn").value(book2.getIsbn()))
