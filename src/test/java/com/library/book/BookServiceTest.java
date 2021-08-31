@@ -25,7 +25,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void shouldAddBookToDatabase() {
+    void shouldAddBook() {
         //when
         BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
         //then
@@ -34,7 +34,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void shouldFindAllBooksInDatabase() {
+    void shouldFindAllBooks() {
         //given
         BookDTO book1 = createBook("Hamlet", "William Shakespeare", "123456789");
         BookDTO book2 = createBook("The Odyssey", "Homer", "987654321");
@@ -45,7 +45,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void shouldDeleteBookFromDatabase() {
+    void shouldDeleteBook() {
         //given
         BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
         //when
@@ -60,7 +60,8 @@ public class BookServiceTest {
         //given
         String randomId = randomUUID().toString();
         //when
-        Throwable thrown = catchThrowable(() -> bookFacade.deleteBook(randomId));
+        Throwable thrown = catchThrowable(()
+                -> bookFacade.deleteBook(randomId));
         //then
         assertThat(thrown).isInstanceOf(BookNotFoundException.class)
                 .hasMessageContaining("Book not found");
