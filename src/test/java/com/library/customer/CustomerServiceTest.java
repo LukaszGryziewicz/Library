@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -17,90 +18,82 @@ public class CustomerServiceTest {
     @Autowired
     private CustomerFacade customerFacade;
 
-    @Test
-    void shouldAddCustomerToDatabase() {
-        //given
-        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
-        //when
-        customerFacade.addCustomer(customer1);
-        //then
-        final CustomerDTO customer = customerFacade.findCustomer(customer1.getCustomerId());
-        assertThat(customer).isNotNull();
+    private CustomerDTO createCustomer(String firstName, String lastName) {
+        CustomerDTO customer = new CustomerDTO(firstName, lastName);
+        customerFacade.addCustomer(customer);
+        return customer;
     }
 
     @Test
-    void shouldFindAllCustomersInDatabase() {
-        //given
-        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
-        CustomerDTO customer2 = new CustomerDTO("Łukasz", "Gryziewicz");
-        customerFacade.addCustomer(customer1);
-        customerFacade.addCustomer(customer2);
+    void shouldAddCustomer() {
         //when
-        final List<CustomerDTO> customers = customerFacade.getCustomers();
+        CustomerDTO customer = createCustomer("John", "Smith");
         //then
-        assertThat(customers.size()).isEqualTo(2);
-        CustomerDTO customerFromDB1 = customers.get(0);
-        assertThat(customerFromDB1.getCustomerId()).isEqualTo(customer1.getCustomerId());
-        assertThat(customerFromDB1.getFirstName()).isEqualTo(customer1.getFirstName());
-        assertThat(customerFromDB1.getLastName()).isEqualTo(customer1.getLastName());
-        CustomerDTO customerFromDB2 = customers.get(1);
-        assertThat(customerFromDB2.getCustomerId()).isEqualTo(customer2.getCustomerId());
-        assertThat(customerFromDB2.getFirstName()).isEqualTo(customer2.getFirstName());
-        assertThat(customerFromDB2.getLastName()).isEqualTo(customer2.getLastName());
+        final CustomerDTO customerFromDB = customerFacade.findCustomer(customer.getCustomerId());
+        assertThat(customerFromDB).isEqualTo(customer);
+    }
+
+    @Test
+    void shouldFindAllCustomers() {
+        //given
+        CustomerDTO customer1 = createCustomer("John", "Smith");
+        CustomerDTO customer2 = createCustomer("Richard", "Williams");
+        //when
+        final List<CustomerDTO> customerList = customerFacade.getCustomers();
+        //then
+        assertThat(customerList).containsExactlyInAnyOrder(customer1, customer2);
 
     }
 
     @Test
-    void shouldDeleteCustomerFromDatabase() {
-        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
-        customerFacade.addCustomer(customer1);
+    void shouldDeleteCustomer() {
+        //given
+        CustomerDTO customer = createCustomer("John", "Smith");
         //when
-        customerFacade.deleteCustomer(customer1.getCustomerId());
+        customerFacade.deleteCustomer(customer.getCustomerId());
         //then
-        final List<CustomerDTO> customer = customerFacade.getCustomers();
-        assertThat(customer).isEmpty();
+        final List<CustomerDTO> customerList = customerFacade.getCustomers();
+        assertThat(customerList).isEmpty();
     }
 
     @Test
     void shouldThrowExceptionWhenDeletingCustomerThatDoesNotExist() {
-        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
+        //given
+        String randomId = randomUUID().toString();
         //when
         Throwable thrown = catchThrowable(() ->
-                customerFacade.deleteCustomer(customer1.getCustomerId()));
-        //than
+                customerFacade.deleteCustomer(randomId));
+        //then
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class)
                 .hasMessageContaining("Customer not found");
     }
 
     @Test
-    void shouldFindCustomer() {
+    void shouldFindCustomerById() {
         //given
-        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
-        customerFacade.addCustomer(customer1);
+        CustomerDTO customer = createCustomer("John", "Smith");
         //when
-        CustomerDTO customer = customerFacade.findCustomer(customer1.getCustomerId());
+        CustomerDTO customerFromDB = customerFacade.findCustomer(customer.getCustomerId());
         //then
-        assertThat(customer).isNotNull();
+        assertThat(customer).isEqualTo(customerFromDB);
     }
 
     @Test
     void shouldThrowExceptionWhenCustomerIsNotFound() {
         //given
-        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
+        String randomId = randomUUID().toString();
         //when
         Throwable thrown = catchThrowable(() ->
-                customerFacade.findCustomer(customer1.getCustomerId()));
+                customerFacade.findCustomer(randomId));
         //then
-        assertThat(thrown).isInstanceOf(CustomerNotFoundException.class)
-                .hasMessageContaining("Customer not found");
+        assertThat(thrown).isInstanceOf(CustomerNotFoundException.class);
     }
 
     @Test
     void shouldUpdateCustomer() {
         //given
-        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
-        CustomerDTO customer2 = new CustomerDTO("Łukasz", "Gryziewicz");
-        customerFacade.addCustomer(customer1);
+        CustomerDTO customer1 = createCustomer("John", "Smith");
+        CustomerDTO customer2 = new CustomerDTO("Richard", "Williams");
         //when
         customerFacade.updateCustomer(customer1.getCustomerId(), customer2);
         //then
@@ -114,11 +107,11 @@ public class CustomerServiceTest {
     @Test
     void shouldThrowExceptionWhenUpdatingCustomerThatDoesNotExist() {
         //given
-        CustomerDTO customer1 = new CustomerDTO("Adam", "Dominik");
-        CustomerDTO customer2 = new CustomerDTO("Łukasz", "Gryziewicz");
+        String randomId = randomUUID().toString();
+        CustomerDTO customer = new CustomerDTO("Richard", "Williams");
         //when
         Throwable thrown = catchThrowable(() ->
-                customerFacade.updateCustomer(customer1.getCustomerId(), customer2));
+                customerFacade.updateCustomer(randomId, customer));
         //then
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class);
     }
