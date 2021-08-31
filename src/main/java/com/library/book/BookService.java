@@ -92,7 +92,7 @@ class BookService {
         final Book existingBook = findBookEntity(bookId);
         existingBook.update(covertDTOToBook(updatedBookDTO));
         bookRepository.save(existingBook);
-        return updatedBookDTO;
+        return convertBookToDTO(existingBook);
     }
 
     void deleteBook(String bookId) {
