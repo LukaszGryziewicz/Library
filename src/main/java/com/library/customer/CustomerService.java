@@ -61,7 +61,7 @@ class CustomerService {
         final Customer existingCustomer = findCustomerEntity(customerId);
         existingCustomer.update(convertDTOToCustomer(updatedCustomer));
         customerRepository.save(existingCustomer);
-        return updatedCustomer;
+        return convertCustomerToDTO(existingCustomer);
     }
 
     void deleteCustomer(String customerId) {
