@@ -13,8 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.UUID;
 
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -29,57 +29,53 @@ public class RentalServiceTest {
     @Autowired
     private BookFacade bookFacade;
 
+    private BookDTO createBook(String title, String author, String isbn) {
+        BookDTO book = new BookDTO(title, author, isbn);
+        bookFacade.addBook(book);
+        return book;
+    }
+
+    private CustomerDTO createCustomer(String firstName, String lastName) {
+        CustomerDTO customer = new CustomerDTO(firstName, lastName);
+        customerFacade.addCustomer(customer);
+        return customer;
+    }
+
+    private RentalDTO createRental(CustomerDTO customer, BookDTO book) {
+        return rentalFacade.rent(customer.getCustomerId(), book.getTitle(), book.getAuthor());
+    }
+
     @Test
     void shouldAddRentalToDatabase() {
         //given
-        BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addBook(book1);
-        customerFacade.addCustomer(customer1);
+        CustomerDTO customer = createCustomer("Will", "Smith");
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
         //when
-        RentalDTO rental = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
+        RentalDTO rental = createRental(customer, book);
         //then
-        assertThat(rentalFacade.findRental(rental.getRentalId())).isNotNull();
+        RentalDTO facadeRental = rentalFacade.findRental(rental.getRentalId());
+        assertThat(facadeRental).isEqualTo(rental);
     }
 
     @Test
     void shouldSetBookToRented() {
         //given
-        BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addBook(book1);
-        customerFacade.addCustomer(customer1);
+        CustomerDTO customer = createCustomer("Will", "Smith");
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
         //when
-        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
+        final RentalDTO rental = createRental(customer, book);
         //then
-        final BookDTO book = bookFacade.findBook(rental1.getBookId());
-        assertThat(book.isRented()).isTrue();
-    }
-
-
-    @Test
-    void shouldThrowExceptionWhenTryingToAddRentedBookToRental() {
-        //given
-        BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addBook(book1);
-        customerFacade.addCustomer(customer1);
-        rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
-        //when
-        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor()));
-        //then
-        assertThat(thrown).isInstanceOf(NoBookAvailableException.class);
-
+        BookDTO rentedBook = bookFacade.findBook(rental.getBookId());
+        assertThat(rentedBook.isRented()).isTrue();
     }
 
     @Test
     void shouldThrowExceptionWhenCustomerIsNotInDatabase() {
         //given
-        BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addBook(book1);
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
+        CustomerDTO customer = new CustomerDTO("Will", "Smith");
         //when
-        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor()));
+        Throwable thrown = catchThrowable(() -> createRental(customer, book));
         //then
         assertThat(thrown).isInstanceOf(CustomerNotFoundException.class);
     }
@@ -87,11 +83,10 @@ public class RentalServiceTest {
     @Test
     void shouldThrowExceptionWhenBookIsNotInDatabase() {
         //given
-        BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        customerFacade.addCustomer(customer1);
+        CustomerDTO customer = createCustomer("Will", "Smith");
+        BookDTO book = new BookDTO("Hamlet", "William Shakespeare", "123456789");
         //when
-        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor()));
+        Throwable thrown = catchThrowable(() -> createRental(customer, book));
         //then
         assertThat(thrown).isInstanceOf(BookNotFoundException.class);
     }
@@ -99,119 +94,113 @@ public class RentalServiceTest {
     @Test
     void shouldThrowExceptionWhenNoBookIsAvailable() {
         //given
-        BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addBook(book1);
-        customerFacade.addCustomer(customer1);
-        rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
+        CustomerDTO customer = createCustomer("Will", "Smith");
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
+        createRental(customer, book);
         //when
-        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor()));
+        Throwable thrown = catchThrowable(() -> createRental(customer, book));
         //then
         assertThat(thrown).isInstanceOf(NoBookAvailableException.class);
+    }
 
+    @Test
+    public void shouldThrowExceptionWhenCustomerExceededNumberOfRentals() {
+        //given
+        CustomerDTO customer = createCustomer("Will", "Smith");
+        BookDTO book1 = createBook("Hamlet", "William Shakespeare", "123456789");
+        BookDTO book2 = createBook("Odyssey", "Homer", "987654321");
+        BookDTO book3 = createBook("1984", "George Orwell", "786549265");
+        BookDTO book4 = createBook("Lord of the Flies", "William Golding", "453628426");
+        createRental(customer, book1);
+        createRental(customer, book2);
+        createRental(customer, book3);
+        //when
+        Throwable thrown = catchThrowable(() -> createRental(customer, book4));
+        //then
+        assertThat(thrown).isInstanceOf(ExceededMaximumNumberOfRentalsException.class)
+                .hasMessageContaining("Customer reached the maximum number of rentals(3)");
     }
 
     @Test
     void shouldEndRental() {
         //given
-        BookDTO book1 = new BookDTO("Adam", "Z Nikiszowca", "123456789");
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addBook(book1);
-        customerFacade.addCustomer(customer1);
-        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
+        CustomerDTO customer = createCustomer("Will", "Smith");
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
+        RentalDTO rental = createRental(customer, book);
         //when
-        rentalFacade.endRental(rental1.getRentalId());
+        rentalFacade.endRental(rental.getRentalId());
         //then
-        assertThat(rentalFacade.getAllRentals()).isEmpty();
+        List<RentalDTO> rentalList = rentalFacade.getAllRentals();
+        assertThat(rentalList).isEmpty();
     }
 
     @Test
     void shouldReturnAllRentals() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-
-        BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        CustomerDTO customer2 = new CustomerDTO("Adam", "Dominik");
-
-        bookFacade.addBook(book1);
-        bookFacade.addBook(book2);
-        customerFacade.addCustomer(customer1);
-        customerFacade.addCustomer(customer2);
-
-        rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
-        rentalFacade.rent(customer2.getCustomerId(), book2.getTitle(), book2.getAuthor());
+        CustomerDTO customer1 = createCustomer("Will", "Smith");
+        CustomerDTO customer2 = createCustomer("Adam", "Dominik");
+        BookDTO book1 = createBook("Hamlet", "William Shakespeare", "123456789");
+        BookDTO book2 = createBook("Odyssey", "Homer", "987654321");
+        RentalDTO rental1 = createRental(customer1, book1);
+        RentalDTO rental2 = createRental(customer2, book2);
         //when
         final List<RentalDTO> allRentals = rentalFacade.getAllRentals();
         //then
-        assertThat(allRentals).hasSize(2);
+        assertThat(allRentals).containsExactlyInAnyOrder(rental1, rental2);
     }
-
 
     @Test
     void shouldFindRentalsOfCustomer() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
-        BookDTO book2 = new BookDTO("Łukasz z Bytomia", "Łukasz Gryziewicz", "987654321");
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        CustomerDTO customer2 = new CustomerDTO("Adam", "Dominik");
-        bookFacade.addBook(book1);
-        bookFacade.addBook(book2);
-        customerFacade.addCustomer(customer1);
-        customerFacade.addCustomer(customer2);
-        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
-        rentalFacade.rent(customer2.getCustomerId(), book2.getTitle(), book2.getAuthor());
+        CustomerDTO customer1 = createCustomer("Will", "Smith");
+        CustomerDTO customer2 = createCustomer("Adam", "Dominik");
+        BookDTO book1 = createBook("Hamlet", "William Shakespeare", "123456789");
+        BookDTO book2 = createBook("Odyssey", "Homer", "987654321");
+        RentalDTO rental1 = createRental(customer1, book1);
+        createRental(customer2, book2);
         //when
-        final List<RentalDTO> rentalByCustomer = rentalFacade.getRentalsOfCustomer(customer1.getCustomerId());
+        final List<RentalDTO> rentalsOfCustomer = rentalFacade.getRentalsOfCustomer(customer1.getCustomerId());
         //then
-        assertThat(rentalByCustomer).hasSize(1);
-        final RentalDTO rentalFromDB = rentalByCustomer.get(0);
-        assertThat(rentalFromDB.getRentalId()).isEqualTo(rental1.getRentalId());
-        assertThat(rentalFromDB.getCustomerId()).isEqualTo(rental1.getCustomerId());
-        assertThat(rentalFromDB.getBookId()).isEqualTo(rental1.getBookId());
+        assertThat(rentalsOfCustomer).hasSize(1);
+        final RentalDTO rentalFromDB = rentalsOfCustomer.get(0);
+        assertThat(rentalFromDB).isEqualTo(rental1);
     }
 
     @Test
     void shouldFindRentalsOfBook() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
-
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        CustomerDTO customer2 = new CustomerDTO("Adam", "Dominik");
-
-        bookFacade.addBook(book1);
-        customerFacade.addCustomer(customer1);
-        customerFacade.addCustomer(customer2);
-        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
-        rentalFacade.endRental(rental1.getRentalId());
-        final RentalDTO rental2 = rentalFacade.rent(customer2.getCustomerId(), book1.getTitle(), book1.getAuthor());
+        CustomerDTO customer1 = createCustomer("Will", "Smith");
+        CustomerDTO customer2 = createCustomer("Adam", "Dominik");
+        BookDTO book1 = createBook("Hamlet", "William Shakespeare", "123456789");
+        BookDTO book2 = createBook("Odyssey", "Homer", "987654321");
+        RentalDTO rental = createRental(customer1, book1);
+        createRental(customer2, book2);
         //when
-        final List<RentalDTO> rentalByBook = rentalFacade.getRentalsOfBook(book1.getBookId());
+        final List<RentalDTO> rentalsOfBook = rentalFacade.getRentalsOfBook(book1.getBookId());
         //then
-        assertThat(rentalByBook).hasSize(1);
-        final RentalDTO rentalFromDB = rentalByBook.get(0);
-        assertThat(rentalFromDB.getRentalId()).isEqualTo(rental2.getRentalId());
+        assertThat(rentalsOfBook).hasSize(1);
+        final RentalDTO rentalFromDB = rentalsOfBook.get(0);
+        assertThat(rentalFromDB).isEqualTo(rental);
     }
 
     @Test
     public void shouldFindRental() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-
-        bookFacade.addBook(book1);
-        customerFacade.addCustomer(customer1);
-        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
+        CustomerDTO customer = new CustomerDTO("Will", "Smith");
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
+        RentalDTO rental = createRental(customer, book);
         //when
-        RentalDTO rental = rentalFacade.findRental(rental1.getRentalId());
+        RentalDTO facadeRental = rentalFacade.findRental(rental.getRentalId());
         //then
-        assertThat(rental.getRentalId()).isEqualTo(rental1.getRentalId());
+        assertThat(facadeRental).isEqualTo(rental);
     }
 
     @Test
     public void shouldThrowExceptionWhenRentalIsNotFound() {
+        //given
+        String randomId = randomUUID().toString();
         //when
-        Throwable thrown = catchThrowable(() -> rentalFacade.findRental(UUID.randomUUID().toString()));
+        Throwable thrown = catchThrowable(() -> rentalFacade.findRental(randomId));
         //then
         assertThat(thrown).isInstanceOf(RentalNotFoundException.class);
     }
@@ -219,45 +208,24 @@ public class RentalServiceTest {
     @Test
     void shouldDeleteRental() {
         //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-
-        bookFacade.addBook(book1);
-        customerFacade.addCustomer(customer1);
-        final RentalDTO rental1 = rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
+        CustomerDTO customer = createCustomer("Will", "Smith");
+        BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
+        RentalDTO rental = createRental(customer, book);
         //when
-        rentalFacade.deleteRental(rental1.getRentalId());
+        rentalFacade.deleteRental(rental.getRentalId());
         //then
-        assertThat(rentalFacade.getAllRentals()).isEmpty();
+        List<RentalDTO> allRentals = rentalFacade.getAllRentals();
+        assertThat(allRentals).isEmpty();
     }
 
     @Test
     public void shouldThrowExceptionWhenTryingToDeleteRentalThatDoesNotExist() {
-        Throwable thrown = catchThrowable(() -> rentalFacade.deleteRental(UUID.randomUUID().toString()));
+        //given
+        String randomId = randomUUID().toString();
+        //when
+        Throwable thrown = catchThrowable(() -> rentalFacade.deleteRental(randomId));
         //then
         assertThat(thrown).isInstanceOf(RentalNotFoundException.class);
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenExceedingNumberOfRentals() {
-        //given
-        BookDTO book1 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
-        BookDTO book2 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
-        BookDTO book3 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
-        BookDTO book4 = new BookDTO("Adam z Nikiszowca", "Adam Domnik", "123456789");
-        CustomerDTO customer1 = new CustomerDTO("Łukasz", "Gryziewicz");
-        bookFacade.addBook(book1);
-        bookFacade.addBook(book2);
-        bookFacade.addBook(book3);
-        bookFacade.addBook(book4);
-        customerFacade.addCustomer(customer1);
-        //when
-        rentalFacade.rent(customer1.getCustomerId(), book1.getTitle(), book1.getAuthor());
-        rentalFacade.rent(customer1.getCustomerId(), book2.getTitle(), book2.getAuthor());
-        rentalFacade.rent(customer1.getCustomerId(), book2.getTitle(), book3.getAuthor());
-        Throwable thrown = catchThrowable(() -> rentalFacade.rent(customer1.getCustomerId(), book4.getTitle(), book4.getAuthor()));
-        //then
-        assertThat(thrown).isInstanceOf(ExceededMaximumNumberOfRentalsException.class);
     }
 }
 
