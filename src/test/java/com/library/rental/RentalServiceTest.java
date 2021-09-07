@@ -186,7 +186,7 @@ public class RentalServiceTest {
     @Test
     public void shouldFindRental() {
         //given
-        CustomerDTO customer = new CustomerDTO("Will", "Smith");
+        CustomerDTO customer = createCustomer("Will", "Smith");
         BookDTO book = createBook("Hamlet", "William Shakespeare", "123456789");
         RentalDTO rental = createRental(customer, book);
         //when
