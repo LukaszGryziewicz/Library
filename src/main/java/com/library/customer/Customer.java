@@ -33,11 +33,11 @@ class Customer {
         this.id = id;
     }
 
-    public String getCustomerId() {
+    String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(String customerId) {
+    void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 

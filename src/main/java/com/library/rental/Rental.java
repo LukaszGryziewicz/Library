@@ -18,7 +18,7 @@ class Rental {
     Rental() {
     }
 
-    public Rental(String rentalId, Instant timeOfRental, String customerId, String bookId) {
+    Rental(String rentalId, Instant timeOfRental, String customerId, String bookId) {
         this.rentalId = rentalId;
         this.timeOfRental = timeOfRental;
         this.customerId = customerId;
@@ -33,19 +33,19 @@ class Rental {
         this.id = id;
     }
 
-    public String getRentalId() {
+    String getRentalId() {
         return rentalId;
     }
 
-    public void setRentalId(String rentalId) {
+    void setRentalId(String rentalId) {
         this.rentalId = rentalId;
     }
 
-    public Instant getTimeOfRental() {
+    Instant getTimeOfRental() {
         return timeOfRental;
     }
 
-    public void setTimeOfRental(Instant timeOfRental) {
+    void setTimeOfRental(Instant timeOfRental) {
         this.timeOfRental = timeOfRental;
     }
 
@@ -67,8 +67,8 @@ class Rental {
 
     @Override
     public boolean equals(Object o) {
-        if ( this == o ) return true;
-        if ( o == null || getClass() != o.getClass() ) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Rental rental = (Rental) o;
         return id == rental.id && Objects.equals(rentalId, rental.rentalId) && Objects.equals(customerId, rental.customerId) && Objects.equals(bookId, rental.bookId);
     }
