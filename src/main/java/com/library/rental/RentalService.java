@@ -9,10 +9,10 @@ import com.library.historicalRental.HistoricalRentalFacade;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static java.time.Instant.now;
+import static java.time.LocalDateTime.now;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 
@@ -80,7 +80,7 @@ class RentalService {
 
     void scanForOverdueRentals() {
         long threeWeeksInSeconds = 1814400;
-        Instant threeWeeksAgo = now().minusSeconds(threeWeeksInSeconds);
+        LocalDateTime threeWeeksAgo = now().minusSeconds(threeWeeksInSeconds);
         List<Rental> overdueRentals = rentalRepository.findAll().stream()
                 .filter(rental -> rental.getTimeOfRental().isBefore(threeWeeksAgo))
                 .collect(toList());
@@ -101,7 +101,7 @@ class RentalService {
         final RentalDTO rental = findRental(rentalId);
         final CustomerDTO customer = customerFacade.findCustomer(rental.getCustomerId());
         final BookDTO book = bookFacade.findBook(rental.getBookId());
-        final Instant timeOfRentalEnd = now();
+        final LocalDateTime timeOfRentalEnd = LocalDateTime.now();
         HistoricalRentalDTO historicalRentalDTO = new HistoricalRentalDTO(
                 rental.getRentalId(),
                 rental.getTimeOfRental(),

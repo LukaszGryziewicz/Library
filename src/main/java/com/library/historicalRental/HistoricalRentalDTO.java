@@ -1,12 +1,16 @@
 package com.library.historicalRental;
 
-import java.time.Instant;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class HistoricalRentalDTO {
     private String historicalRentalId;
-    private Instant dateCreated;
-    private Instant dateEnded;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime dateCreated;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime dateEnded;
     private String customerId;
     private String firstName;
     private String lastName;
@@ -18,7 +22,7 @@ public class HistoricalRentalDTO {
     public HistoricalRentalDTO() {
     }
 
-    public HistoricalRentalDTO(String historicalRentalId, Instant dateCreated, Instant dateEnded, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn) {
+    public HistoricalRentalDTO(String historicalRentalId, LocalDateTime dateCreated, LocalDateTime dateEnded, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn) {
         this.historicalRentalId = historicalRentalId;
         this.dateCreated = dateCreated;
         this.dateEnded = dateEnded;
@@ -39,19 +43,19 @@ public class HistoricalRentalDTO {
         this.historicalRentalId = historicalRentalId;
     }
 
-    public Instant getDateCreated() {
+    public LocalDateTime getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Instant dateCreated) {
+    public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public Instant getDateEnded() {
+    public LocalDateTime getDateEnded() {
         return dateEnded;
     }
 
-    public void setDateEnded(Instant dateEnded) {
+    public void setDateEnded(LocalDateTime dateEnded) {
         this.dateEnded = dateEnded;
     }
 
@@ -113,8 +117,8 @@ public class HistoricalRentalDTO {
 
     @Override
     public boolean equals(Object o) {
-        if ( this == o ) return true;
-        if ( o == null || getClass() != o.getClass() ) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         HistoricalRentalDTO that = (HistoricalRentalDTO) o;
         return Objects.equals(historicalRentalId, that.historicalRentalId) && Objects.equals(dateCreated, that.dateCreated) && Objects.equals(dateEnded, that.dateEnded) && Objects.equals(customerId, that.customerId) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(bookId, that.bookId) && Objects.equals(title, that.title) && Objects.equals(author, that.author) && Objects.equals(isbn, that.isbn);
     }

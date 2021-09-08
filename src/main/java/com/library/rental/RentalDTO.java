@@ -1,11 +1,14 @@
 package com.library.rental;
 
-import java.time.Instant;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class RentalDTO {
     private String rentalId;
-    private Instant timeOfRental;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime timeOfRental;
     private String customerId;
     private String firstName;
     private String lastName;
@@ -17,7 +20,7 @@ public class RentalDTO {
     public RentalDTO() {
     }
 
-    public RentalDTO(String rentalId, Instant timeOfRental, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn) {
+    public RentalDTO(String rentalId, LocalDateTime timeOfRental, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn) {
         this.rentalId = rentalId;
         this.timeOfRental = timeOfRental;
         this.customerId = customerId;
@@ -37,11 +40,11 @@ public class RentalDTO {
         this.rentalId = rentalId;
     }
 
-    public Instant getTimeOfRental() {
+    public LocalDateTime getTimeOfRental() {
         return timeOfRental;
     }
 
-    public void setTimeOfRental(Instant timeOfRental) {
+    public void setTimeOfRental(LocalDateTime timeOfRental) {
         this.timeOfRental = timeOfRental;
     }
 
@@ -103,8 +106,8 @@ public class RentalDTO {
 
     @Override
     public boolean equals(Object o) {
-        if ( this == o ) return true;
-        if ( o == null || getClass() != o.getClass() ) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         RentalDTO rentalDTO = (RentalDTO) o;
         return Objects.equals(rentalId, rentalDTO.rentalId) && Objects.equals(timeOfRental, rentalDTO.timeOfRental) && Objects.equals(customerId, rentalDTO.customerId) && Objects.equals(firstName, rentalDTO.firstName) && Objects.equals(lastName, rentalDTO.lastName) && Objects.equals(bookId, rentalDTO.bookId) && Objects.equals(title, rentalDTO.title) && Objects.equals(author, rentalDTO.author) && Objects.equals(isbn, rentalDTO.isbn);
     }

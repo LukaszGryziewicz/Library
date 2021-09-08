@@ -1,7 +1,9 @@
 package com.library.historicalRental;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -11,8 +13,10 @@ class HistoricalRental {
     @Column(nullable = false, updatable = false)
     private Long id;
     private String historicalRentalId;
-    private Instant dateCreated;
-    private Instant dateEnded;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime dateCreated;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime dateEnded;
     //customer
     private String customerId;
     private String firstName;
@@ -26,7 +30,7 @@ class HistoricalRental {
     HistoricalRental() {
     }
 
-    HistoricalRental(String historicalRentalId, Instant dateCreated, Instant dateEnded, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn) {
+    HistoricalRental(String historicalRentalId, LocalDateTime dateCreated, LocalDateTime dateEnded, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn) {
         this.historicalRentalId = historicalRentalId;
         this.dateCreated = dateCreated;
         this.dateEnded = dateEnded;
@@ -55,19 +59,19 @@ class HistoricalRental {
         this.historicalRentalId = historicalRentalId;
     }
 
-    Instant getDateCreated() {
+    LocalDateTime getDateCreated() {
         return dateCreated;
     }
 
-    void setDateCreated(Instant dateCreated) {
+    void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    Instant getDateEnded() {
+    LocalDateTime getDateEnded() {
         return dateEnded;
     }
 
-    void setDateEnded(Instant dateEnded) {
+    void setDateEnded(LocalDateTime dateEnded) {
         this.dateEnded = dateEnded;
     }
 

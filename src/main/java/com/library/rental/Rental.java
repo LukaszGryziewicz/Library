@@ -1,7 +1,9 @@
 package com.library.rental;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -11,14 +13,15 @@ class Rental {
     @Column(nullable = false, updatable = false)
     private Long id;
     private String rentalId;
-    private Instant timeOfRental;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime timeOfRental;
     private String customerId;
     private String bookId;
 
     Rental() {
     }
 
-    Rental(String rentalId, Instant timeOfRental, String customerId, String bookId) {
+    Rental(String rentalId, LocalDateTime timeOfRental, String customerId, String bookId) {
         this.rentalId = rentalId;
         this.timeOfRental = timeOfRental;
         this.customerId = customerId;
@@ -41,11 +44,11 @@ class Rental {
         this.rentalId = rentalId;
     }
 
-    Instant getTimeOfRental() {
+    LocalDateTime getTimeOfRental() {
         return timeOfRental;
     }
 
-    void setTimeOfRental(Instant timeOfRental) {
+    void setTimeOfRental(LocalDateTime timeOfRental) {
         this.timeOfRental = timeOfRental;
     }
 

@@ -3,8 +3,9 @@ package com.library.book;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static java.util.UUID.randomUUID;
 
 @Service
 class BookService {
@@ -59,7 +60,7 @@ class BookService {
     }
 
     BookDTO addBook(BookDTO bookDTO) {
-        bookDTO.setBookId(UUID.randomUUID().toString());
+        bookDTO.setBookId(randomUUID().toString());
         bookRepository.save(covertDTOToBook(bookDTO));
         return bookDTO;
     }
