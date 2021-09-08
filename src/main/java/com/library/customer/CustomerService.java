@@ -3,8 +3,9 @@ package com.library.customer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+
+import static java.util.UUID.randomUUID;
+import static java.util.stream.Collectors.toList;
 
 @Service
 class CustomerService {
@@ -36,11 +37,11 @@ class CustomerService {
         return customerRepository.findAll()
                 .stream()
                 .map(this::convertCustomerToDTO)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     CustomerDTO addCustomer(CustomerDTO customerDTO) {
-        customerDTO.setCustomerId(UUID.randomUUID().toString());
+        customerDTO.setCustomerId(randomUUID().toString());
         customerRepository.save(convertDTOToCustomer(customerDTO));
         return customerDTO;
     }

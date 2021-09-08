@@ -1,11 +1,13 @@
 package com.library.customer;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @EnableWebMvc
@@ -21,30 +23,30 @@ class CustomerController {
     @GetMapping()
     ResponseEntity<List<CustomerDTO>> getAllCustomers() {
         final List<CustomerDTO> customers = customerFacade.getCustomers();
-        return new ResponseEntity<>(customers, HttpStatus.OK);
+        return new ResponseEntity<>(customers, OK);
     }
 
     @PostMapping()
     ResponseEntity<CustomerDTO> addCustomer(@RequestBody CustomerDTO customerDTO) {
         final CustomerDTO newCustomer = customerFacade.addCustomer(customerDTO);
-        return new ResponseEntity<>(newCustomer, HttpStatus.CREATED);
+        return new ResponseEntity<>(newCustomer, CREATED);
     }
 
     @GetMapping("{id}")
     ResponseEntity<CustomerDTO> findCustomer(@PathVariable("id") String customerId) {
         CustomerDTO customer = customerFacade.findCustomer(customerId);
-        return new ResponseEntity<>(customer, HttpStatus.OK);
+        return new ResponseEntity<>(customer, OK);
     }
 
     @PutMapping("/{id}")
     ResponseEntity<CustomerDTO> updateCustomer(@PathVariable("id") String customerId, @RequestBody CustomerDTO customerDTO) {
         CustomerDTO updatedCustomer = customerFacade.updateCustomer(customerId, customerDTO);
-        return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
+        return new ResponseEntity<>(updatedCustomer, OK);
     }
 
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteCustomer(@PathVariable("id") String customerId) {
         customerFacade.deleteCustomer(customerId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(OK);
     }
 }

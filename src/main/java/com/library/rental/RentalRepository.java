@@ -18,6 +18,4 @@ interface RentalRepository extends JpaRepository<Rental, Long> {
     void deleteRentalByRentalId(String rentalId);
 
     boolean existsByRentalId(String rentalId);
-
-    int countFinesByCustomerId(String customerId);
 }

@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 import static java.time.Instant.now;
+import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -56,13 +56,14 @@ class RentalService {
                 .collect(toList());
     }
 
+    @Transactional
     RentalDTO rent(String customerId, String title, String author) {
         customerFacade.checkIfCustomerExistById(customerId);
         checkIfCustomerIsEligibleForRental(customerId);
         bookFacade.findBooksByTitleAndAuthor(title, author);
         final BookDTO availableBook = bookFacade.findFirstAvailableBookByTitleAndAuthor(title, author);
         bookFacade.rentBook(availableBook.getBookId());
-        Rental rental = new Rental(UUID.randomUUID().toString(), now(), customerId, availableBook.getBookId());
+        Rental rental = new Rental(randomUUID().toString(), now(), customerId, availableBook.getBookId());
         rentalRepository.save(rental);
         return convertRentalToDTO(rental);
     }

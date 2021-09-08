@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.transaction.Transactional;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,7 +38,7 @@ public class CustomerControllerTest {
         CustomerDTO customer1 = createCustomer("John", "Smith");
         CustomerDTO customer2 = createCustomer("Richard", "Williams");
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/customers"))
+        mockMvc.perform(get("/customers"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].customerId").value(customer1.getCustomerId()))
@@ -55,10 +55,10 @@ public class CustomerControllerTest {
         CustomerDTO customer = new CustomerDTO("John", "Smith");
         String content = objectMapper.writeValueAsString(customer);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.post("/customers")
-                        .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/customers")
+                        .contentType(APPLICATION_JSON)
                         .content(content)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName").value(customer.getFirstName()))
@@ -70,7 +70,7 @@ public class CustomerControllerTest {
         //given
         CustomerDTO customer = createCustomer("John", "Smith");
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/customers/" + customer.getCustomerId()))
+        mockMvc.perform(get("/customers/" + customer.getCustomerId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customerId").value(customer.getCustomerId()))
@@ -83,7 +83,7 @@ public class CustomerControllerTest {
         //given
         CustomerDTO customer = createCustomer("John", "Smith");
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.get("/customers/" + customer.getCustomerId()))
+        mockMvc.perform(get("/customers/" + customer.getCustomerId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customerId").value(customer.getCustomerId()))
@@ -98,10 +98,10 @@ public class CustomerControllerTest {
         CustomerDTO customer2 = new CustomerDTO("Richard", "Williams");
         String content = objectMapper.writeValueAsString(customer2);
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.put("/customers/" + customer1.getCustomerId())
-                        .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/customers/" + customer1.getCustomerId())
+                        .contentType(APPLICATION_JSON)
                         .content(content)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customerId").value(customer1.getCustomerId()))
                 .andExpect(jsonPath("$.firstName").value(customer2.getFirstName()))
@@ -113,7 +113,7 @@ public class CustomerControllerTest {
         //given
         CustomerDTO customer = createCustomer("John", "Smith");
         //expect
-        mockMvc.perform(MockMvcRequestBuilders.delete("/customers/" + customer.getCustomerId()))
+        mockMvc.perform(delete("/customers/" + customer.getCustomerId()))
                 .andExpect(status().isOk());
     }
 }
