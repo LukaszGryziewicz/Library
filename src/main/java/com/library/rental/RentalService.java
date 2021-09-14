@@ -146,7 +146,7 @@ class RentalService {
     List<RentalDTO> getRentalsOfBook(String bookId) {
         bookFacade.checkIfBookExistById(bookId);
         return convertListOfHistoricalRentalsToDTO(
-                rentalRepository.findRentalByBookId(bookId)
+                rentalRepository.findRentalsByBookId(bookId)
         );
     }
 

@@ -13,7 +13,7 @@ interface RentalRepository extends JpaRepository<Rental, Long> {
 
     int countRentalsByCustomerId(String id);
 
-    List<Rental> findRentalByBookId(String id);
+    List<Rental> findRentalsByBookId(String id);
 
     void deleteRentalByRentalId(String rentalId);
 
