@@ -2,6 +2,7 @@ package com.library.book;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,5 +16,6 @@ interface BookRepository extends JpaRepository<Book, Long> {
 
     boolean existsByBookId(String bookId);
 
+    @Transactional
     void deleteBookByBookId(String bookId);
 }
