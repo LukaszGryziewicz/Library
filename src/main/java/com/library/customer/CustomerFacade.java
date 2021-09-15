@@ -13,10 +13,6 @@ public class CustomerFacade {
         this.customerService = customerService;
     }
 
-    List<CustomerDTO> getCustomers() {
-        return customerService.getCustomers();
-    }
-
     public CustomerDTO addCustomer(CustomerDTO customerDTO) {
         return customerService.addCustomer(customerDTO);
     }
@@ -25,19 +21,19 @@ public class CustomerFacade {
         return customerService.findCustomer(customerId);
     }
 
+    public void checkIfCustomerExistById(String customerId) {
+        customerService.checkIfCustomerExistById(customerId);
+    }
+
+    List<CustomerDTO> getCustomers() {
+        return customerService.getCustomers();
+    }
+
     CustomerDTO updateCustomer(String customerId, CustomerDTO newCustomer) {
         return customerService.updateCustomer(customerId, newCustomer);
     }
 
     void deleteCustomer(String customerId) {
         customerService.deleteCustomer(customerId);
-    }
-
-    public void checkIfCustomerExistById(String customerId) {
-        customerService.checkIfCustomerExistById(customerId);
-    }
-
-    public void addFines(List<String> customersId, String fine) {
-        customerService.addFines(customersId, fine);
     }
 }

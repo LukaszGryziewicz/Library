@@ -1,8 +1,6 @@
 package com.library.customer;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -14,23 +12,13 @@ class Customer {
     private String customerId;
     private String firstName;
     private String lastName;
-    @ElementCollection
-    private List<String> fines = new ArrayList<>();
 
-    Customer() {
+    protected Customer() {
     }
 
     Customer(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-    }
-
-    long getId() {
-        return id;
-    }
-
-    void setId(long id) {
-        this.id = id;
     }
 
     String getCustomerId() {
@@ -57,21 +45,9 @@ class Customer {
         this.lastName = lastName;
     }
 
-    List<String> getFines() {
-        return fines;
-    }
-
-    void setFines(List<String> fines) {
-        this.fines = fines;
-    }
-
     void update(Customer customer) {
         this.firstName = customer.getFirstName();
         this.lastName = customer.getLastName();
-    }
-
-    void addFine(String fine) {
-        fines.add(fine);
     }
 
     @Override

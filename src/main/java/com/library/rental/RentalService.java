@@ -87,7 +87,6 @@ class RentalService {
         List<String> customersWithOverdueRentals = overdueRentals.stream()
                 .map(Rental::getCustomerId)
                 .collect(toList());
-        customerFacade.addFines(customersWithOverdueRentals, "Overdue,50$");
     }
 
     RentalDTO findRental(String rentalId) {

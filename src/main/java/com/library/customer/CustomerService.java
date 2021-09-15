@@ -16,23 +16,6 @@ class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    private CustomerDTO convertCustomerToDTO(Customer customer) {
-        CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setCustomerId(customer.getCustomerId());
-        customerDTO.setFirstName(customer.getFirstName());
-        customerDTO.setLastName(customer.getLastName());
-        customerDTO.setFines(customer.getFines());
-        return customerDTO;
-    }
-
-    private Customer convertDTOToCustomer(CustomerDTO customerDTO) {
-        Customer customer = new Customer();
-        customer.setCustomerId(customerDTO.getCustomerId());
-        customer.setFirstName(customerDTO.getFirstName());
-        customer.setLastName(customerDTO.getLastName());
-        return customer;
-    }
-
     List<CustomerDTO> getCustomers() {
         return customerRepository.findAll()
                 .stream()
@@ -51,11 +34,6 @@ class CustomerService {
                 .orElseThrow(CustomerNotFoundException::new);
         return convertCustomerToDTO(customer);
 
-    }
-
-    private Customer findCustomerEntity(String customerId) {
-        return customerRepository.findCustomerByCustomerId(customerId)
-                .orElseThrow(CustomerNotFoundException::new);
     }
 
     CustomerDTO updateCustomer(String customerId, CustomerDTO updatedCustomer) {
@@ -77,10 +55,24 @@ class CustomerService {
         }
     }
 
-    void addFines(List<String> customersId, String fine) {
-        List<Customer> customersByCustomerId = customerRepository.findCustomersByCustomerIdIn(customersId);
-        customersByCustomerId
-                .forEach(customer -> customer.addFine(fine));
-        customerRepository.saveAll(customersByCustomerId);
+    private Customer findCustomerEntity(String customerId) {
+        return customerRepository.findCustomerByCustomerId(customerId)
+                .orElseThrow(CustomerNotFoundException::new);
+    }
+
+    private CustomerDTO convertCustomerToDTO(Customer customer) {
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setCustomerId(customer.getCustomerId());
+        customerDTO.setFirstName(customer.getFirstName());
+        customerDTO.setLastName(customer.getLastName());
+        return customerDTO;
+    }
+
+    private Customer convertDTOToCustomer(CustomerDTO customerDTO) {
+        Customer customer = new Customer();
+        customer.setCustomerId(customerDTO.getCustomerId());
+        customer.setFirstName(customerDTO.getFirstName());
+        customer.setLastName(customerDTO.getLastName());
+        return customer;
     }
 }
