@@ -118,17 +118,6 @@ public class BookServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenListOfBooksWithGivenTitleAndAuthorIsEmpty() {
-        //given
-        String randomString = randomUUID().toString();
-        //when
-        Throwable thrown = catchThrowable(() ->
-                bookFacade.findBooksByTitleAndAuthor(randomString, randomString));
-        //then
-        assertThat(thrown).isInstanceOf(BookNotFoundException.class);
-    }
-
-    @Test
     void shouldFindFirstAvailableBook() {
         //given
         BookDTO book1 = createBook("Hamlet", "William Shakespeare", "123456789");

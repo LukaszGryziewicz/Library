@@ -24,24 +24,16 @@ public class BookFacade {
         return bookService.findBook(bookId);
     }
 
-    public List<BookDTO> findBooksByTitleAndAuthor(String title, String author) {
-        return bookService.findBooksByTitleAndAuthor(title, author);
-    }
-
     public BookDTO findFirstAvailableBookByTitleAndAuthor(String title, String author) {
         return bookService.findFirstAvailableBookByTitleAndAuthor(title, author);
     }
 
-    public BookDTO updateBook(String bookId, BookDTO newBook) {
-        return bookService.updateBook(bookId, newBook);
-    }
-
-    void deleteBook(String bookId) {
-        bookService.deleteBook(bookId);
-    }
-
     public void checkIfBookExistById(String bookId) {
         bookService.checkIfBookExistById(bookId);
+    }
+
+    public void checkIfBookExistByTitleAndAuthor(String title, String author) {
+        bookService.checkIfBookExistByTitleAndAuthor(title, author);
     }
 
     public void returnBook(String bookId) {
@@ -50,5 +42,17 @@ public class BookFacade {
 
     public void rentBook(String bookId) {
         bookService.rentBook(bookId);
+    }
+
+    List<BookDTO> findBooksByTitleAndAuthor(String title, String author) {
+        return bookService.findBooksByTitleAndAuthor(title, author);
+    }
+
+    BookDTO updateBook(String bookId, BookDTO newBook) {
+        return bookService.updateBook(bookId, newBook);
+    }
+
+    void deleteBook(String bookId) {
+        bookService.deleteBook(bookId);
     }
 }

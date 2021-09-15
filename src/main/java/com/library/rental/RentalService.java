@@ -38,7 +38,7 @@ class RentalService {
     RentalDTO rent(String customerId, String title, String author) {
         customerFacade.checkIfCustomerExistById(customerId);
         checkIfCustomerIsEligibleForRental(customerId);
-        bookFacade.findBooksByTitleAndAuthor(title, author);
+        bookFacade.checkIfBookExistByTitleAndAuthor(title, author);
         final BookDTO availableBook = bookFacade.findFirstAvailableBookByTitleAndAuthor(title, author);
         bookFacade.rentBook(availableBook.getBookId());
         Rental rental = new Rental(randomUUID().toString(), now(), customerId, availableBook.getBookId());

@@ -38,7 +38,7 @@ class BookRepositoryTest {
     }
 
     @Test
-    void shouldReturnTrueWhenBookExists() {
+    void shouldReturnTrueWhenBookExistsById() {
         //given
         Book book = new Book("Hamlet", "William Shakespeare", "123456789");
         book.setBookId("8f055724-0f22-4fa9-827c-fcd37e0e541e");
@@ -50,7 +50,7 @@ class BookRepositoryTest {
     }
 
     @Test
-    void shouldReturnFalseWhenBookDoesNotExist() {
+    void shouldReturnFalseWhenBookDoesNotExistById() {
         //given
         String id = "8f055724-0f22-4fa9-827c-fcd37e0e541e";
         //when
@@ -113,5 +113,29 @@ class BookRepositoryTest {
                 .findBooksByTitleAndAuthor(book.getTitle(), book2.getAuthor());
         //then
         assertThat(booksByTitleAndAuthor).containsExactlyInAnyOrder(book, book2);
+    }
+
+    @Test
+    void shouldReturnTrueWhenBookExistsByTitleAndAuthor() {
+        //given
+        Book book = new Book("Hamlet", "William Shakespeare", "123456789");
+        bookRepository.save(book);
+        //when
+        boolean existsByBookId = bookRepository
+                .existsByTitleAndAuthor(book.getTitle(), book.getAuthor());
+        //assert
+        assertThat(existsByBookId).isTrue();
+    }
+
+    @Test
+    void shouldReturnFalseWhenBookDoesNotExistByTitleAndAuthor() {
+        //given
+        String title = "Hamlet";
+        String author = "William Shakespeare";
+        //when
+        boolean existsByBookId = bookRepository
+                .existsByTitleAndAuthor(title, author);
+        //assert
+        assertThat(existsByBookId).isFalse();
     }
 }

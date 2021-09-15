@@ -16,6 +16,8 @@ interface BookRepository extends JpaRepository<Book, Long> {
 
     boolean existsByBookId(String bookId);
 
+    boolean existsByTitleAndAuthor(String title, String author);
+
     @Transactional
     void deleteBookByBookId(String bookId);
 }
