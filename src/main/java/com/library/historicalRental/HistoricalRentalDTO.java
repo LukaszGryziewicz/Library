@@ -39,24 +39,12 @@ public class HistoricalRentalDTO {
         return historicalRentalId;
     }
 
-    public void setHistoricalRentalId(String historicalRentalId) {
-        this.historicalRentalId = historicalRentalId;
-    }
-
     public LocalDateTime getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(LocalDateTime dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
     public LocalDateTime getDateEnded() {
         return dateEnded;
-    }
-
-    public void setDateEnded(LocalDateTime dateEnded) {
-        this.dateEnded = dateEnded;
     }
 
     public String getCustomerId() {

@@ -27,7 +27,7 @@ class HistoricalRental {
     private String author;
     private String isbn;
 
-    HistoricalRental() {
+    protected HistoricalRental() {
     }
 
     HistoricalRental(String historicalRentalId, LocalDateTime dateCreated, LocalDateTime dateEnded, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn) {
@@ -43,36 +43,17 @@ class HistoricalRental {
         this.isbn = isbn;
     }
 
-    long getId() {
-        return id;
-    }
-
-    void setId(long id) {
-        this.id = id;
-    }
 
     String getHistoricalRentalId() {
         return historicalRentalId;
-    }
-
-    void setHistoricalRentalId(String historicalRentalId) {
-        this.historicalRentalId = historicalRentalId;
     }
 
     LocalDateTime getDateCreated() {
         return dateCreated;
     }
 
-    void setDateCreated(LocalDateTime dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
     LocalDateTime getDateEnded() {
         return dateEnded;
-    }
-
-    void setDateEnded(LocalDateTime dateEnded) {
-        this.dateEnded = dateEnded;
     }
 
     String getCustomerId() {
@@ -87,16 +68,8 @@ class HistoricalRental {
         return firstName;
     }
 
-    void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     String getLastName() {
         return lastName;
-    }
-
-    void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     String getBookId() {
@@ -111,30 +84,18 @@ class HistoricalRental {
         return title;
     }
 
-    void setTitle(String title) {
-        this.title = title;
-    }
-
     String getAuthor() {
         return author;
-    }
-
-    void setAuthor(String author) {
-        this.author = author;
     }
 
     String getIsbn() {
         return isbn;
     }
 
-    void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if ( this == o ) return true;
-        if ( o == null || getClass() != o.getClass() ) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         HistoricalRental that = (HistoricalRental) o;
         return Objects.equals(id, that.id) && Objects.equals(historicalRentalId, that.historicalRentalId) && Objects.equals(dateCreated, that.dateCreated) && Objects.equals(dateEnded, that.dateEnded) && Objects.equals(customerId, that.customerId) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(bookId, that.bookId) && Objects.equals(title, that.title) && Objects.equals(author, that.author) && Objects.equals(isbn, that.isbn);
     }

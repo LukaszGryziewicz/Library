@@ -21,6 +21,30 @@ class HistoricalRentalService {
         this.bookFacade = bookFacade;
     }
 
+    void createHistoricalRental(HistoricalRentalDTO historicalRentalDTO) {
+        historicalRentalRepository.save(convertDTOToHistoricalRental(historicalRentalDTO));
+    }
+
+    List<HistoricalRentalDTO> findAllHistoricalRentals() {
+        return convertListOfHistoricalRentalsToDTO(
+                historicalRentalRepository.findAll()
+        );
+    }
+
+    List<HistoricalRentalDTO> findHistoricalRentalsOfCustomer(String customerId) {
+        customerFacade.checkIfCustomerExistById(customerId);
+        return convertListOfHistoricalRentalsToDTO(
+                historicalRentalRepository.findHistoricalRentalsByCustomerId(customerId)
+        );
+    }
+
+    List<HistoricalRentalDTO> findHistoricalRentalsOfBook(String bookId) {
+        bookFacade.checkIfBookExistById(bookId);
+        return convertListOfHistoricalRentalsToDTO(
+                historicalRentalRepository.findHistoricalRentalsByBookId(bookId)
+        );
+    }
+
     private HistoricalRentalDTO convertHistoricalRentalToDTO(HistoricalRental historicalRental) {
         return new HistoricalRentalDTO(
                 historicalRental.getHistoricalRentalId(),
@@ -55,29 +79,5 @@ class HistoricalRentalService {
         return historicalRentals.stream()
                 .map(this::convertHistoricalRentalToDTO)
                 .collect(toList());
-    }
-
-    void createHistoricalRental(HistoricalRentalDTO historicalRentalDTO) {
-        historicalRentalRepository.save(convertDTOToHistoricalRental(historicalRentalDTO));
-    }
-
-    List<HistoricalRentalDTO> findAllHistoricalRentals() {
-        return convertListOfHistoricalRentalsToDTO(
-                historicalRentalRepository.findAll()
-        );
-    }
-
-    List<HistoricalRentalDTO> findHistoricalRentalsOfCustomer(String customerId) {
-        customerFacade.checkIfCustomerExistById(customerId);
-        return convertListOfHistoricalRentalsToDTO(
-                historicalRentalRepository.findHistoricalRentalsByCustomerId(customerId)
-        );
-    }
-
-    List<HistoricalRentalDTO> findHistoricalRentalsOfBook(String bookId) {
-        bookFacade.checkIfBookExistById(bookId);
-        return convertListOfHistoricalRentalsToDTO(
-                historicalRentalRepository.findHistoricalRentalsByBookId(bookId)
-        );
     }
 }
