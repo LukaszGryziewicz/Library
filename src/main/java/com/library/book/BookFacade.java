@@ -51,6 +51,4 @@ public class BookFacade {
     public void rentBook(String bookId) {
         bookService.rentBook(bookId);
     }
-
-
 }
