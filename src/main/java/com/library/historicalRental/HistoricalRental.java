@@ -1,7 +1,5 @@
 package com.library.historicalRental;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -13,9 +11,7 @@ class HistoricalRental {
     @Column(nullable = false, updatable = false)
     private Long id;
     private String historicalRentalId;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime dateCreated;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime dateEnded;
     //customer
     private String customerId;
@@ -30,16 +26,17 @@ class HistoricalRental {
     protected HistoricalRental() {
     }
 
-    HistoricalRental(String historicalRentalId,
-                     LocalDateTime dateCreated,
-                     LocalDateTime dateEnded,
-                     String customerId,
-                     String firstName,
-                     String lastName,
-                     String bookId,
-                     String title,
-                     String author,
-                     String isbn
+    HistoricalRental(
+            String historicalRentalId,
+            LocalDateTime dateCreated,
+            LocalDateTime dateEnded,
+            String customerId,
+            String firstName,
+            String lastName,
+            String bookId,
+            String title,
+            String author,
+            String isbn
     ) {
         this.historicalRentalId = historicalRentalId;
         this.dateCreated = dateCreated;

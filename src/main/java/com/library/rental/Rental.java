@@ -1,7 +1,5 @@
 package com.library.rental;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -13,7 +11,6 @@ class Rental {
     @Column(nullable = false, updatable = false)
     private Long id;
     private String rentalId;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime timeOfRental;
     private String customerId;
     private String bookId;
