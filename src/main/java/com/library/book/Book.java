@@ -15,7 +15,7 @@ class Book {
     private String isbn;
     private boolean rented;
 
-    Book() {
+    protected Book() {
     }
 
     Book(String title, String author, String isbn) {
@@ -30,14 +30,6 @@ class Book {
 
     void setBookId(String bookId) {
         this.bookId = bookId;
-    }
-
-    long getId() {
-        return id;
-    }
-
-    void setId(long id) {
-        this.id = id;
     }
 
     String getTitle() {

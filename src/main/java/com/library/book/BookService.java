@@ -16,32 +16,6 @@ class BookService {
         this.bookRepository = bookRepository;
     }
 
-    private BookDTO convertBookToDTO(Book book) {
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setBookId(book.getBookId());
-        bookDTO.setTitle(book.getTitle());
-        bookDTO.setAuthor(book.getAuthor());
-        bookDTO.setIsbn(book.getIsbn());
-        bookDTO.setRented(book.isRented());
-        return bookDTO;
-    }
-
-    private Book covertDTOToBook(BookDTO bookDTO) {
-        Book book = new Book();
-        book.setBookId(bookDTO.getBookId());
-        book.setTitle(bookDTO.getTitle());
-        book.setAuthor(bookDTO.getAuthor());
-        book.setIsbn(bookDTO.getIsbn());
-        book.setRented(bookDTO.isRented());
-        return book;
-    }
-
-    private List<BookDTO> convertListOfBookToDTO(List<Book> listOfBooks) {
-        return listOfBooks.stream()
-                .map(this::convertBookToDTO)
-                .collect(Collectors.toUnmodifiableList());
-    }
-
     void returnBook(String bookId) {
         final Book book = findBookEntity(bookId);
         book.returnBook();
@@ -68,11 +42,6 @@ class BookService {
     BookDTO findBook(String bookId) {
         final Book book = findBookEntity(bookId);
         return convertBookToDTO(book);
-    }
-
-    private Book findBookEntity(String bookId) {
-        return bookRepository.findBookByBookId(bookId)
-                .orElseThrow(BookNotFoundException::new);
     }
 
     List<BookDTO> findBooksByTitleAndAuthor(String title, String author) {
@@ -106,5 +75,36 @@ class BookService {
         if (!exists) {
             throw new BookNotFoundException();
         }
+    }
+
+    private Book findBookEntity(String bookId) {
+        return bookRepository.findBookByBookId(bookId)
+                .orElseThrow(BookNotFoundException::new);
+    }
+
+    private BookDTO convertBookToDTO(Book book) {
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setBookId(book.getBookId());
+        bookDTO.setTitle(book.getTitle());
+        bookDTO.setAuthor(book.getAuthor());
+        bookDTO.setIsbn(book.getIsbn());
+        bookDTO.setRented(book.isRented());
+        return bookDTO;
+    }
+
+    private Book covertDTOToBook(BookDTO bookDTO) {
+        Book book = new Book();
+        book.setBookId(bookDTO.getBookId());
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setRented(bookDTO.isRented());
+        return book;
+    }
+
+    private List<BookDTO> convertListOfBookToDTO(List<Book> listOfBooks) {
+        return listOfBooks.stream()
+                .map(this::convertBookToDTO)
+                .collect(Collectors.toUnmodifiableList());
     }
 }
