@@ -1,7 +1,7 @@
-# Library
+# Library :books:
 This application is designed to resemble a small library.
 
-## Technologies 
+## Technologies⚙ 
 - Spring Boot
 - Spring Web
 - Hibernate
@@ -9,7 +9,7 @@ This application is designed to resemble a small library.
 - JUnit 5
 - H2 Database
 
-## What I learned
+## What I've learned:electron:
 - The facade pattern
 - MockMvc
 - DTO
