@@ -19,21 +19,18 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {CustomerNotFoundException.class, BookNotFoundException.class, RentalNotFoundException.class})
     ResponseEntity<Object> handleNotFoundExceptions(Exception e) {
         ApiException apiException = new ApiException(e.getMessage(), NOT_FOUND, now());
-
         return new ResponseEntity<>(apiException, NOT_FOUND);
     }
 
     @ExceptionHandler(NoBookAvailableException.class)
     ResponseEntity<Object> handleNoBookAvailableException(NoBookAvailableException e) {
         ApiException apiException = new ApiException(e.getMessage(), NOT_FOUND, now());
-
         return new ResponseEntity<>(apiException, NOT_FOUND);
     }
 
     @ExceptionHandler(ExceededMaximumNumberOfRentalsException.class)
     ResponseEntity<Object> handleExceededMaximumNumberOfRentalsException(ExceededMaximumNumberOfRentalsException e) {
         ApiException apiException = new ApiException(e.getMessage(), CONFLICT, now());
-
         return new ResponseEntity<>(apiException, CONFLICT);
     }
 
