@@ -33,8 +33,7 @@ class HistoricalRentalRepositoryTest {
     @Test
     void shouldFindHistoricalRentalsByBookId() {
         //given
-        HistoricalRental historicalRental = new HistoricalRental(
-        );
+        HistoricalRental historicalRental = new HistoricalRental();
         historicalRental.setBookId("672fca70-67b7-4d5b-b436-e3c51f3d35fd");
         HistoricalRental historicalRental2 = new HistoricalRental();
         historicalRental2.setBookId("882a1363-886c-41b8-967a-5b4526bfd62a");

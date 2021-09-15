@@ -143,7 +143,7 @@ class RentalRepositoryTest {
     }
 
     @Test
-    void deleteRentalByRentalId() {
+    void shouldDeleteRentalByRentalId() {
         //given
         Rental rental = new Rental(
                 "524b09c8-c2ba-434e-9d21-f7e52b9370c4",

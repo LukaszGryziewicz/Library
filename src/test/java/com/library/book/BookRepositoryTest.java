@@ -114,16 +114,4 @@ class BookRepositoryTest {
         //then
         assertThat(booksByTitleAndAuthor).containsExactlyInAnyOrder(book, book2);
     }
-
-    @Test
-    void shouldReturnEmptyListWhenBooksWithGivenTitleAndAuthorDontExist() {
-        //given
-        String title = "Hamlet";
-        String author = "William Shakespeare";
-        //when
-        List<Book> booksByTitleAndAuthor = bookRepository
-                .findBooksByTitleAndAuthor(title, author);
-        //then
-        assertThat(booksByTitleAndAuthor).isEmpty();
-    }
 }

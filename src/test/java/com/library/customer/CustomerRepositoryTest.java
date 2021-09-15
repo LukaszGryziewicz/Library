@@ -64,7 +64,7 @@ class CustomerRepositoryTest {
     }
 
     @Test
-    void deleteCustomerByCustomerId() {
+    void shouldDeleteCustomerByCustomerId() {
         //given
         Customer customer = new Customer("John", "Smith");
         customer.setCustomerId("ad8b7f39-dbc6-4c56-8289-5dcea52d0681");
