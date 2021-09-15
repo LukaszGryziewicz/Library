@@ -18,7 +18,7 @@ class Rental {
     private String customerId;
     private String bookId;
 
-    Rental() {
+    protected Rental() {
     }
 
     Rental(String rentalId, LocalDateTime timeOfRental, String customerId, String bookId) {
@@ -28,44 +28,20 @@ class Rental {
         this.bookId = bookId;
     }
 
-    long getId() {
-        return id;
-    }
-
-    void setId(long id) {
-        this.id = id;
-    }
-
     String getRentalId() {
         return rentalId;
-    }
-
-    void setRentalId(String rentalId) {
-        this.rentalId = rentalId;
     }
 
     LocalDateTime getTimeOfRental() {
         return timeOfRental;
     }
 
-    void setTimeOfRental(LocalDateTime timeOfRental) {
-        this.timeOfRental = timeOfRental;
-    }
-
     String getCustomerId() {
         return customerId;
     }
 
-    void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
-
     String getBookId() {
         return bookId;
-    }
-
-    void setBookId(String bookId) {
-        this.bookId = bookId;
     }
 
     @Override

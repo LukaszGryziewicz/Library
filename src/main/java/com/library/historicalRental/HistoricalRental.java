@@ -30,7 +30,17 @@ class HistoricalRental {
     protected HistoricalRental() {
     }
 
-    HistoricalRental(String historicalRentalId, LocalDateTime dateCreated, LocalDateTime dateEnded, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn) {
+    HistoricalRental(String historicalRentalId,
+                     LocalDateTime dateCreated,
+                     LocalDateTime dateEnded,
+                     String customerId,
+                     String firstName,
+                     String lastName,
+                     String bookId,
+                     String title,
+                     String author,
+                     String isbn
+    ) {
         this.historicalRentalId = historicalRentalId;
         this.dateCreated = dateCreated;
         this.dateEnded = dateEnded;
@@ -42,7 +52,6 @@ class HistoricalRental {
         this.author = author;
         this.isbn = isbn;
     }
-
 
     String getHistoricalRentalId() {
         return historicalRentalId;

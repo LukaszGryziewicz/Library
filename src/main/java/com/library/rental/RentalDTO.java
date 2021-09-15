@@ -20,7 +20,17 @@ public class RentalDTO {
     public RentalDTO() {
     }
 
-    public RentalDTO(String rentalId, LocalDateTime timeOfRental, String customerId, String firstName, String lastName, String bookId, String title, String author, String isbn) {
+    public RentalDTO(
+            String rentalId,
+            LocalDateTime timeOfRental,
+            String customerId,
+            String firstName,
+            String lastName,
+            String bookId,
+            String title,
+            String author,
+            String isbn
+    ) {
         this.rentalId = rentalId;
         this.timeOfRental = timeOfRental;
         this.customerId = customerId;
@@ -36,16 +46,8 @@ public class RentalDTO {
         return rentalId;
     }
 
-    public void setRentalId(String rentalId) {
-        this.rentalId = rentalId;
-    }
-
     public LocalDateTime getTimeOfRental() {
         return timeOfRental;
-    }
-
-    public void setTimeOfRental(LocalDateTime timeOfRental) {
-        this.timeOfRental = timeOfRental;
     }
 
     public String getCustomerId() {

@@ -17,31 +17,27 @@ public class RentalFacade {
         return rentalService.rent(customerId, title, author);
     }
 
-    public RentalDTO findRental(String rentalId) {
-        return rentalService.findRental(rentalId);
-    }
-
     public void endRental(String rentalId) {
         rentalService.endRental(rentalId);
+    }
+
+    RentalDTO findRental(String rentalId) {
+        return rentalService.findRental(rentalId);
     }
 
     void deleteRental(String rentalId) {
         rentalService.deleteRental(rentalId);
     }
 
-    public List<RentalDTO> getAllRentals() {
+    List<RentalDTO> getAllRentals() {
         return rentalService.getAllRentals();
     }
 
-    public List<RentalDTO> getRentalsOfCustomer(String customerId) {
+    List<RentalDTO> getRentalsOfCustomer(String customerId) {
         return rentalService.getRentalsOfCustomer(customerId);
     }
 
-    public List<RentalDTO> getRentalsOfBook(String bookId) {
+    List<RentalDTO> getRentalsOfBook(String bookId) {
         return rentalService.getRentalsOfBook(bookId);
-    }
-
-    void scanForOverdueRentals() {
-        rentalService.scanForOverdueRentals();
     }
 }
