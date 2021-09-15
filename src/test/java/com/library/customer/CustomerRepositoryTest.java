@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -31,7 +32,7 @@ class CustomerRepositoryTest {
     @Test
     void shouldNotFindCustomerByCustomerId() {
         //given
-        String id = "ad8b7f39-dbc6-4c56-8289-5dcea52d0681";
+        String id = randomUUID().toString();
         //when
         Optional<Customer> customerByCustomerId = customerRepository
                 .findCustomerByCustomerId(id);
@@ -43,7 +44,7 @@ class CustomerRepositoryTest {
     void shouldReturnTrueWhenCustomerExists() {
         //given
         Customer customer = new Customer("John", "Smith");
-        customer.setCustomerId("ad8b7f39-dbc6-4c56-8289-5dcea52d0681");
+        customer.setCustomerId(randomUUID().toString());
         customerRepository.save(customer);
         //when
         boolean existsByCustomerId = customerRepository
@@ -55,7 +56,7 @@ class CustomerRepositoryTest {
     @Test
     void shouldReturnFalseWhenCustomerDoesNotExist() {
         //given
-        String id = "ad8b7f39-dbc6-4c56-8289-5dcea52d0681";
+        String id = randomUUID().toString();
         //when
         boolean existsByCustomerId = customerRepository
                 .existsByCustomerId(id);
@@ -67,7 +68,7 @@ class CustomerRepositoryTest {
     void shouldDeleteCustomerByCustomerId() {
         //given
         Customer customer = new Customer("John", "Smith");
-        customer.setCustomerId("ad8b7f39-dbc6-4c56-8289-5dcea52d0681");
+        customer.setCustomerId(randomUUID().toString());
         customerRepository.save(customer);
         //when
         customerRepository.deleteCustomerByCustomerId(customer.getCustomerId());

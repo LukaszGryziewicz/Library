@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
 
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -18,9 +19,9 @@ class HistoricalRentalRepositoryTest {
     void shouldFindHistoricalRentalsByCustomerId() {
         //given
         HistoricalRental historicalRental = new HistoricalRental();
-        historicalRental.setCustomerId("672fca70-67b7-4d5b-b436-e3c51f3d35fd");
+        historicalRental.setCustomerId(randomUUID().toString());
         HistoricalRental historicalRental2 = new HistoricalRental();
-        historicalRental2.setCustomerId("882a1363-886c-41b8-967a-5b4526bfd62a");
+        historicalRental2.setCustomerId(randomUUID().toString());
         historicalRentalRepository.saveAll(List.of(historicalRental, historicalRental2));
         //when
         List<HistoricalRental> historicalRentalsByCustomerId = historicalRentalRepository
@@ -34,9 +35,9 @@ class HistoricalRentalRepositoryTest {
     void shouldFindHistoricalRentalsByBookId() {
         //given
         HistoricalRental historicalRental = new HistoricalRental();
-        historicalRental.setBookId("672fca70-67b7-4d5b-b436-e3c51f3d35fd");
+        historicalRental.setBookId(randomUUID().toString());
         HistoricalRental historicalRental2 = new HistoricalRental();
-        historicalRental2.setBookId("882a1363-886c-41b8-967a-5b4526bfd62a");
+        historicalRental2.setBookId(randomUUID().toString());
         historicalRentalRepository.saveAll(List.of(historicalRental, historicalRental2));
         //when
         List<HistoricalRental> historicalRentalsByCustomerId = historicalRentalRepository

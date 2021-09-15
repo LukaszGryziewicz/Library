@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 import java.util.Optional;
 
-import static java.time.LocalDateTime.now;
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -19,12 +19,8 @@ class RentalRepositoryTest {
     @Test
     void shouldFindRentalByRentalId() {
         //given
-        Rental rental = new Rental(
-                "524b09c8-c2ba-434e-9d21-f7e52b9370c4",
-                now(),
-                "80e56b65-938b-46fa-8aea-9a31517acf26",
-                "bf84d1b4-1ff0-450c-bc0f-c08ddccdc4c1"
-        );
+        Rental rental = new Rental();
+        rental.setRentalId(randomUUID().toString());
         rentalRepository.save(rental);
         //when
         Optional<Rental> rentalByRentalId = rentalRepository
@@ -36,7 +32,7 @@ class RentalRepositoryTest {
     @Test
     void shouldNotFindRentalByRentalId() {
         //given
-        String id = "524b09c8-c2ba-434e-9d21-f7e52b9370c4";
+        String id = randomUUID().toString();
         //when
         Optional<Rental> rentalByRentalId = rentalRepository
                 .findRentalByRentalId(id);
@@ -47,12 +43,8 @@ class RentalRepositoryTest {
     @Test
     void shouldReturnTrueWhenRentalExists() {
         //given
-        Rental rental = new Rental(
-                "524b09c8-c2ba-434e-9d21-f7e52b9370c4",
-                now(),
-                "80e56b65-938b-46fa-8aea-9a31517acf26",
-                "bf84d1b4-1ff0-450c-bc0f-c08ddccdc4c1"
-        );
+        Rental rental = new Rental();
+        rental.setRentalId(randomUUID().toString());
         rentalRepository.save(rental);
         //when
         boolean existsByRentalId = rentalRepository
@@ -64,7 +56,7 @@ class RentalRepositoryTest {
     @Test
     void shouldReturnFalseWhenRentalDoesNotExist() {
         //given
-        String id = "524b09c8-c2ba-434e-9d21-f7e52b9370c4";
+        String id = randomUUID().toString();
         //when
         boolean existsByRentalId = rentalRepository
                 .existsByRentalId(id);
@@ -75,18 +67,9 @@ class RentalRepositoryTest {
     @Test
     void shouldFindRentalsByCustomerId() {
         //given
-        Rental rental = new Rental(
-                "524b09c8-c2ba-434e-9d21-f7e52b9370c4",
-                now(),
-                "80e56b65-938b-46fa-8aea-9a31517acf26",
-                "bf84d1b4-1ff0-450c-bc0f-c08ddccdc4c1"
-        );
-        Rental rental2 = new Rental(
-                "392b10ce-df7f-4a5c-a1a5-55587bda1e57",
-                now(),
-                "9368e414-620a-4c9e-973a-923980795dc0",
-                "bf84d1b4-1ff0-450c-bc0f-c08ddccdc4c1"
-        );
+        Rental rental = new Rental();
+        rental.setCustomerId(randomUUID().toString());
+        Rental rental2 = new Rental();
         rentalRepository.saveAll(List.of(rental, rental2));
         //when
         List<Rental> rentalsByCustomerId = rentalRepository
@@ -98,18 +81,9 @@ class RentalRepositoryTest {
     @Test
     void shouldCountRentalsByCustomerId() {
         //given
-        Rental rental = new Rental(
-                "524b09c8-c2ba-434e-9d21-f7e52b9370c4",
-                now(),
-                "80e56b65-938b-46fa-8aea-9a31517acf26",
-                "bf84d1b4-1ff0-450c-bc0f-c08ddccdc4c1"
-        );
-        Rental rental2 = new Rental(
-                "392b10ce-df7f-4a5c-a1a5-55587bda1e57",
-                now(),
-                "9368e414-620a-4c9e-973a-923980795dc0",
-                "bf84d1b4-1ff0-450c-bc0f-c08ddccdc4c1"
-        );
+        Rental rental = new Rental();
+        rental.setCustomerId(randomUUID().toString());
+        Rental rental2 = new Rental();
         rentalRepository.saveAll(List.of(rental, rental2));
         //when
         int numberOfCustomerRentals = rentalRepository
@@ -122,18 +96,9 @@ class RentalRepositoryTest {
     @Test
     void shouldFindRentalsByBookId() {
         //given
-        Rental rental = new Rental(
-                "524b09c8-c2ba-434e-9d21-f7e52b9370c4",
-                now(),
-                "80e56b65-938b-46fa-8aea-9a31517acf26",
-                "bf84d1b4-1ff0-450c-bc0f-c08ddccdc4c1"
-        );
-        Rental rental2 = new Rental(
-                "392b10ce-df7f-4a5c-a1a5-55587bda1e57",
-                now(),
-                "80e56b65-938b-46fa-8aea-9a31517acf26",
-                "d6b5a91c-0b8c-404d-bc0d-15546a92bb44"
-        );
+        Rental rental = new Rental();
+        rental.setBookId(randomUUID().toString());
+        Rental rental2 = new Rental();
         rentalRepository.saveAll(List.of(rental, rental2));
         //when
         List<Rental> rentalsByBookId = rentalRepository
@@ -145,12 +110,8 @@ class RentalRepositoryTest {
     @Test
     void shouldDeleteRentalByRentalId() {
         //given
-        Rental rental = new Rental(
-                "524b09c8-c2ba-434e-9d21-f7e52b9370c4",
-                now(),
-                "80e56b65-938b-46fa-8aea-9a31517acf26",
-                "bf84d1b4-1ff0-450c-bc0f-c08ddccdc4c1"
-        );
+        Rental rental = new Rental();
+        rental.setRentalId(randomUUID().toString());
         rentalRepository.save(rental);
         //when
         rentalRepository.deleteRentalByRentalId(rental.getRentalId());

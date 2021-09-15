@@ -29,6 +29,10 @@ class Rental {
         return rentalId;
     }
 
+    void setRentalId(String rentalId) {
+        this.rentalId = rentalId;
+    }
+
     LocalDateTime getTimeOfRental() {
         return timeOfRental;
     }
@@ -37,8 +41,16 @@ class Rental {
         return customerId;
     }
 
+    void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
     String getBookId() {
         return bookId;
+    }
+
+    void setBookId(String bookId) {
+        this.bookId = bookId;
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -19,7 +20,7 @@ class BookRepositoryTest {
     void shouldFindBookByBookId() {
         //given
         Book book = new Book("Hamlet", "William Shakespeare", "123456789");
-        book.setBookId("8f055724-0f22-4fa9-827c-fcd37e0e541e");
+        book.setBookId(randomUUID().toString());
         bookRepository.save(book);
         //when
         Optional<Book> bookByBookId = bookRepository.findBookByBookId(book.getBookId());
@@ -30,7 +31,7 @@ class BookRepositoryTest {
     @Test
     void shouldNotFindBookByBookId() {
         //given
-        String id = "8f055724-0f22-4fa9-827c-fcd37e0e541e";
+        String id = randomUUID().toString();
         //when
         Optional<Book> bookByBookId = bookRepository.findBookByBookId(id);
         //then
@@ -41,7 +42,7 @@ class BookRepositoryTest {
     void shouldReturnTrueWhenBookExistsById() {
         //given
         Book book = new Book("Hamlet", "William Shakespeare", "123456789");
-        book.setBookId("8f055724-0f22-4fa9-827c-fcd37e0e541e");
+        book.setBookId(randomUUID().toString());
         bookRepository.save(book);
         //when
         boolean existsByBookId = bookRepository.existsByBookId(book.getBookId());
@@ -52,7 +53,7 @@ class BookRepositoryTest {
     @Test
     void shouldReturnFalseWhenBookDoesNotExistById() {
         //given
-        String id = "8f055724-0f22-4fa9-827c-fcd37e0e541e";
+        String id = randomUUID().toString();
         //when
         boolean existsByBookId = bookRepository.existsByBookId(id);
         //assert
@@ -63,7 +64,7 @@ class BookRepositoryTest {
     void shouldDeleteBookByBookId() {
         //given
         Book book = new Book("Hamlet", "William Shakespeare", "123456789");
-        book.setBookId("8f055724-0f22-4fa9-827c-fcd37e0e541e");
+        book.setBookId(randomUUID().toString());
         bookRepository.save(book);
         //when
         bookRepository.deleteBookByBookId(book.getBookId());
